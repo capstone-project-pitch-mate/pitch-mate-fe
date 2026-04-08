@@ -19,7 +19,25 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "paths": {
+      "@api/*": ["./src/api/*"],
+      "@pages/*": ["./src/pages/*"],
+      "@assets/*": ["./src/assets/*"],
+      "@components/*": ["./src/shared/components/*"],
+      "@ui/*": ["./src/shared/components/ui/*"],
+      "@layout/*": ["./src/shared/components/layout/*"],
+      "@icon/*": ["./src/shared/components/icon/*"],
+      "@hooks/*": ["./src/shared/hooks/*"],
+      "@utils/*": ["./src/shared/utils/*"],
+      "@type/*": ["./src/shared/types/*"],
+      "@constant/*": ["./src/shared/constant/*"],
+      "@styles/*": ["./src/shared/styles/*"],
+      "@shared/*": ["./src/shared/*"],
+      "@router/*": ["./src/router/*"],
+      "@img/*": ["./src/assets/img/*"],
+      "@/*": ["./src/*"]
+    }
   },
-  "include": ["src"]
+  "include": ["src", "*.tsx", "*.ts"]
 }
