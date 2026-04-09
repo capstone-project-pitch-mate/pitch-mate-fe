@@ -6,6 +6,7 @@ import { ROUTES } from "./constants";
 import Dashboard from "@pages/dashboard";
 import Login from "@pages/login";
 import Signup from "@pages/signup";
+import NotFound from "@pages/not-found";
 
 export const router = createBrowserRouter([
   {
@@ -17,6 +18,7 @@ export const router = createBrowserRouter([
       },
       { path: ROUTES.LOGIN, element: <Login /> },
       { path: ROUTES.SIGNUP, element: <Signup /> },
+      { path: "*", element: <NotFound /> },
     ],
   },
 ]);
