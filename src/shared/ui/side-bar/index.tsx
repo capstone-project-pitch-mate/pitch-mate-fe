@@ -80,8 +80,8 @@ export default function SideBar({
   return (
     <div
       className={cn(
-        "flex flex-col border-r border-[rgba(0,0,0,0.08)] bg-[#FAFAFF]",
-        isOpen ? "min-w-95" : "min-w-23.25",
+        "flex h-full shrink-0 flex-col border-r border-[rgba(0,0,0,0.08)] bg-[#FAFAFF]",
+        isOpen ? "w-95" : "w-23.25",
       )}
     >
       <div className="flex h-22 shrink-0 flex-row items-center gap-5 border-b border-[rgba(0,0,0,0.08)] pl-5">
