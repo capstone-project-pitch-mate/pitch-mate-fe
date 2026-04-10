@@ -12,7 +12,7 @@ export default function VideoEmptyView() {
   };
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-12">
+    <div className="flex min-h-150 flex-1 flex-col items-center justify-center gap-12">
       <img className="h-30 w-30" src={IcOverviewTotal} alt="총 연습 영상" />
       <div className="flex flex-col items-center gap-3">
         <span className="text-3xl leading-10 font-medium text-[#1A1A2E]">
@@ -25,7 +25,7 @@ export default function VideoEmptyView() {
       </div>
       <Button size="lg" handleClick={handleToUpload}>
         <div className="flex flex-row items-center gap-2.5">
-          <img src={IcUploadWhite} alt="업로드 버튼" />
+          <img src={IcUploadWhite} aria-hidden="true" />
           <span className="text-xl leading-8 font-medium text-white">
             첫 영상 업로드하기
           </span>

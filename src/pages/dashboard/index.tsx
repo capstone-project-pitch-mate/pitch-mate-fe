@@ -3,8 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button, Overview, VideoEmptyView } from "@shared/ui";
 import IcUploadWhite from "@assets/icon/ic_upload_white.svg";
 import IcRightArrow from "@assets/icon/ic_right_arrow.svg";
-import { DUMMY_DASHBOARD_VIDEO_LIST } from "./constants";
 
+import { DUMMY_DASHBOARD_VIDEO_LIST } from "./constants";
 import { VideoCard } from "./components";
 
 const NICKNAME = "김발표";
@@ -50,9 +50,9 @@ export default function Dashboard() {
         ) : (
           <>
             <div className="flex flex-row items-center justify-between">
-              <label className="text-3xl leading-12 font-medium text-[#1A1A2E]">
+              <h2 className="text-3xl leading-12 font-medium text-[#1A1A2E]">
                 최근 영상
-              </label>
+              </h2>
               <Link
                 to="/video-history"
                 className="flex flex-row items-center gap-1.5"
