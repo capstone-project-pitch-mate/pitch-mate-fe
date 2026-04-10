@@ -43,6 +43,7 @@ export default function SideBar({
   const handleLogout = () => {
     // TODO: 추후 api 연동 및 로그아웃 로직
     console.log("로그아웃");
+    navigate("/login", { replace: true });
   };
 
   const menuItems: MenuItem[] = [
@@ -83,7 +84,7 @@ export default function SideBar({
         isOpen ? "min-w-95" : "min-w-23.25",
       )}
     >
-      <div className="flex h-22 flex-row items-center gap-5 border-b border-[rgba(0,0,0,0.08)] pl-5">
+      <div className="flex h-22 shrink-0 flex-row items-center gap-5 border-b border-[rgba(0,0,0,0.08)] pl-5">
         {isOpen ? (
           <>
             <button className="p-2.5" type="button" onClick={handleChange}>
