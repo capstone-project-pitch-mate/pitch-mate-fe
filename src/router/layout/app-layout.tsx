@@ -14,13 +14,13 @@ export default function AppLayout() {
   // TODO: 인증 가드 추가하기
 
   return (
-    <main className="flex min-h-screen flex-row">
+    <main className="flex h-screen overflow-hidden">
       <SideBar
         pathname={location.pathname}
         isOpen={isOpen}
         handleChange={handleChange}
       />
-      <section className="min-w-0 flex-1">
+      <section className="min-w-0 flex-1 overflow-y-auto">
         <Outlet />
       </section>
     </main>
