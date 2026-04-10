@@ -8,8 +8,10 @@ export default function AppLayout() {
   const [isOpen, setIsOpen] = useState(true);
 
   const handleChange = () => {
-    setIsOpen(!isOpen);
+    setIsOpen((prev) => !prev);
   };
+
+  // TODO: 인증 가드 추가하기
 
   return (
     <main className="flex min-h-screen flex-row">
@@ -18,7 +20,9 @@ export default function AppLayout() {
         isOpen={isOpen}
         handleChange={handleChange}
       />
-      <Outlet />
+      <section className="min-w-0 flex-1">
+        <Outlet />
+      </section>
     </main>
   );
 }
