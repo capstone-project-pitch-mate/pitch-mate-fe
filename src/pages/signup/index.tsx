@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type SubmitEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { Button, InputBar } from "@shared/ui";
@@ -11,7 +11,7 @@ export default function Signup() {
   const [password, setPassword] = useState("");
   const [checkPassword, setCheckPassword] = useState("");
 
-  const handleSignup = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSignup = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     // TODO: 서버 회원가입 api 연동
     // 회원가입 성공 시 로그인 화면으로 이동
@@ -66,6 +66,7 @@ export default function Signup() {
         <Button size="full" color="primary" type="submit" disabled={disabled}>
           가입하기
         </Button>
+        {/* TODO: 이메일 또는 닉네임 중복 여부 검증을 먼저 실행하여 오류 시 에러 메시지 띄우기 */}
       </form>
       <span className="text-xl leading-8 text-[#71718A]">
         이미 계정이 있으신가요?{" "}
