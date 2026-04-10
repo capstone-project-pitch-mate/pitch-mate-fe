@@ -1,4 +1,4 @@
-import IcMic from "@assets/icon/mic.svg";
+import IcMic from "@assets/icon/ic_mic.svg";
 import { cn } from "@utils/cn";
 
 interface LogoProps {
