@@ -139,7 +139,10 @@
     border: none;
     outline-color: #6868ff;
   }
-
+  input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+  }
   a {
     text-decoration: none;
   }

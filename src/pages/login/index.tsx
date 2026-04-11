@@ -1,7 +1,8 @@
 import { useState, type SubmitEvent } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 import { Button, InputBar } from "@shared/ui";
-import { Link, useNavigate } from "react-router-dom";
+import { ROUTES } from "@router/constants";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ export default function Login() {
   const handleLogin = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     // TODO: 서버 로그인 api 연동
-    navigate("/");
+    navigate(ROUTES.DASHBOARD);
   };
 
   return (
@@ -45,7 +46,7 @@ export default function Login() {
       </form>
       <span className="text-xl leading-8 text-[#71718A]">
         계정이 없으신가요?{" "}
-        <Link className="font-medium text-[#6868FF]" to="/signup">
+        <Link className="font-medium text-[#6868FF]" to={ROUTES.SIGNUP}>
           회원가입
         </Link>
       </span>

@@ -37,7 +37,7 @@ export const router = createBrowserRouter([
             element: <VideoHistoryDetail />,
           },
           {
-            path: ROUTES.HISTORY_COMPARE,
+            path: ROUTES.HISTORY_COMPARE(":videoId1", ":videoId2"),
             element: <HistoryCompare />,
           },
           {

@@ -2,6 +2,7 @@ import { useState, type SubmitEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { Button, InputBar } from "@shared/ui";
+import { ROUTES } from "@router/constants";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ export default function Signup() {
     e.preventDefault();
     // TODO: 서버 회원가입 api 연동
     // 회원가입 성공 시 로그인 화면으로 이동
-    navigate("/login");
+    navigate(ROUTES.LOGIN);
   };
 
   const disabled =
@@ -70,7 +71,7 @@ export default function Signup() {
       </form>
       <span className="text-xl leading-8 text-[#71718A]">
         이미 계정이 있으신가요?{" "}
-        <Link className="font-medium text-[#6868FF]" to="/login">
+        <Link className="font-medium text-[#6868FF]" to={ROUTES.LOGIN}>
           로그인
         </Link>
       </span>
