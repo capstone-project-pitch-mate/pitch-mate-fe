@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 import { ROUTES } from "@router/constants";
 
 export default function NotFound() {
@@ -6,9 +8,9 @@ export default function NotFound() {
       <div className="flex min-w-100 flex-col gap-4 rounded-2xl border-2 border-[#6868FF] bg-[#FAFAFF] p-10 shadow-lg">
         <h1 className="text-4xl font-bold text-[#6868FF]">404</h1>
         <p className="text-2xl font-semibold">Page Not Found :)</p>
-        <a href={ROUTES.DASHBOARD} className="mt-4 text-lg text-[#6868FF]">
+        <Link className="mt-4 text-lg text-[#6868FF]" to={ROUTES.DASHBOARD}>
           홈으로 이동
-        </a>
+        </Link>
       </div>
     </div>
   );

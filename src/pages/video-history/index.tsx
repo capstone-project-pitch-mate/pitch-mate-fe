@@ -51,7 +51,6 @@ export default function VideoHistory() {
   };
 
   const handleToCompare = () => {
-    console.log(selectedCompareVideoIds);
     navigate(
       ROUTES.HISTORY_COMPARE(
         String(selectedCompareVideoIds[0]),
