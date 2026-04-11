@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 
 import IcTime from "@assets/icon/ic_time.svg";
+import { formatDate, formatDuration } from "@utils/formatter";
+import { ROUTES } from "@router/constants";
 
 interface VideoCardProps {
   id: number;
@@ -18,17 +20,10 @@ export default function VideoCard({
   createdAt,
 }: VideoCardProps) {
   const navigate = useNavigate();
-  const date = new Date(createdAt);
 
   const handleToVideoDetail = () => {
-    navigate(`/video-history/${id}`);
+    navigate(ROUTES.VIDEO_HISTORY_DETAIL(String(id)));
   };
-
-  const minutes = Math.floor(durationSeconds / 60);
-  const seconds = String(durationSeconds % 60).padStart(2, "0");
-  const formattedDate = date.toLocaleDateString("ko-KR", {
-    timeZone: "Asia/Seoul",
-  });
 
   return (
     <button
@@ -43,9 +38,7 @@ export default function VideoCard({
           alt={`${id}번 영상 썸네일`}
         />
         <div className="absolute right-4 bottom-4 rounded-lg bg-[rgba(0,0,0,0.70)] pt-1 pr-3 pb-1 pl-3">
-          <span className="text-white">
-            {minutes}:{seconds}
-          </span>
+          <span className="text-white">{formatDuration(durationSeconds)}</span>
         </div>
       </div>
 
@@ -55,7 +48,7 @@ export default function VideoCard({
         </span>
         <div className="flex flex-row items-center gap-1.5">
           <img src={IcTime} alt="날짜" />
-          <span className="text-[#71718A]">{formattedDate}</span>
+          <span className="text-[#71718A]">{formatDate(createdAt)}</span>
         </div>
       </div>
     </button>

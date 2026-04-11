@@ -12,6 +12,7 @@ import IcMypage from "@assets/icon/ic_mypage.svg";
 import IcMypageSelected from "@assets/icon/ic_mypage_selected.svg";
 import IcLogout from "@assets/icon/ic_logout.svg";
 import { cn } from "@utils/cn";
+import { ROUTES } from "@router/constants";
 
 import Logo from "../logo";
 
@@ -43,37 +44,37 @@ export default function SideBar({
   const handleLogout = () => {
     // TODO: 추후 api 연동 및 로그아웃 로직
     console.log("로그아웃");
-    navigate("/login", { replace: true });
+    navigate(ROUTES.LOGIN, { replace: true });
   };
 
   const menuItems: MenuItem[] = [
     {
       label: "대시보드",
-      path: "/",
+      path: ROUTES.DASHBOARD,
       defaultIcon: IcDashboard,
       selectedIcon: IcDashboardSelected,
-      isActive: pathname === "/",
+      isActive: pathname === ROUTES.DASHBOARD,
     },
     {
       label: "영상 업로드",
-      path: "/video-upload",
+      path: ROUTES.VIDEO_UPLOAD,
       defaultIcon: IcUpload,
       selectedIcon: IcUploadSelected,
-      isActive: pathname.startsWith("/video-upload"),
+      isActive: pathname.startsWith(ROUTES.VIDEO_UPLOAD),
     },
     {
       label: "히스토리",
-      path: "/video-history",
+      path: ROUTES.VIDEO_HISTORY,
       defaultIcon: IcHistory,
       selectedIcon: IcHistorySelected,
-      isActive: pathname.startsWith("/video-history"),
+      isActive: pathname.startsWith(ROUTES.VIDEO_HISTORY),
     },
     {
       label: "내 정보",
-      path: "/mypage",
+      path: ROUTES.MYPAGE,
       defaultIcon: IcMypage,
       selectedIcon: IcMypageSelected,
-      isActive: pathname.startsWith("/mypage"),
+      isActive: pathname.startsWith(ROUTES.MYPAGE),
     },
   ];
 

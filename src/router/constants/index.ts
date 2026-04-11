@@ -5,6 +5,7 @@ export const ROUTES = {
   VIDEO_UPLOAD: "/video-upload",
   VIDEO_HISTORY: "/video-history",
   VIDEO_HISTORY_DETAIL: (videoId: string) => `/video-history/${videoId}`,
-  HISTORY_COMPARE: "/history-compare",
+  HISTORY_COMPARE: (videoId1: string, videoId2: string) =>
+    `/history-compare/${videoId1}/${videoId2}`,
   MYPAGE: "/mypage",
 };

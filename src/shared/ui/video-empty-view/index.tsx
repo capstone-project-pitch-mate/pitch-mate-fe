@@ -2,13 +2,14 @@ import { useNavigate } from "react-router-dom";
 
 import IcUploadWhite from "@assets/icon/ic_upload_white.svg";
 import IcOverviewTotal from "@assets/icon/ic_overview_total.svg";
+import { ROUTES } from "@router/constants";
 
 import Button from "../button";
 
 export default function VideoEmptyView() {
   const navigate = useNavigate();
   const handleToUpload = () => {
-    navigate("/video-upload");
+    navigate(ROUTES.VIDEO_UPLOAD);
   };
 
   return (

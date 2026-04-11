@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button, Overview, VideoEmptyView } from "@shared/ui";
 import IcUploadWhite from "@assets/icon/ic_upload_white.svg";
 import IcRightArrow from "@assets/icon/ic_right_arrow.svg";
+import { ROUTES } from "@router/constants";
 
 import { DUMMY_DASHBOARD_VIDEO_LIST } from "./constants";
 import { VideoCard } from "./components";
@@ -15,7 +16,7 @@ const AVERAGE_SCORE = 73.2;
 export default function Dashboard() {
   const navigate = useNavigate();
   const handleToUpload = () => {
-    navigate("/video-upload");
+    navigate(ROUTES.VIDEO_UPLOAD);
   };
 
   return (
@@ -54,7 +55,7 @@ export default function Dashboard() {
                 최근 영상
               </h2>
               <Link
-                to="/video-history"
+                to={ROUTES.VIDEO_HISTORY}
                 className="flex flex-row items-center gap-1.5"
               >
                 <span className="text-xl text-[#6868FF]">전체 보기</span>
