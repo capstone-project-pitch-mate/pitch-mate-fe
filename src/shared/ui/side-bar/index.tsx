@@ -1,20 +1,19 @@
 import { useNavigate } from "react-router-dom";
+import {
+  LayoutDashboard,
+  Upload,
+  History,
+  User,
+  LogOut,
+  Menu,
+  ChevronLeft,
+} from "lucide-react";
 
-import IcLeft from "@assets/icon/ic_left.svg";
-import IcHamburger from "@assets/icon/ic_hamburger.svg";
-import IcDashboard from "@assets/icon/ic_dashboard.svg";
-import IcDashboardSelected from "@assets/icon/ic_dashboard_selected.svg";
-import IcUpload from "@assets/icon/ic_upload.svg";
-import IcUploadSelected from "@assets/icon/ic_upload_selected.svg";
-import IcHistory from "@assets/icon/ic_history.svg";
-import IcHistorySelected from "@assets/icon/ic_history_selected.svg";
-import IcMypage from "@assets/icon/ic_mypage.svg";
-import IcMypageSelected from "@assets/icon/ic_mypage_selected.svg";
-import IcLogout from "@assets/icon/ic_logout.svg";
 import { cn } from "@utils/cn";
 import { ROUTES } from "@router/constants";
 
 import Logo from "../logo";
+import type { ReactNode } from "react";
 
 interface SideBarProps {
   pathname: string;
@@ -25,8 +24,8 @@ interface SideBarProps {
 interface MenuItem {
   label: string;
   path: string;
-  defaultIcon: string;
-  selectedIcon: string;
+  defaultIcon: ReactNode;
+  selectedIcon: ReactNode;
   isActive: boolean;
 }
 
@@ -51,29 +50,29 @@ export default function SideBar({
     {
       label: "대시보드",
       path: ROUTES.DASHBOARD,
-      defaultIcon: IcDashboard,
-      selectedIcon: IcDashboardSelected,
+      defaultIcon: <LayoutDashboard size={32} color="#71718A" />,
+      selectedIcon: <LayoutDashboard size={32} color="#6868FF" />,
       isActive: pathname === ROUTES.DASHBOARD,
     },
     {
       label: "영상 업로드",
       path: ROUTES.VIDEO_UPLOAD,
-      defaultIcon: IcUpload,
-      selectedIcon: IcUploadSelected,
+      defaultIcon: <Upload size={32} color="#71718A" />,
+      selectedIcon: <Upload size={32} color="#6868FF" />,
       isActive: pathname.startsWith(ROUTES.VIDEO_UPLOAD),
     },
     {
       label: "히스토리",
       path: ROUTES.VIDEO_HISTORY,
-      defaultIcon: IcHistory,
-      selectedIcon: IcHistorySelected,
+      defaultIcon: <History size={32} color="#71718A" />,
+      selectedIcon: <History size={32} color="#6868FF" />,
       isActive: pathname.startsWith(ROUTES.VIDEO_HISTORY),
     },
     {
       label: "내 정보",
       path: ROUTES.MYPAGE,
-      defaultIcon: IcMypage,
-      selectedIcon: IcMypageSelected,
+      defaultIcon: <User size={32} color="#71718A" />,
+      selectedIcon: <User size={32} color="#6868FF" />,
       isActive: pathname.startsWith(ROUTES.MYPAGE),
     },
   ];
@@ -89,7 +88,7 @@ export default function SideBar({
         {isOpen ? (
           <>
             <button className="p-2.5" type="button" onClick={handleChange}>
-              <img src={IcLeft} alt="사이드바 닫기 버튼" />
+              <ChevronLeft size={32} color="#71718A" />
             </button>
             <div className="flex flex-row items-center gap-3">
               <Logo size="sm" />
@@ -100,7 +99,7 @@ export default function SideBar({
           </>
         ) : (
           <button className="p-2.5" type="button" onClick={handleChange}>
-            <img src={IcHamburger} alt="사이드바 열기 버튼" />
+            <Menu size={32} color="#71718A" />
           </button>
         )}
       </div>
@@ -116,11 +115,7 @@ export default function SideBar({
               type="button"
               onClick={() => handleToPage(item.path)}
             >
-              <img
-                className="h-8 w-8"
-                src={item.isActive ? item.selectedIcon : item.defaultIcon}
-                alt={`${item.label} 버튼`}
-              />
+              {item.isActive ? item.selectedIcon : item.defaultIcon}
               {isOpen && (
                 <h3
                   className={cn(
@@ -139,7 +134,7 @@ export default function SideBar({
           type="button"
           onClick={handleLogout}
         >
-          <img className="h-8 w-8" src={IcLogout} alt="로그아웃 버튼" />
+          <LogOut size={32} color="#71718A" />
           {isOpen && <h3 className="text-2xl text-[#71718A]">로그아웃</h3>}
         </button>
       </div>

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
+import { Upload } from "lucide-react";
 
-import IcUploadWhite from "@assets/icon/ic_upload_white.svg";
 import IcOverviewTotal from "@assets/icon/ic_overview_total.svg";
 import { ROUTES } from "@router/constants";
 
@@ -26,7 +26,7 @@ export default function VideoEmptyView() {
       </div>
       <Button size="lg" handleClick={handleToUpload}>
         <div className="flex flex-row items-center gap-2.5">
-          <img src={IcUploadWhite} aria-hidden="true" />
+          <Upload color="#fff" />
           <span className="text-xl leading-8 font-medium text-white">
             첫 영상 업로드하기
           </span>

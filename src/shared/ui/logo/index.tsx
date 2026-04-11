@@ -1,4 +1,5 @@
-import IcMic from "@assets/icon/ic_mic.svg";
+import { Mic } from "lucide-react";
+
 import { cn } from "@utils/cn";
 
 interface LogoProps {
@@ -16,11 +17,7 @@ export default function Logo({ size = "sm", hasShadow = false }: LogoProps) {
           "shadow-[0_18px_28px_-6px_rgba(104,104,255,0.32),0_8px_14px_-6px_rgba(104,104,255,0.28)]",
       )}
     >
-      <img
-        className={size === "sm" ? "h-6 w-6" : "h-11 w-11"}
-        src={IcMic}
-        alt="PitchMate Logo"
-      />
+      <Mic size={size === "sm" ? 24 : 44} color="#fff" />
     </div>
   );
 }
