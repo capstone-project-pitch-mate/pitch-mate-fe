@@ -104,6 +104,12 @@ export default function VideoHistory() {
               </Button>
             ))}
         </div>
+        {compareMode && (
+          <div className="flex flex-row gap-3 rounded-2xl bg-[rgba(104,104,255,0.05)] p-6 text-[#6868FF]">
+            <GitCompare />
+            <p className="text-lg">{`비교할 두 회차를 선택해주세요 (${selectedCompareVideoIds.length}/2)`}</p>
+          </div>
+        )}
 
         {isEmpty ? (
           <VideoEmptyView />
@@ -112,7 +118,6 @@ export default function VideoHistory() {
             {filteredList.map((history) => {
               const selectedOrder =
                 selectedCompareVideoIds.indexOf(history.videoId) + 1;
-
               return (
                 <HistoryCard
                   key={history.videoId}
