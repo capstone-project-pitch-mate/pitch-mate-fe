@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { Camera, User, Save, Mail, Calendar } from "lucide-react";
 
 import { Button, InputBar } from "@shared/ui";
+import { MAX_PROFILE_IMAGE_SIZE } from "@shared/constants";
 
 // TODO: 서버에서 정보 받아오기
 const DUMMY_NICKNAME = "김발표";
@@ -40,6 +41,12 @@ export default function EditProfileSection() {
 
     if (!file.type.startsWith("image/")) {
       alert("이미지 파일만 선택할 수 있습니다.");
+      e.target.value = "";
+      return;
+    }
+
+    if (file.size > MAX_PROFILE_IMAGE_SIZE) {
+      alert("5MB 이하 이미지 파일만 선택할 수 있습니다.");
       e.target.value = "";
       return;
     }
@@ -159,7 +166,7 @@ export default function EditProfileSection() {
 
       <div className="flex self-end">
         <Button
-          type="submit"
+          type="button"
           disabled={disabled}
           handleClick={handleEditProfile}
         >
