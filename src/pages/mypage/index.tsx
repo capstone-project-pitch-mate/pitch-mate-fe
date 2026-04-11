@@ -1,4 +1,5 @@
 import { Overview } from "@shared/ui";
+import { EditProfileSection } from "./components";
 
 const TOTAL_VIDEO_COUNT = 4;
 const COMPLETED_COUNT = 3;
@@ -15,7 +16,7 @@ export default function MyPage() {
         completedCount={COMPLETED_COUNT}
         averageScore={AVERAGE_SCORE}
       />
-      <section className="rounded-2xl p-9 shadow-[0_2px_5px_0_rgba(0,0,0,0.10),0_2px_3px_-2px_rgba(0,0,0,0.10)]"></section>
+      <EditProfileSection />
     </div>
   );
 }

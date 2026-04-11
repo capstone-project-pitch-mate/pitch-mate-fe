@@ -1,11 +1,13 @@
 import { cn } from "@utils/cn";
-import type { HTMLInputTypeAttribute } from "react";
+import type { HTMLInputTypeAttribute, ReactNode } from "react";
 
 interface InputBarProps {
-  label?: string;
+  label?: ReactNode;
   type?: HTMLInputTypeAttribute;
   text: string;
   placeholder: string;
+  disabled?: boolean;
+  maxLength?: number;
   isError?: boolean;
   error?: string;
   handleChangeText: (text: string) => void;
@@ -16,6 +18,8 @@ export default function InputBar({
   type = "text",
   text,
   placeholder,
+  disabled,
+  maxLength,
   isError,
   error,
   handleChangeText,
@@ -41,6 +45,8 @@ export default function InputBar({
         value={text}
         onChange={(e) => handleChangeText(e.target.value)}
         placeholder={placeholder}
+        disabled={disabled}
+        maxLength={maxLength}
       />
     </div>
   );
