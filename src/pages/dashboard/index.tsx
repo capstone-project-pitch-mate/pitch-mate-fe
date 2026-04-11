@@ -1,8 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
+import { Upload, ArrowRight } from "lucide-react";
 
 import { Button, Overview, VideoEmptyView } from "@shared/ui";
-import IcUploadWhite from "@assets/icon/ic_upload_white.svg";
-import IcRightArrow from "@assets/icon/ic_right_arrow.svg";
 import { ROUTES } from "@router/constants";
 
 import { DUMMY_DASHBOARD_VIDEO_LIST } from "./constants";
@@ -32,7 +31,7 @@ export default function Dashboard() {
         </div>
         <Button size="lg" handleClick={handleToUpload}>
           <div className="flex flex-row items-center gap-2.5">
-            <img src={IcUploadWhite} alt="업로드 버튼" />
+            <Upload />
             <span className="text-xl leading-8 font-medium text-white">
               새 영상 업로드
             </span>
@@ -59,7 +58,7 @@ export default function Dashboard() {
                 className="flex flex-row items-center gap-1.5"
               >
                 <span className="text-xl text-[#6868FF]">전체 보기</span>
-                <img src={IcRightArrow} alt="전체 보기" />
+                <ArrowRight color="#6868FF" />
               </Link>
             </div>
             <div className="grid grid-cols-2 grid-rows-2 gap-8">

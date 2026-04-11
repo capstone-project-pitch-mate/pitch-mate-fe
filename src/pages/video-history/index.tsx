@@ -20,7 +20,7 @@ export default function VideoHistory() {
     history.videoTitle.toLowerCase().includes(search.trim().toLowerCase()),
   );
 
-  const isEmpty = DUMMY_HISTORY_LIST.length === 0;
+  const isEmpty = DUMMY_HISTORY_LIST.length !== 0;
 
   const handleCompareMode = () => {
     setCompareMode((prev) => {

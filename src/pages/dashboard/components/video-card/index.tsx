@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
+import { Clock } from "lucide-react";
 
-import IcTime from "@assets/icon/ic_time.svg";
 import { formatDate, formatDuration } from "@utils/formatter";
 import { ROUTES } from "@router/constants";
 
@@ -47,8 +47,10 @@ export default function VideoCard({
           {title}
         </span>
         <div className="flex flex-row items-center gap-1.5">
-          <img src={IcTime} alt="날짜" />
-          <span className="text-[#71718A]">{formatDate(createdAt)}</span>
+          <Clock color="#71718A" size={20} />
+          <span className="text-lg text-[#71718A]">
+            {formatDate(createdAt)}
+          </span>
         </div>
       </div>
     </button>
