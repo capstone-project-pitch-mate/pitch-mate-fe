@@ -92,9 +92,7 @@ export default function SideBar({
             </button>
             <div className="flex flex-row items-center gap-3">
               <Logo size="sm" />
-              <h2 className="text-[28px] font-bold text-[#6868FF]">
-                PitchMate
-              </h2>
+              <h2 className="text-3xl font-bold text-[#6868FF]">PitchMate</h2>
             </div>
           </>
         ) : (
