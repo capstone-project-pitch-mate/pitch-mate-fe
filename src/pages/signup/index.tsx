@@ -20,6 +20,7 @@ export default function Signup() {
 
   const handleSignup = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setErrorMessage("");
 
     signup(
       {

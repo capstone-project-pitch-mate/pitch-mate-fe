@@ -53,8 +53,14 @@ type ApiMethodConfig<TData = unknown> = Omit<
   "url" | "method"
 >;
 
+const baseURL = import.meta.env.VITE_API_BASE_URL;
+
+if (import.meta.env.PROD && !baseURL) {
+  throw new Error("VITE_API_BASE_URL is required in production.");
+}
+
 export const axiosInstance: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL ?? "",
+  baseURL: baseURL ?? "",
   timeout: DEFAULT_TIMEOUT_MS,
   headers: {
     "Content-Type": "application/json",
@@ -153,15 +159,11 @@ export const apiInstance = {
     config?: ApiMethodConfig<TBody>,
   ) => requestByMethod<TResult, TBody>("DELETE", url, config),
 
-  head: <TResult = unknown>(
-    url: string,
-    config?: ApiMethodConfig<never>,
-  ) => requestByMethod<TResult, never>("HEAD", url, config),
+  head: <TResult = unknown>(url: string, config?: ApiMethodConfig<never>) =>
+    requestByMethod<TResult, never>("HEAD", url, config),
 
-  options: <TResult = unknown>(
-    url: string,
-    config?: ApiMethodConfig<never>,
-  ) => requestByMethod<TResult, never>("OPTIONS", url, config),
+  options: <TResult = unknown>(url: string, config?: ApiMethodConfig<never>) =>
+    requestByMethod<TResult, never>("OPTIONS", url, config),
 };
 
 export default apiInstance;
