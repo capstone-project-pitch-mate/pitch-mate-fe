@@ -68,6 +68,10 @@ export const axiosInstance: AxiosInstance = axios.create({
 });
 
 const toApiError = (error: unknown): ApiError => {
+  if (error instanceof ApiError) {
+    return error;
+  }
+
   if (axios.isAxiosError(error)) {
     const data = error.response?.data as ApiErrorResponse | undefined;
     const status = data?.status ?? error.response?.status ?? 0;
