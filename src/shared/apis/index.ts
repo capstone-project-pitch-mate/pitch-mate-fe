@@ -8,6 +8,12 @@ import axios, {
 const DEFAULT_TIMEOUT_MS = 10_000;
 
 export type ApiRequestConfig<TData = unknown> = AxiosRequestConfig<TData>;
+export interface ApiResponse<TResult = unknown> {
+  code: number;
+  status: number;
+  message: string;
+  result: TResult;
+}
 
 type ApiMethodConfig<TData = unknown> = Omit<
   ApiRequestConfig<TData>,
@@ -22,24 +28,24 @@ export const axiosInstance: AxiosInstance = axios.create({
   },
 });
 
-const request = async <TResponse = unknown, TData = unknown>(
+const request = async <TResult = unknown, TData = unknown>(
   config: ApiRequestConfig<TData>,
-): Promise<TResponse> => {
+): Promise<ApiResponse<TResult>> => {
   const response = await axiosInstance.request<
-    TResponse,
-    AxiosResponse<TResponse>,
+    ApiResponse<TResult>,
+    AxiosResponse<ApiResponse<TResult>>,
     TData
   >(config);
 
   return response.data;
 };
 
-const requestByMethod = <TResponse = unknown, TData = unknown>(
+const requestByMethod = <TResult = unknown, TData = unknown>(
   method: Method,
   url: string,
   config?: ApiMethodConfig<TData>,
-): Promise<TResponse> =>
-  request<TResponse, TData>({
+): Promise<ApiResponse<TResult>> =>
+  request<TResult, TData>({
     ...config,
     method,
     url,
@@ -48,43 +54,43 @@ const requestByMethod = <TResponse = unknown, TData = unknown>(
 export const apiInstance = {
   request,
 
-  get: <TResponse = unknown, TParams = unknown>(
+  get: <TResult = unknown, TParams = unknown>(
     url: string,
     config?: ApiMethodConfig<never> & { params?: TParams },
-  ) => requestByMethod<TResponse, never>("GET", url, config),
+  ) => requestByMethod<TResult, never>("GET", url, config),
 
-  post: <TResponse = unknown, TBody = unknown>(
+  post: <TResult = unknown, TBody = unknown>(
     url: string,
     data?: TBody,
     config?: ApiMethodConfig<TBody>,
-  ) => requestByMethod<TResponse, TBody>("POST", url, { ...config, data }),
+  ) => requestByMethod<TResult, TBody>("POST", url, { ...config, data }),
 
-  put: <TResponse = unknown, TBody = unknown>(
+  put: <TResult = unknown, TBody = unknown>(
     url: string,
     data?: TBody,
     config?: ApiMethodConfig<TBody>,
-  ) => requestByMethod<TResponse, TBody>("PUT", url, { ...config, data }),
+  ) => requestByMethod<TResult, TBody>("PUT", url, { ...config, data }),
 
-  patch: <TResponse = unknown, TBody = unknown>(
+  patch: <TResult = unknown, TBody = unknown>(
     url: string,
     data?: TBody,
     config?: ApiMethodConfig<TBody>,
-  ) => requestByMethod<TResponse, TBody>("PATCH", url, { ...config, data }),
+  ) => requestByMethod<TResult, TBody>("PATCH", url, { ...config, data }),
 
-  delete: <TResponse = unknown, TBody = unknown>(
+  delete: <TResult = unknown, TBody = unknown>(
     url: string,
     config?: ApiMethodConfig<TBody>,
-  ) => requestByMethod<TResponse, TBody>("DELETE", url, config),
+  ) => requestByMethod<TResult, TBody>("DELETE", url, config),
 
-  head: <TResponse = unknown>(
+  head: <TResult = unknown>(
     url: string,
     config?: ApiMethodConfig<never>,
-  ) => requestByMethod<TResponse, never>("HEAD", url, config),
+  ) => requestByMethod<TResult, never>("HEAD", url, config),
 
-  options: <TResponse = unknown>(
+  options: <TResult = unknown>(
     url: string,
     config?: ApiMethodConfig<never>,
-  ) => requestByMethod<TResponse, never>("OPTIONS", url, config),
+  ) => requestByMethod<TResult, never>("OPTIONS", url, config),
 };
 
 export default apiInstance;
