@@ -1,5 +1,7 @@
-import { cn } from "@utils/cn";
 import type { HTMLInputTypeAttribute, ReactNode } from "react";
+
+import { HANGUL_REGEX } from "@shared/constants";
+import { cn } from "@utils/cn";
 
 interface InputBarProps {
   label?: ReactNode;
@@ -43,7 +45,14 @@ export default function InputBar({
         )}
         type={type}
         value={text}
-        onChange={(e) => handleChangeText(e.target.value)}
+        onChange={(e) => {
+          const nextText =
+            type === "password"
+              ? e.target.value.replace(HANGUL_REGEX, "")
+              : e.target.value;
+
+          handleChangeText(nextText);
+        }}
         placeholder={placeholder}
         disabled={disabled}
         maxLength={maxLength}

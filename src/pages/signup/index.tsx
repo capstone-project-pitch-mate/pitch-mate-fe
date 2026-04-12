@@ -1,29 +1,50 @@
 import { useState, type SubmitEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 
 import { Button, InputBar } from "@shared/ui";
 import { ROUTES } from "@router/constants";
+import { EMAIL_REGEX } from "@shared/constants";
+
+import { useSignupMutation } from "./hooks";
 
 export default function Signup() {
-  const navigate = useNavigate();
-
   const [email, setEmail] = useState("");
   const [nickname, setNickname] = useState("");
   const [password, setPassword] = useState("");
   const [checkPassword, setCheckPassword] = useState("");
 
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const { signup, isPendingSignup } = useSignupMutation();
+
   const handleSignup = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: 서버 회원가입 api 연동
-    // 회원가입 성공 시 로그인 화면으로 이동
-    navigate(ROUTES.LOGIN);
+
+    signup(
+      {
+        email: email.trim(),
+        nickname: nickname.trim(),
+        password: password.trim(),
+      },
+      {
+        onError: (error) => {
+          setErrorMessage(error.message);
+        },
+      },
+    );
   };
 
+  const trimmedEmail = email.trim();
+  const isEmailInvalid = trimmedEmail !== "" && !EMAIL_REGEX.test(trimmedEmail);
+
   const disabled =
-    email.trim() === "" ||
+    trimmedEmail === "" ||
+    isEmailInvalid ||
     nickname.trim() === "" ||
     password.trim() === "" ||
-    password !== checkPassword;
+    password !== checkPassword ||
+    isPendingSignup;
 
   return (
     <div className="flex flex-col items-center gap-10">
@@ -41,6 +62,8 @@ export default function Signup() {
           text={email}
           handleChangeText={setEmail}
           placeholder="email@example.com"
+          isError={isEmailInvalid}
+          error="이메일 형식이 올바르지 않습니다."
         />
         <InputBar
           label="닉네임"
@@ -64,10 +87,22 @@ export default function Signup() {
           isError={password !== checkPassword && checkPassword.trim() !== ""}
           error="비밀번호와 일치하지 않습니다."
         />
-        <Button size="full" color="primary" type="submit" disabled={disabled}>
-          가입하기
-        </Button>
-        {/* TODO: 이메일 또는 닉네임 중복 여부 검증을 먼저 실행하여 오류 시 에러 메시지 띄우기 */}
+        <div className="relative">
+          <Button size="full" color="primary" type="submit" disabled={disabled}>
+            {isPendingSignup ? (
+              <div className="flex items-center justify-center">
+                <Loader2 className="animate-spin" size={24} />
+              </div>
+            ) : (
+              "가입하기"
+            )}
+          </Button>
+          {errorMessage && (
+            <span className="text-md absolute right-0 -bottom-7.5 font-medium text-[#FF9496]">
+              {errorMessage}
+            </span>
+          )}
+        </div>
       </form>
       <span className="text-xl leading-8 text-[#71718A]">
         이미 계정이 있으신가요?{" "}

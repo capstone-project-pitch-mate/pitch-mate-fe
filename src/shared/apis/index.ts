@@ -15,6 +15,39 @@ export interface ApiResponse<TResult = unknown> {
   result: TResult;
 }
 
+interface ApiErrorResponse {
+  code?: number;
+  status?: number;
+  message?: string;
+  [key: string]: unknown;
+}
+
+export class ApiError extends Error {
+  code: number;
+  status: number;
+  payload?: unknown;
+
+  constructor({
+    message,
+    code,
+    status,
+    payload,
+    cause,
+  }: {
+    message: string;
+    code: number;
+    status: number;
+    payload?: unknown;
+    cause?: unknown;
+  }) {
+    super(message, { cause });
+    this.name = "ApiError";
+    this.code = code;
+    this.status = status;
+    this.payload = payload;
+  }
+}
+
 type ApiMethodConfig<TData = unknown> = Omit<
   ApiRequestConfig<TData>,
   "url" | "method"
@@ -28,16 +61,54 @@ export const axiosInstance: AxiosInstance = axios.create({
   },
 });
 
+const toApiError = (error: unknown): ApiError => {
+  if (axios.isAxiosError(error)) {
+    const data = error.response?.data as ApiErrorResponse | undefined;
+    const status = data?.status ?? error.response?.status ?? 0;
+    const code = data?.code ?? status;
+    const message = data?.message ?? error.message;
+
+    return new ApiError({
+      message,
+      code,
+      status,
+      payload: data,
+      cause: error,
+    });
+  }
+
+  if (error instanceof Error) {
+    return new ApiError({
+      message: error.message,
+      code: 0,
+      status: 0,
+      payload: error,
+      cause: error,
+    });
+  }
+
+  return new ApiError({
+    message: "Unknown error occurred.",
+    code: 0,
+    status: 0,
+    payload: error,
+  });
+};
+
 const request = async <TResult = unknown, TData = unknown>(
   config: ApiRequestConfig<TData>,
 ): Promise<ApiResponse<TResult>> => {
-  const response = await axiosInstance.request<
-    ApiResponse<TResult>,
-    AxiosResponse<ApiResponse<TResult>>,
-    TData
-  >(config);
+  try {
+    const response = await axiosInstance.request<
+      ApiResponse<TResult>,
+      AxiosResponse<ApiResponse<TResult>>,
+      TData
+    >(config);
 
-  return response.data;
+    return response.data;
+  } catch (error) {
+    throw toApiError(error);
+  }
 };
 
 const requestByMethod = <TResult = unknown, TData = unknown>(
