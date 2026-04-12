@@ -1,5 +1,6 @@
-import { cn } from "@utils/cn";
 import type { HTMLInputTypeAttribute, ReactNode } from "react";
+
+import { cn } from "@utils/cn";
 
 interface InputBarProps {
   label?: ReactNode;
