@@ -4,6 +4,12 @@
 @import "tailwindcss";
 
 @layer base {
+  html {
+    /* 전체적인 사이즈 조정을 위해 수정
+    전역적으로 rem 기반 값들 축소 */
+    font-size: 85%;
+  }
+
   body {
     font-family:
       Pretendard,
