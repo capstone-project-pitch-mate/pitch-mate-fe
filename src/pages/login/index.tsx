@@ -54,7 +54,12 @@ export default function Login() {
           placeholder="비밀번호 입력"
         />
         <div className="relative">
-          <Button size="full" color="primary" type="submit">
+          <Button
+            size="full"
+            color="primary"
+            type="submit"
+            disabled={isPendingLogin}
+          >
             {isPendingLogin ? (
               <div className="flex items-center justify-center">
                 <Loader2 className="animate-spin" size={24} />
