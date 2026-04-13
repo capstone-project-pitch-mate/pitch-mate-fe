@@ -1,17 +1,21 @@
 import { useState } from "react";
-import { Outlet, useLocation } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 
+import { ROUTES } from "@router/constants";
 import { SideBar } from "@shared/ui";
 
 export default function AppLayout() {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(true);
+  const accessToken = localStorage.getItem("accessToken");
 
   const handleChange = () => {
     setIsOpen((prev) => !prev);
   };
 
-  // TODO: 인증 가드 추가하기
+  if (!accessToken) {
+    return <Navigate to={ROUTES.LOGIN} replace />;
+  }
 
   return (
     <main className="flex h-screen overflow-hidden">

@@ -1,6 +1,11 @@
 import apiInstance from "@shared/apis";
 
-import type { SignupResponse, SignupRequestBody } from "./types";
+import type {
+  SignupResponse,
+  SignupRequestBody,
+  LoginRequestBoby,
+  LoginResponse,
+} from "./types";
 import { AUTH_URL } from "./constants";
 
 export const signupApi = async ({
@@ -13,6 +18,18 @@ export const signupApi = async ({
     {
       email,
       nickname,
+      password,
+    },
+  );
+
+  return response.result;
+};
+
+export const loginApi = async ({ email, password }: LoginRequestBoby) => {
+  const response = await apiInstance.post<LoginResponse, LoginRequestBoby>(
+    AUTH_URL.LOGIN,
+    {
+      email,
       password,
     },
   );

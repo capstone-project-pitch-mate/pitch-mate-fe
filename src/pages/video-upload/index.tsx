@@ -113,7 +113,7 @@ export default function VideoUpload() {
     videoTitle.trim() === "" || videoDesc.trim() === "" || videoFile === null;
 
   return (
-    <div className="flex flex-1 justify-center p-9 pb-50">
+    <div className="flex min-w-300 flex-1 justify-center p-9 pb-50">
       <div className="flex max-w-300 min-w-250 flex-1 flex-col gap-9">
         <UploadTopContent
           uploadType={uploadType}
