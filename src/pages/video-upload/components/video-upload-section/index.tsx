@@ -65,10 +65,10 @@ export default function VideoUploadSection({
             </div>
             <div className="flex flex-col items-center gap-2 text-center">
               <p className="text-2xl leading-9 font-bold">
-                영상 파일을 드래그하거나 클릭해 업로드하세요
+                영상 파일을 드래그하거나 아래 버튼을 클릭해 업로드하세요
               </p>
               <p className="text-xl leading-8 font-semibold text-[#71718A]">
-                MP4, MOV, AVI (최대 500MB)
+                MP4, MOV, AVI, WEBM (최대 500MB)
               </p>
             </div>
             <Button size="lg" color="secondary" handleClick={openFileDialog}>
@@ -81,7 +81,7 @@ export default function VideoUploadSection({
       <input
         ref={fileInputRef}
         type="file"
-        accept=".mp4,.mov,.avi,video/mp4,video/quicktime,video/x-msvideo"
+        accept=".mp4,.mov,.avi,.webm,video/mp4,video/quicktime,video/x-msvideo,video/webm"
         className="hidden"
         onChange={handleChangeFile}
       />

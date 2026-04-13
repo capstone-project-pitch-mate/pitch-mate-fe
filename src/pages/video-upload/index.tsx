@@ -70,7 +70,7 @@ export default function VideoUpload() {
 
   const handleSelectUploadFile = (file: File) => {
     if (!isAllowedVideoFile(file)) {
-      alert("MP4, MOV, AVI 파일만 업로드할 수 있습니다.");
+      alert("MP4, MOV, AVI, WEBM 파일만 업로드할 수 있습니다.");
       return;
     }
 

@@ -5,8 +5,14 @@ export const ALLOWED_VIDEO_MIME_TYPES = [
   "video/mp4",
   "video/quicktime", // mov
   "video/x-msvideo", // avi
+  "video/webm", // webm
 ] as const;
 
-export const ALLOWED_VIDEO_EXTENSIONS = [".mp4", ".mov", ".avi"] as const;
+export const ALLOWED_VIDEO_EXTENSIONS = [
+  ".mp4",
+  ".mov",
+  ".avi",
+  ".webm",
+] as const;
 
 export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
