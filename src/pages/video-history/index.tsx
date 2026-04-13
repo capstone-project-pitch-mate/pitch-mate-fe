@@ -69,9 +69,7 @@ export default function VideoHistory() {
       <div className="flex flex-col gap-10 p-10">
         <div className="flex flex-row items-center justify-between">
           <div className="flex flex-col gap-1.5">
-            <h1 className="text-4xl leading-14 font-medium text-[#1A1A2E]">
-              히스토리
-            </h1>
+            <h1 className="text-4xl leading-14 font-medium">히스토리</h1>
             <p className="text-2xl leading-9 text-[#71718A]">
               영상별 피드백을 확인하고 비교하세요.
             </p>

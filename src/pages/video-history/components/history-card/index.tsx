@@ -51,7 +51,7 @@ export default function HistoryCard({
 
         <div className="flex flex-col gap-2">
           <div className="flex flex-row items-center gap-4">
-            <p className="text-xl font-semibold text-[#1A1A2E]">{videoTitle}</p>
+            <p className="text-xl font-semibold">{videoTitle}</p>
             {isAnalyzing && (
               <div className="flex flex-row items-center gap-2 rounded-xl border border-[#FEE685] pt-1 pr-2 pb-1 pl-2 text-[#FE9A00]">
                 <Loader2 className="animate-spin" size={20} />

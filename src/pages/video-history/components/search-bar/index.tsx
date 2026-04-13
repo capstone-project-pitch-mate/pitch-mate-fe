@@ -14,7 +14,7 @@ export default function SearchBar({
       <div className="flex h-14 w-full max-w-150 min-w-100 flex-row items-center gap-3 rounded-xl bg-[#F5F5FA] pr-4 pl-4">
         <Search color="#71718A" />
         <input
-          className="w-full text-xl text-[#1A1A2E] placeholder:text-[#71718A]"
+          className="w-full text-xl placeholder:text-[#71718A]"
           type="search"
           placeholder="영상 검색..."
           value={search}

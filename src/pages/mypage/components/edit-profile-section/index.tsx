@@ -93,9 +93,7 @@ export default function EditProfileSection() {
   return (
     <section className="flex flex-col gap-9 rounded-2xl p-9 shadow-[0_2px_5px_0_rgba(0,0,0,0.10),0_2px_3px_-2px_rgba(0,0,0,0.10)]">
       <div className="flex flex-col gap-3">
-        <h3 className="text-2xl leading-6 font-medium text-[#1A1A2E]">
-          프로필 수정
-        </h3>
+        <h3 className="text-2xl leading-6 font-semibold">프로필 수정</h3>
         <p className="text-2xl leading-6 text-[#71718A]">
           닉네임과 프로필 이미지를 수정할 수 있습니다.
         </p>
@@ -118,9 +116,7 @@ export default function EditProfileSection() {
         />
 
         <div className="flex flex-col gap-2">
-          <span className="text-3xl font-medium text-[#1A1A2E]">
-            {DUMMY_NICKNAME}
-          </span>
+          <span className="text-3xl font-medium">{DUMMY_NICKNAME}</span>
           <span className="text-xl text-[#71718A]">{DUMMY_EMAIL}</span>
         </div>
       </div>

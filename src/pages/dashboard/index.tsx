@@ -22,7 +22,7 @@ export default function Dashboard() {
     <div className="flex min-h-screen min-w-232 flex-col gap-13 p-10">
       <section className="flex flex-row items-center justify-between">
         <div className="flex flex-col gap-1.5">
-          <h1 className="text-4xl leading-14 font-medium text-[#1A1A2E]">
+          <h1 className="text-4xl leading-14 font-medium">
             안녕하세요, {NICKNAME}님!
           </h1>
           <p className="text-2xl leading-9 text-[#71718A]">
@@ -50,9 +50,7 @@ export default function Dashboard() {
         ) : (
           <>
             <div className="flex flex-row items-center justify-between">
-              <h2 className="text-3xl leading-12 font-medium text-[#1A1A2E]">
-                최근 영상
-              </h2>
+              <h2 className="text-3xl leading-12 font-medium">최근 영상</h2>
               <Link
                 to={ROUTES.VIDEO_HISTORY}
                 className="flex flex-row items-center gap-1.5"

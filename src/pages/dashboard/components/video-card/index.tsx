@@ -43,7 +43,7 @@ export default function VideoCard({
       </div>
 
       <div className="flex flex-col gap-2.5">
-        <span className="overflow-hidden text-start text-2xl leading-9 font-semibold text-ellipsis text-[#1A1A2E]">
+        <span className="overflow-hidden text-start text-2xl leading-9 font-semibold text-ellipsis">
           {title}
         </span>
         <div className="flex flex-row items-center gap-1.5">

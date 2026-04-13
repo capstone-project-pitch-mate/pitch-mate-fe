@@ -27,7 +27,7 @@ export default function Button({
   const buttonColor =
     color === "primary"
       ? "bg-[#6868FF] text-white"
-      : "bg-white text-[#1A1A2E] border border-[rgba(0,0,0,0.08)]";
+      : "bg-white   border border-[rgba(0,0,0,0.08)]";
 
   return (
     <button

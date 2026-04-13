@@ -19,9 +19,7 @@ export default function Login() {
   return (
     <div className="flex flex-col items-center gap-10">
       <div className="flex flex-col items-center gap-2.5">
-        <h4 className="text-2xl leading-6 font-medium text-[#1A1A2E]">
-          로그인
-        </h4>
+        <h4 className="text-2xl leading-6 font-medium">로그인</h4>
         <p className="text-2xl leading-9 text-[#71718A]">
           계정에 로그인하여 개선해보세요
         </p>
