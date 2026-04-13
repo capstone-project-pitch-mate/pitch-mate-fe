@@ -50,9 +50,7 @@ export default function Signup() {
   return (
     <div className="flex flex-col items-center gap-10">
       <div className="flex flex-col items-center gap-2.5">
-        <h4 className="text-2xl leading-6 font-medium text-[#1A1A2E]">
-          회원가입
-        </h4>
+        <h4 className="text-2xl leading-6 font-medium">회원가입</h4>
         <p className="text-2xl leading-9 text-[#71718A]">
           무료로 시작하고 실력을 키워보세요
         </p>

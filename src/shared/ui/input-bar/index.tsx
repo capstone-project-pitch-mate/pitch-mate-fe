@@ -29,9 +29,7 @@ export default function InputBar({
     <div className="flex w-full flex-col gap-3">
       {label && (
         <div className="flex flex-row items-center gap-4">
-          <label className="text-xl leading-6 font-medium text-[#1A1A2E]">
-            {label}
-          </label>
+          <label className="text-xl leading-6 font-medium">{label}</label>
           {isError && (
             <span className="text-md font-medium text-[#FF9496]">{error}</span>
           )}

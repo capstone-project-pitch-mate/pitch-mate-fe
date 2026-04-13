@@ -16,7 +16,7 @@ export default function VideoEmptyView() {
     <div className="flex min-h-150 flex-1 flex-col items-center justify-center gap-12">
       <img className="h-30 w-30" src={IcOverviewTotal} alt="총 연습 영상" />
       <div className="flex flex-col items-center gap-3">
-        <span className="text-3xl leading-10 font-medium text-[#1A1A2E]">
+        <span className="text-3xl leading-10 font-medium">
           아직 업로드된 영상이 없어요
         </span>
         <p className="text-xl leading-9 text-[#71718A]">
