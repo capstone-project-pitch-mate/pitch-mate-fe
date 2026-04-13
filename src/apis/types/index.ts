@@ -1,1 +1,6 @@
-export type { SignupRequestBody, SignupResponse } from "./auth";
+export type {
+  SignupRequestBody,
+  SignupResponse,
+  LoginRequestBoby,
+  LoginResponse,
+} from "./auth";

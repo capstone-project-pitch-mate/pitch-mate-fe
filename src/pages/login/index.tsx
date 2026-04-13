@@ -1,19 +1,34 @@
 import { useState, type SubmitEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 
 import { Button, InputBar } from "@shared/ui";
 import { ROUTES } from "@router/constants";
 
-export default function Login() {
-  const navigate = useNavigate();
+import { useLoginMutation } from "./hooks";
 
+export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const { login, isPendingLogin } = useLoginMutation();
 
   const handleLogin = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: 서버 로그인 api 연동
-    navigate(ROUTES.DASHBOARD);
+    setErrorMessage("");
+
+    login(
+      {
+        email: email.trim(),
+        password: password.trim(),
+      },
+      {
+        onError: (error) => {
+          setErrorMessage(error.message);
+        },
+      },
+    );
   };
 
   return (
@@ -38,9 +53,22 @@ export default function Login() {
           handleChangeText={setPassword}
           placeholder="비밀번호 입력"
         />
-        <Button size="full" color="primary" type="submit">
-          로그인
-        </Button>
+        <div className="relative">
+          <Button size="full" color="primary" type="submit">
+            {isPendingLogin ? (
+              <div className="flex items-center justify-center">
+                <Loader2 className="animate-spin" size={24} />
+              </div>
+            ) : (
+              "로그인"
+            )}
+          </Button>
+          {errorMessage && (
+            <span className="text-md absolute right-0 -bottom-7.5 font-medium text-[#FF9496]">
+              {errorMessage}
+            </span>
+          )}
+        </div>
       </form>
       <span className="text-xl leading-8 text-[#71718A]">
         계정이 없으신가요?{" "}
