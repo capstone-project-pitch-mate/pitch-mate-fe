@@ -84,9 +84,14 @@ export default function SideBar({
         isOpen ? "w-95" : "w-23.25",
       )}
     >
-      <div className="flex h-22 shrink-0 flex-row items-center gap-5 border-b border-[rgba(0,0,0,0.08)] pl-5">
+      <div
+        className={cn(
+          "flex h-22 shrink-0 border-b border-[rgba(0,0,0,0.08)]",
+          !isOpen && "justify-center",
+        )}
+      >
         {isOpen ? (
-          <>
+          <div className="flex flex-row gap-5 pl-5">
             <button className="p-2.5" type="button" onClick={handleChange}>
               <ChevronLeft size={32} color="#71718A" />
             </button>
@@ -94,7 +99,7 @@ export default function SideBar({
               <Logo size="sm" />
               <h2 className="text-3xl font-bold text-[#6868FF]">PitchMate</h2>
             </div>
-          </>
+          </div>
         ) : (
           <button className="p-2.5" type="button" onClick={handleChange}>
             <Menu size={32} color="#71718A" />
@@ -107,8 +112,9 @@ export default function SideBar({
             <button
               key={item.path}
               className={cn(
-                "flex h-17 w-full flex-row items-center gap-4.5 pr-4.5 pl-4.5",
+                "flex h-17 w-full flex-row items-center gap-4.5",
                 item.isActive && "rounded-2xl bg-[rgba(104,104,255,0.10)]",
+                isOpen ? "pr-4.5 pl-4.5" : "justify-center",
               )}
               type="button"
               onClick={() => handleToPage(item.path)}
@@ -128,7 +134,10 @@ export default function SideBar({
           ))}
         </div>
         <button
-          className="flex h-22 w-full flex-row items-center gap-4.5 border-t border-[rgba(0,0,0,0.08)] pr-7.5 pl-7.5"
+          className={cn(
+            "flex h-22 w-full flex-row items-center gap-4.5 border-t border-[rgba(0,0,0,0.08)]",
+            isOpen ? "pl-7.5" : "justify-center",
+          )}
           type="button"
           onClick={handleLogout}
         >
