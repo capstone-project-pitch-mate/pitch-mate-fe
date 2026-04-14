@@ -1,11 +1,37 @@
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-import { CompareTotalScoreSection } from "./components";
-import { DUMMY_COMPARED_SESSION1, DUMMY_COMPARED_SESSION2 } from "./constants";
+import {
+  CompareCategoryChartSection,
+  CompareTotalScoreSection,
+} from "./components";
+import {
+  DUMMY_COMPARED_CATEGORY,
+  DUMMY_COMPARED_SESSION1,
+  DUMMY_COMPARED_SESSION2,
+  EVAL_CATEGORY,
+} from "./constants";
 
 export default function HistoryCompare() {
   const navigate = useNavigate();
+
+  const categoryScoreKeys = [
+    "speechAvg",
+    "nonVerbalAvg",
+    "deliveryAvg",
+  ] as const;
+
+  const comparedCategoryData = EVAL_CATEGORY.map((category, index) => {
+    const scoreKey = categoryScoreKeys[index];
+
+    return {
+      category,
+      [DUMMY_COMPARED_SESSION1.videoTitle]:
+        DUMMY_COMPARED_CATEGORY.session1[scoreKey],
+      [DUMMY_COMPARED_SESSION2.videoTitle]:
+        DUMMY_COMPARED_CATEGORY.session2[scoreKey],
+    };
+  });
 
   const handleBack = () => {
     navigate(-1);
@@ -27,6 +53,11 @@ export default function HistoryCompare() {
       <CompareTotalScoreSection
         session1={DUMMY_COMPARED_SESSION1}
         session2={DUMMY_COMPARED_SESSION2}
+      />
+      <CompareCategoryChartSection
+        data={comparedCategoryData}
+        session1Name={DUMMY_COMPARED_SESSION1.videoTitle}
+        sesssion2Name={DUMMY_COMPARED_SESSION2.videoTitle}
       />
     </div>
   );

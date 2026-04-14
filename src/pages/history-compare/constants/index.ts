@@ -16,6 +16,8 @@ export const DUMMY_COMPARED_SESSION2: ComparedTotalScoreType = {
   createdAt: "2026-04-19T14:08:37.442Z",
 };
 
+export const EVAL_CATEGORY = ["스피치", "비언어", "전달력/표현력"];
+
 export const DUMMY_COMPARED_CATEGORY = {
   session1: {
     speechAvg: 0.5,
@@ -25,6 +27,6 @@ export const DUMMY_COMPARED_CATEGORY = {
   session2: {
     speechAvg: 0.7,
     nonVerbalAvg: 0.8,
-    deliveryAvg: 0.8,
+    deliveryAvg: 0.9,
   },
 };
