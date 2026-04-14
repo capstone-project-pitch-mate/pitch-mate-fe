@@ -3,10 +3,14 @@ import { useNavigate } from "react-router-dom";
 
 import {
   CompareCategoryChartSection,
+  CompareDetailBarChartSection,
+  CompareOverallComment,
   CompareTotalScoreSection,
 } from "./components";
 import {
+  DUMMY_COMPARE_OVERALL_COMMENT,
   DUMMY_COMPARED_CATEGORY,
+  DUMMY_COMPARED_DETAIL,
   DUMMY_COMPARED_SESSION1,
   DUMMY_COMPARED_SESSION2,
   EVAL_CATEGORY,
@@ -38,7 +42,7 @@ export default function HistoryCompare() {
   };
 
   return (
-    <div className="flex min-h-screen min-w-300 flex-col gap-10 p-10">
+    <div className="flex min-h-screen min-w-300 flex-col gap-10 p-10 pb-30">
       <section className="flex flex-row items-center gap-8">
         <button type="button" className="p-5" onClick={handleBack}>
           <ArrowLeft />
@@ -57,7 +61,18 @@ export default function HistoryCompare() {
       <CompareCategoryChartSection
         data={comparedCategoryData}
         session1Name={DUMMY_COMPARED_SESSION1.videoTitle}
-        sesssion2Name={DUMMY_COMPARED_SESSION2.videoTitle}
+        session2Name={DUMMY_COMPARED_SESSION2.videoTitle}
+      />
+      <CompareDetailBarChartSection
+        rubricDetailScores={DUMMY_COMPARED_DETAIL}
+        session1Name={DUMMY_COMPARED_SESSION1.videoTitle}
+        session2Name={DUMMY_COMPARED_SESSION2.videoTitle}
+      />
+      <CompareOverallComment
+        session1Name={DUMMY_COMPARED_SESSION1.videoTitle}
+        session2Name={DUMMY_COMPARED_SESSION2.videoTitle}
+        session1Comment={DUMMY_COMPARE_OVERALL_COMMENT.session1OverallComment}
+        session2Comment={DUMMY_COMPARE_OVERALL_COMMENT.session2OverallComment}
       />
     </div>
   );

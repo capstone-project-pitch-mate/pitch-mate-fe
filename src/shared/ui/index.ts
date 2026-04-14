@@ -5,3 +5,4 @@ export { default as SideBar } from "./side-bar";
 export { default as Overview } from "./overview";
 export { default as VideoEmptyView } from "./video-empty-view";
 export { default as CategoryChart } from "./category-chart";
+export { default as DetailBarChart } from "./detail-bar-chart";

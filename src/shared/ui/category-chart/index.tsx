@@ -12,15 +12,18 @@ import type { ChartData } from "recharts/types/state/chartDataSlice";
 interface CategoryChartProps {
   data: ChartData;
   session1Name: string;
-  sesssion2Name?: string;
+  session2Name?: string;
 }
 
 export default function CategoryChart({
   data,
   session1Name,
-  sesssion2Name,
+  session2Name,
 }: CategoryChartProps) {
-  const radiusTicks = Array.from({ length: 5 }, (_, index) => (index + 1) / 5);
+  const radiusTicks = Array.from(
+    { length: 10 },
+    (_, index) => (index + 1) / 10,
+  );
 
   return (
     <ResponsiveContainer width="100%" height={300}>
@@ -40,13 +43,16 @@ export default function CategoryChart({
           fillOpacity={0.15}
           strokeWidth={2}
         />
-        <Radar
-          dataKey={sesssion2Name}
-          stroke="#10b981"
-          fill="#10b981"
-          fillOpacity={0.15}
-          strokeWidth={2}
-        />
+        {session2Name && (
+          <Radar
+            dataKey={session2Name}
+            stroke="#10b981"
+            fill="#10b981"
+            fillOpacity={0.15}
+            strokeWidth={2}
+          />
+        )}
+
         <Legend
           itemSorter={(item: { value?: string }) =>
             item.value === session1Name ? 0 : 1
