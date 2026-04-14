@@ -48,7 +48,7 @@ export default function HistoryCompare() {
           <ArrowLeft />
         </button>
         <div className="flex flex-col gap-1.5">
-          <h1 className="text-4xl leading-14 font-medium">회차 비교</h1>
+          <h1 className="text-4xl leading-14 font-medium">히스토리 비교</h1>
           <p className="text-2xl leading-9 text-[#71718A]">
             두 영상의 평가 결과를 비교합니다.
           </p>
