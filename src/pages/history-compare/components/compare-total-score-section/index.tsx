@@ -38,7 +38,9 @@ export default function CompareTotalScoreSection({
             )}
           >
             {scoreGap > 0 ? <TrendingUp /> : <TrendingDown />}
-            <span className="text-3xl font-bold">{scoreGap}점</span>
+            <span className="text-3xl font-bold">
+              {scoreGap > 0 ? `+${scoreGap}` : scoreGap}점
+            </span>
           </div>
         )}
         {scoreGap === 0 ? (

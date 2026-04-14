@@ -13,12 +13,14 @@ interface CategoryChartProps {
   data: ChartData;
   session1Name: string;
   session2Name?: string;
+  width?: number;
 }
 
 export default function CategoryChart({
   data,
   session1Name,
   session2Name,
+  width,
 }: CategoryChartProps) {
   const radiusTicks = Array.from(
     { length: 10 },
@@ -26,7 +28,7 @@ export default function CategoryChart({
   );
 
   return (
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width={width} height={300}>
       <RadarChart data={data}>
         <PolarGrid stroke="#e5e5f0" />
         <PolarAngleAxis dataKey="category" tick={{ fontSize: 12 }} />
@@ -44,20 +46,21 @@ export default function CategoryChart({
           strokeWidth={2}
         />
         {session2Name && (
-          <Radar
-            dataKey={session2Name}
-            stroke="#10b981"
-            fill="#10b981"
-            fillOpacity={0.15}
-            strokeWidth={2}
-          />
+          <>
+            <Radar
+              dataKey={session2Name}
+              stroke="#10b981"
+              fill="#10b981"
+              fillOpacity={0.15}
+              strokeWidth={2}
+            />
+            <Legend
+              itemSorter={(item: { value?: string }) =>
+                item.value === session1Name ? 0 : 1
+              }
+            />
+          </>
         )}
-
-        <Legend
-          itemSorter={(item: { value?: string }) =>
-            item.value === session1Name ? 0 : 1
-          }
-        />
       </RadarChart>
     </ResponsiveContainer>
   );
