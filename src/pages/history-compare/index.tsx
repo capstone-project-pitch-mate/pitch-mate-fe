@@ -19,6 +19,10 @@ import {
 export default function HistoryCompare() {
   const navigate = useNavigate();
 
+  const handleBack = () => {
+    navigate(-1);
+  };
+
   const categoryScoreKeys = [
     "speechAvg",
     "nonVerbalAvg",
@@ -36,10 +40,6 @@ export default function HistoryCompare() {
         DUMMY_COMPARED_CATEGORY.session2[scoreKey],
     };
   });
-
-  const handleBack = () => {
-    navigate(-1);
-  };
 
   return (
     <div className="flex min-h-screen min-w-300 flex-col gap-10 p-10 pb-30">
