@@ -44,7 +44,7 @@ export default function RubricSection({
           </div>
 
           <div className="flex flex-col items-center gap-6">
-            <span className="text-xl">카테고리별 평가</span>
+            <span className="text-xl">종합 점수</span>
             <div className="flex h-30 w-30 items-center justify-center rounded-full bg-[rgba(104,104,255,0.10)]">
               <span className="text-3xl font-bold text-[#6868FF]">
                 {totalScore}

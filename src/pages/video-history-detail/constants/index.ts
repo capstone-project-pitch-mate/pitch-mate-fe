@@ -55,7 +55,7 @@ export const DUMMY_FEEDBACKS: FeedbackType[] = [
     authorId: 105,
     authorNickname: "정연습",
     startTimeSeconds: 29,
-    endTimeSeconds: 35,
+    endTimeSeconds: 30,
     content:
       "마무리 문장은 분명하고 좋았습니다. 마지막에 미소를 조금 더 보여주면 전체 인상이 더 부드러워질 것 같아요.",
     createdAt: "2026-04-14T10:10:00",
