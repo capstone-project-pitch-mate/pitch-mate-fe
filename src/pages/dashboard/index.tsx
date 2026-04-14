@@ -19,7 +19,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="flex min-h-screen min-w-232 flex-col gap-13 p-10">
+    <div className="flex min-h-screen min-w-300 flex-col gap-13 p-10">
       <section className="flex flex-row items-center justify-between">
         <div className="flex flex-col gap-1.5">
           <h1 className="text-4xl leading-14 font-medium">
