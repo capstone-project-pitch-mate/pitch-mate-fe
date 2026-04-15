@@ -8,10 +8,12 @@ export const useLogoutMutation = () => {
   const navigate = useNavigate();
   const toast = useToast();
 
-  const refreshToken = localStorage.getItem("refreshToken") ?? "";
-
   const { mutate: logout } = useMutation({
-    mutationFn: () => logoutApi(refreshToken),
+    mutationFn: () => {
+      const refreshToken = localStorage.getItem("refreshToken");
+      if (!refreshToken) return Promise.resolve();
+      return logoutApi(refreshToken);
+    },
     onSuccess: () => {
       toast.info("로그아웃되었습니다.");
     },
@@ -21,7 +23,8 @@ export const useLogoutMutation = () => {
       );
     },
     onSettled: () => {
-      localStorage.clear();
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
       navigate("/login", { replace: true });
     },
     retry: 3,
