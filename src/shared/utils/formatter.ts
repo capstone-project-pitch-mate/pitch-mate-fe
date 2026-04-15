@@ -1,5 +1,5 @@
 export const formatDuration = (durationSeconds: number) => {
-  const minutes = Math.floor(durationSeconds / 60);
+  const minutes = String(Math.floor(durationSeconds / 60)).padStart(2, "0");
   const seconds = String(durationSeconds % 60).padStart(2, "0");
   return `${minutes}:${seconds}`;
 };
