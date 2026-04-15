@@ -2,7 +2,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { Upload, ArrowRight } from "lucide-react";
 
 import { ROUTES } from "@router/constants";
-import { Button, Overview, PageLoading, VideoEmptyView } from "@shared/ui";
+import {
+  Button,
+  Overview,
+  PageError,
+  PageLoading,
+  VideoEmptyView,
+} from "@shared/ui";
 import { useDashboardQuery } from "@apis/queries";
 
 import { VideoCard } from "./components";
@@ -10,7 +16,8 @@ import { VideoCard } from "./components";
 export default function Dashboard() {
   const navigate = useNavigate();
 
-  const { dashboardData, isPendingDashboard } = useDashboardQuery();
+  const { dashboardData, isPendingDashboard, isErrorDashboard } =
+    useDashboardQuery();
 
   const handleToUpload = () => {
     navigate(ROUTES.VIDEO_UPLOAD);
@@ -18,6 +25,10 @@ export default function Dashboard() {
 
   if (isPendingDashboard) {
     return <PageLoading />;
+  }
+
+  if (!isErrorDashboard) {
+    return <PageError />;
   }
 
   return (
