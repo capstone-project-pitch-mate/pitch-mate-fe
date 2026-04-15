@@ -5,8 +5,7 @@ import { Loader2 } from "lucide-react";
 import { Button, InputBar } from "@shared/ui";
 import { ROUTES } from "@router/constants";
 import { EMAIL_REGEX } from "@shared/constants";
-
-import { useSignupMutation } from "./hooks";
+import { useSignupMutation } from "@apis/queries";
 
 export default function Signup() {
   const [email, setEmail] = useState("");

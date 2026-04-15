@@ -6,6 +6,7 @@ import axios, {
 } from "axios";
 
 const DEFAULT_TIMEOUT_MS = 10_000;
+const AUTH_BYPASS_PATHS = new Set(["/auth/login", "/auth/signup"]);
 
 export type ApiRequestConfig<TData = unknown> = AxiosRequestConfig<TData>;
 export interface ApiResponse<TResult = unknown> {
@@ -65,6 +66,43 @@ export const axiosInstance: AxiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+});
+
+const stripTrailingSlash = (path: string): string =>
+  path.length > 1 && path.endsWith("/") ? path.slice(0, -1) : path;
+
+const getRequestPathname = (url?: string): string => {
+  if (!url) {
+    return "";
+  }
+
+  try {
+    return stripTrailingSlash(new URL(url, window.location.origin).pathname);
+  } catch {
+    return stripTrailingSlash(url.split("?")[0] ?? "");
+  }
+};
+
+const shouldBypassAuth = (url?: string): boolean =>
+  AUTH_BYPASS_PATHS.has(getRequestPathname(url));
+
+axiosInstance.interceptors.request.use((config) => {
+  if (shouldBypassAuth(config.url) || typeof window === "undefined") {
+    return config;
+  }
+
+  const accessToken = window.localStorage.getItem("accessToken");
+
+  if (!accessToken) {
+    return config;
+  }
+
+  config.headers = config.headers ?? {};
+  config.headers.Authorization = accessToken.startsWith("Bearer ")
+    ? accessToken
+    : `Bearer ${accessToken}`;
+
+  return config;
 });
 
 const toApiError = (error: unknown): ApiError => {

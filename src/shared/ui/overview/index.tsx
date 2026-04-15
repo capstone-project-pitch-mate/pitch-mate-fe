@@ -5,7 +5,7 @@ import IcOverviewAverage from "@assets/icon/ic_overview_average.svg";
 interface OverviewProps {
   totalCount: number;
   completedCount: number;
-  averageScore: number;
+  averageScore: number | null;
 }
 
 export default function Overview({
@@ -33,7 +33,9 @@ export default function Overview({
         <img src={IcOverviewAverage} alt="평균 점수" />
         <div className="flex flex-col gap-4">
           <span className="text-xl text-[#71718A]">평균 점수</span>
-          <span className="text-4xl font-bold">{averageScore}</span>
+          <span className="text-4xl font-bold">
+            {averageScore === null ? "-" : averageScore}
+          </span>
         </div>
       </div>
     </section>
