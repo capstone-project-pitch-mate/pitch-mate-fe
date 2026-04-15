@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -13,7 +14,6 @@ import { cn } from "@utils/cn";
 import { ROUTES } from "@router/constants";
 
 import Logo from "../logo";
-import type { ReactNode } from "react";
 
 interface SideBarProps {
   pathname: string;

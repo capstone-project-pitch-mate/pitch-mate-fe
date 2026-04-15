@@ -1,0 +1,68 @@
+import { useCallback, useEffect, useMemo } from "react";
+import { toast, type ToastOptions } from "react-toastify";
+
+import { CustomToast } from "@shared/ui";
+
+const TOAST_CONTAINER_SELECTOR = ".Toastify__toast-container";
+const TOAST_SELECTOR = ".Toastify__toast";
+
+export default function useToast() {
+  const toastOptions = useMemo<ToastOptions>(() => {
+    return {
+      position: "top-center",
+      icon: false,
+      closeButton: false,
+      autoClose: 2000,
+      hideProgressBar: true,
+      style: {
+        background: "transparent",
+        boxShadow: "none",
+        padding: 0,
+        display: "flex",
+        justifyContent: "center",
+        marginTop: 30,
+      },
+    };
+  }, []);
+
+  useEffect(() => {
+    const handlePointerDown = (e: PointerEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (!target) return;
+
+      // 토스트(또는 컨테이너) 내부를 클릭한 경우는 무시 (토스트 바깥 클릭만 닫기)
+      if (
+        target.closest(TOAST_SELECTOR) ||
+        target.closest(TOAST_CONTAINER_SELECTOR)
+      ) {
+        return;
+      }
+
+      // 바깥 영역 클릭 시 모든 토스트 즉시 닫기
+      toast.dismiss();
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+    };
+  }, []);
+
+  const info = useCallback(
+    (message: string) =>
+      toast.info(<CustomToast message={message} />, toastOptions),
+    [toastOptions],
+  );
+
+  const error = useCallback(
+    (message: string) =>
+      toast.error(
+        <CustomToast message={message} isError={true} />,
+        toastOptions,
+      ),
+    [toastOptions],
+  );
+
+  return useMemo(() => ({ info, error }), [info, error]);
+}
