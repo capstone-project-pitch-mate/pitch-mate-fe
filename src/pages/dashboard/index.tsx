@@ -43,11 +43,10 @@ export default function Dashboard() {
       <Overview
         totalCount={dashboardData?.totalVideos ?? 0}
         completedCount={dashboardData?.analyzedVideos ?? 0}
-        averageScore={dashboardData?.averageScore ?? 0}
+        averageScore={dashboardData?.averageScore ?? null}
       />
-      {/* TODO: 추후 더미데이터가 아닌 서버에서 받아온 데이터로 수정 */}
       <section className="flex flex-1 flex-col gap-6">
-        {dashboardData?.recentVideos.length === 0 ? (
+        {!dashboardData?.recentVideos?.length ? (
           <VideoEmptyView />
         ) : (
           <>

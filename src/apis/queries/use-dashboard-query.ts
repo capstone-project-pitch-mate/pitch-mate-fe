@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
@@ -11,8 +12,8 @@ export const useDashboardQuery = () => {
   const {
     data: dashboardData,
     isPending: isPendingDashboard,
-    isError,
-    error,
+    isError: isErrorDashboard,
+    error: dashboardError,
   } = useQuery<DashboardResponse>({
     queryKey: DASHBOARD_QUERY_KEY.DEFAULT,
     queryFn: () => dashboardApi(),
@@ -21,11 +22,19 @@ export const useDashboardQuery = () => {
     gcTime: 1000 * 60 * 15,
   });
 
-  if (isError) {
-    if (error.status === 403) {
+  useEffect(() => {
+    if (
+      isErrorDashboard &&
+      (dashboardError.status === 403 || dashboardError.status === 401)
+    ) {
       navigate("/login", { replace: true });
     }
-  }
+  }, [isErrorDashboard, dashboardError, navigate]);
 
-  return { dashboardData, isPendingDashboard };
+  return {
+    dashboardData,
+    isPendingDashboard,
+    isErrorDashboard,
+    dashboardError,
+  };
 };
