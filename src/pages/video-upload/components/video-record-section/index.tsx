@@ -296,6 +296,7 @@ export default function VideoRecordSection({
             <video
               ref={liveVideoRef}
               className="aspect-video w-full rounded-2xl object-cover"
+              style={{ transform: "scaleX(-1)" }}
               autoPlay
               muted
               playsInline
