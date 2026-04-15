@@ -24,6 +24,7 @@ export const useLogoutMutation = () => {
       localStorage.clear();
       navigate("/login", { replace: true });
     },
+    retry: 3,
   });
 
   return { logout };
