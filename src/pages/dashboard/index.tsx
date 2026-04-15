@@ -27,7 +27,7 @@ export default function Dashboard() {
     return <PageLoading />;
   }
 
-  if (!isErrorDashboard) {
+  if (isErrorDashboard) {
     return <PageError />;
   }
 
