@@ -36,3 +36,7 @@ export const loginApi = async ({ email, password }: LoginRequestBoby) => {
 
   return response.result;
 };
+
+export const logoutApi = async (refreshToken: string) => {
+  await apiInstance.post(AUTH_URL.LOGOUT, { refreshToken });
+};

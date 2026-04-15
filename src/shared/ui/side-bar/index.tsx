@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -11,9 +12,9 @@ import {
 
 import { cn } from "@utils/cn";
 import { ROUTES } from "@router/constants";
+import { useLogoutMutation } from "@apis/queries";
 
 import Logo from "../logo";
-import type { ReactNode } from "react";
 
 interface SideBarProps {
   pathname: string;
@@ -35,15 +36,14 @@ export default function SideBar({
   handleChange,
 }: SideBarProps) {
   const navigate = useNavigate();
+  const { logout } = useLogoutMutation();
 
   const handleToPage = (path: string) => {
     navigate(path);
   };
 
   const handleLogout = () => {
-    // TODO: 추후 api 연동 및 로그아웃 로직
-    console.log("로그아웃");
-    navigate(ROUTES.LOGIN, { replace: true });
+    logout();
   };
 
   const menuItems: MenuItem[] = [

@@ -1,6 +1,7 @@
 export const AUTH_URL = {
   SIGNUP: "/auth/signup",
   LOGIN: "/auth/login",
+  LOGOUT: "/auth/logout",
 };
 
 export const DASHBOARD_URL = {
