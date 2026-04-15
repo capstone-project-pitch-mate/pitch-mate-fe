@@ -4,8 +4,7 @@ import { Loader2 } from "lucide-react";
 
 import { Button, InputBar } from "@shared/ui";
 import { ROUTES } from "@router/constants";
-
-import { useLoginMutation } from "./hooks";
+import { useLoginMutation } from "@apis/queries";
 
 export default function Login() {
   const [email, setEmail] = useState("");

@@ -33,7 +33,9 @@ export default function Overview({
         <img src={IcOverviewAverage} alt="평균 점수" />
         <div className="flex flex-col gap-4">
           <span className="text-xl text-[#71718A]">평균 점수</span>
-          <span className="text-4xl font-bold">{averageScore}</span>
+          <span className="text-4xl font-bold">
+            {averageScore === 0 ? "-" : averageScore}
+          </span>
         </div>
       </div>
     </section>
