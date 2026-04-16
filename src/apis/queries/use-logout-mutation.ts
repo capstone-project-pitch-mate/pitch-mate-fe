@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { logoutApi } from "@apis/auth";
 import useToast from "@hooks/use-toast";
+import { ROUTES } from "@router/constants";
 
 export const useLogoutMutation = () => {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ export const useLogoutMutation = () => {
     onSettled: () => {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
-      navigate("/login", { replace: true });
+      navigate(ROUTES.LOGIN, { replace: true });
     },
     retry: 3,
   });

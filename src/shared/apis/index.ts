@@ -9,6 +9,10 @@ const DEFAULT_TIMEOUT_MS = 10_000;
 const AUTH_BYPASS_PATHS = new Set(["/auth/login", "/auth/signup"]);
 
 export type ApiRequestConfig<TData = unknown> = AxiosRequestConfig<TData>;
+export type ApiContentType = "json" | "form-data";
+export type ApiConfig<TData = unknown> = ApiRequestConfig<TData> & {
+  contentType?: ApiContentType;
+};
 export interface ApiResponse<TResult = unknown> {
   code: number;
   status: number;
@@ -50,7 +54,7 @@ export class ApiError extends Error {
 }
 
 type ApiMethodConfig<TData = unknown> = Omit<
-  ApiRequestConfig<TData>,
+  ApiConfig<TData>,
   "url" | "method"
 >;
 
@@ -63,9 +67,6 @@ if (import.meta.env.PROD && !baseURL) {
 export const axiosInstance: AxiosInstance = axios.create({
   baseURL: baseURL ?? "",
   timeout: DEFAULT_TIMEOUT_MS,
-  headers: {
-    "Content-Type": "application/json",
-  },
 });
 
 const stripTrailingSlash = (path: string): string =>
@@ -144,14 +145,33 @@ const toApiError = (error: unknown): ApiError => {
 };
 
 const request = async <TResult = unknown, TData = unknown>(
-  config: ApiRequestConfig<TData>,
+  config: ApiConfig<TData>,
 ): Promise<ApiResponse<TResult>> => {
+  const { contentType = "json", headers, ...requestConfig } = config;
+  const resolvedHeaders = {
+    ...(headers ?? {}),
+  } as Record<string, unknown>;
+  const hasContentTypeHeader = Object.keys(resolvedHeaders).some(
+    (key) => key.toLowerCase() === "content-type",
+  );
+
+  if (contentType === "form-data") {
+    // Let the browser set multipart boundary automatically.
+    delete resolvedHeaders["Content-Type"];
+    delete resolvedHeaders["content-type"];
+  } else if (!hasContentTypeHeader) {
+    resolvedHeaders["Content-Type"] = "application/json";
+  }
+
   try {
     const response = await axiosInstance.request<
       ApiResponse<TResult>,
       AxiosResponse<ApiResponse<TResult>>,
       TData
-    >(config);
+    >({
+      ...requestConfig,
+      headers: resolvedHeaders as AxiosRequestConfig<TData>["headers"],
+    });
 
     return response.data;
   } catch (error) {

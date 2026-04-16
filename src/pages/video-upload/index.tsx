@@ -5,6 +5,10 @@ import {
   ALLOWED_VIDEO_MIME_TYPES,
   MAX_VIDEO_FILE_SIZE,
 } from "@shared/constants";
+import { useVideoUploadMutation } from "@apis/queries";
+import useToast from "@hooks/use-toast";
+import { PageLoading } from "@shared/ui";
+
 import {
   UploadFooter,
   UploadTopContent,
@@ -27,6 +31,9 @@ const isAllowedVideoFile = (file: File) => {
 };
 
 export default function VideoUpload() {
+  const toast = useToast();
+  const { uploadVideo, isPendingUploadVideo } = useVideoUploadMutation();
+
   const [uploadType, setUploadType] = useState<"UPLOAD" | "RECORD">("UPLOAD");
   const [videoTitle, setVideoTitle] = useState("");
   const [videoDesc, setVideoDesc] = useState("");
@@ -87,11 +94,15 @@ export default function VideoUpload() {
   };
 
   const handleUpload = () => {
-    console.log("Ready to upload", {
-      uploadType,
-      videoTitle,
-      videoDesc,
-      videoFile,
+    if (!videoFile) {
+      toast.error("파일이 정상적으로 업로드되지 않았습니다.");
+      return;
+    }
+    uploadVideo({
+      title: videoTitle,
+      description: videoDesc,
+      videoType: uploadType,
+      file: videoFile,
     });
   };
 
@@ -111,6 +122,10 @@ export default function VideoUpload() {
 
   const disabledToUpload =
     videoTitle.trim() === "" || videoDesc.trim() === "" || videoFile === null;
+
+  if (isPendingUploadVideo) {
+    return <PageLoading />;
+  }
 
   return (
     <div className="flex min-w-300 flex-1 justify-center p-9 pb-50">
