@@ -2,25 +2,27 @@ import { useState } from "react";
 import { GitCompare } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-import { Button, VideoEmptyView } from "@shared/ui";
+import { Button, PageLoading, VideoEmptyView } from "@shared/ui";
+import { ROUTES } from "@router/constants";
+import { useVideoHistoryQuery } from "@apis/queries";
 
 import { HistoryCard, SearchBar } from "./components";
-import { DUMMY_HISTORY_LIST } from "./constants";
-import { ROUTES } from "@router/constants";
 
 export default function VideoHistory() {
   const navigate = useNavigate();
+  const { allHistoryList, isPendingHistoryList } = useVideoHistoryQuery();
+
   const [search, setSearch] = useState("");
   const [compareMode, setCompareMode] = useState(false);
   const [selectedCompareVideoIds, setSelectedCompareVideoIds] = useState<
     number[]
   >([]);
 
-  const filteredList = DUMMY_HISTORY_LIST.filter((history) =>
+  const filteredList = allHistoryList?.filter((history) =>
     history.videoTitle.toLowerCase().includes(search.trim().toLowerCase()),
   );
 
-  const isEmpty = DUMMY_HISTORY_LIST.length === 0;
+  const isEmpty = allHistoryList?.length === 0;
 
   const handleCompareMode = () => {
     setCompareMode((prev) => {
@@ -62,6 +64,10 @@ export default function VideoHistory() {
   const handleToVideoDetail = (videoId: number) => {
     navigate(ROUTES.VIDEO_HISTORY_DETAIL(String(videoId)));
   };
+
+  if (isPendingHistoryList) {
+    return <PageLoading />;
+  }
 
   return (
     <div className="flex min-h-screen w-full min-w-220 flex-col">
@@ -112,27 +118,30 @@ export default function VideoHistory() {
           <VideoEmptyView />
         ) : (
           <div className="flex flex-col gap-5">
-            {filteredList.map((history) => {
-              const selectedOrder =
-                selectedCompareVideoIds.indexOf(history.videoId) + 1;
-              return (
-                <HistoryCard
-                  key={history.videoId}
-                  videoId={history.videoId}
-                  videoTitle={history.videoTitle}
-                  videoThumbnailUrl={history.videoThumbnailUrl}
-                  createdAt={history.createdAt}
-                  durationSeconds={history.durationSeconds}
-                  totalScore={history.totalScore}
-                  isAnalyzing={history.isAnalyzing}
-                  compareMode={compareMode}
-                  handleClick={
-                    compareMode ? handleSelectCompareVideo : handleToVideoDetail
-                  }
-                  selectedOrder={selectedOrder === 0 ? null : selectedOrder}
-                />
-              );
-            })}
+            {filteredList &&
+              filteredList.map((history) => {
+                const selectedOrder =
+                  selectedCompareVideoIds.indexOf(history.videoId) + 1;
+                return (
+                  <HistoryCard
+                    key={history.videoId}
+                    videoId={history.videoId}
+                    videoTitle={history.videoTitle}
+                    videoThumbnailUrl={history.videoThumbnailUrl}
+                    createdAt={history.createdAt}
+                    durationSeconds={history.durationSeconds}
+                    totalScore={history.totalScore}
+                    analysisStatus={history.analysisStatus}
+                    compareMode={compareMode}
+                    handleClick={
+                      compareMode
+                        ? handleSelectCompareVideo
+                        : handleToVideoDetail
+                    }
+                    selectedOrder={selectedOrder === 0 ? null : selectedOrder}
+                  />
+                );
+              })}
           </div>
         )}
       </div>

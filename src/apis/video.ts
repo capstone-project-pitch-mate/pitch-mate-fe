@@ -1,7 +1,8 @@
 import apiInstance from "@shared/apis";
 
 import type { VideoUploadRequest, VideoUploadResponse } from "./types";
-import { VIDEO_URL } from "./constants";
+import { HISTORY_URL, VIDEO_URL } from "./constants";
+import type { AllVideoHistoryResponse } from "./types/video";
 
 export const videoUploadApi = async ({
   title,
@@ -19,6 +20,14 @@ export const videoUploadApi = async ({
       contentType: "form-data",
       params: { title, description, videoType },
     },
+  );
+
+  return response.result;
+};
+
+export const getVideoHistoryApi = async () => {
+  const response = await apiInstance.get<AllVideoHistoryResponse>(
+    HISTORY_URL.DEFAULT,
   );
 
   return response.result;

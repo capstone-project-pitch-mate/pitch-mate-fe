@@ -12,3 +12,7 @@ export const DASHBOARD_URL = {
 export const VIDEO_URL = {
   DEFAULT: "/videos",
 };
+
+export const HISTORY_URL = {
+  DEFAULT: "/history",
+};

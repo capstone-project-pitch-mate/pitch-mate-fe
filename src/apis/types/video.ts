@@ -14,3 +14,13 @@ export interface VideoUploadResponse {
   durationSeconds: number;
   createdAt: string;
 }
+
+export type AllVideoHistoryResponse = {
+  videoId: number;
+  videoTitle: string;
+  videoThumbnailUrl: string;
+  durationSeconds: number;
+  totalScore: number;
+  analysisStatus: string;
+  createdAt: string;
+}[];
