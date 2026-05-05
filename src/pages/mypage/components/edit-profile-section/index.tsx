@@ -173,17 +173,16 @@ export default function EditProfileSection() {
           disabled
         />
         <div className="flex w-full flex-col gap-3">
-          <label className="text-xl leading-6 font-medium" htmlFor="bio">
-            짧은 자기소개
-          </label>
-          {/* ADDED_PROFILE_BIO: textarea keeps the introduction editable before the profile API exists. */}
-          <textarea
-            id="bio"
-            className="min-h-32 resize-none rounded-xl bg-[#F5F5FA] pt-4 pr-5 pb-4 pl-5 text-xl placeholder:text-[#71718A]"
-            value={bio}
-            maxLength={PROFILE_BIO_MAX_LENGTH}
+          <InputBar
+            label={
+              <label className="text-xl leading-6 font-medium" htmlFor="bio">
+                짧은 자기소개
+              </label>
+            }
+            text={bio}
             placeholder="자기소개를 입력해주세요."
-            onChange={(e) => setBio(e.target.value)}
+            handleChangeText={setBio}
+            maxLength={PROFILE_BIO_MAX_LENGTH}
           />
           <span className="self-end text-lg text-[#71718A]">
             {bio.length} / {PROFILE_BIO_MAX_LENGTH}
