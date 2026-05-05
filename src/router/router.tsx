@@ -6,6 +6,7 @@ import Signup from "@pages/signup";
 import NotFound from "@pages/not-found";
 import VideoUpload from "@pages/video-upload";
 import VideoHistory from "@pages/video-history";
+import MentorList from "@pages/mentor-list";
 import VideoHistoryDetail from "@pages/video-history-detail";
 import HistoryCompare from "@pages/history-compare";
 import MyPage from "@pages/mypage";
@@ -31,6 +32,10 @@ export const router = createBrowserRouter([
           {
             path: ROUTES.VIDEO_HISTORY,
             element: <VideoHistory />,
+          },
+          {
+            path: ROUTES.MENTOR_LIST,
+            element: <MentorList />,
           },
           {
             path: ROUTES.VIDEO_HISTORY_DETAIL(":videoId"),

@@ -93,11 +93,11 @@ export default function SideBar({
     },
     {
       label: "멘토 목록",
-      logMessage:
-        "ADDED_ROLE_FLOW: 멘토 목록 페이지는 2번 태스크에서 연결 예정입니다.",
+      // ADDED_MENTOR_LIST: mentor list page is now connected for mentees.
+      path: ROUTES.MENTOR_LIST,
       defaultIcon: <Users size={32} color="#71718A" />,
       selectedIcon: <Users size={32} color="#6868FF" />,
-      isActive: false,
+      isActive: pathname.startsWith(ROUTES.MENTOR_LIST),
     },
     {
       label: "내 정보",
