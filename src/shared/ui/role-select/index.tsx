@@ -54,7 +54,7 @@ export default function RoleSelect({
                   {option.label}
                 </span>
               </div>
-              <span className="text-md leading-6 text-[#71718A]">
+              <span className="leading-6 text-[#71718A]">
                 {option.description}
               </span>
             </label>

@@ -76,7 +76,7 @@ export default function Login() {
             )}
           </Button>
           {errorMessage && (
-            <span className="text-md absolute right-0 -bottom-7.5 font-medium text-[#FF9496]">
+            <span className="absolute right-0 -bottom-7.5 font-medium text-[#FF9496]">
               {errorMessage}
             </span>
           )}

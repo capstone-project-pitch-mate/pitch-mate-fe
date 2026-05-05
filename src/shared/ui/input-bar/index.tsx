@@ -31,7 +31,7 @@ export default function InputBar({
         <div className="flex flex-row items-center gap-4">
           <label className="text-xl leading-6 font-medium">{label}</label>
           {isError && (
-            <span className="text-md font-medium text-[#FF9496]">{error}</span>
+            <span className="font-medium text-[#FF9496]">{error}</span>
           )}
         </div>
       )}
