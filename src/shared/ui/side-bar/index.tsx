@@ -1,18 +1,23 @@
 import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  LayoutDashboard,
-  Upload,
+  ChevronLeft,
+  ClipboardList,
   History,
-  User,
+  LayoutDashboard,
   LogOut,
   Menu,
-  ChevronLeft,
+  MessageSquareText,
+  Upload,
+  User,
+  Users,
+  Video,
 } from "lucide-react";
 
-import { cn } from "@utils/cn";
-import { ROUTES } from "@router/constants";
+import type { UserRole } from "@apis/types";
 import { useLogoutMutation } from "@apis/queries";
+import { ROUTES } from "@router/constants";
+import { cn } from "@utils/cn";
 
 import Logo from "../logo";
 
@@ -24,11 +29,19 @@ interface SideBarProps {
 
 interface MenuItem {
   label: string;
-  path: string;
+  path?: string;
+  logMessage?: string;
   defaultIcon: ReactNode;
   selectedIcon: ReactNode;
   isActive: boolean;
 }
+
+const getStoredUserRole = (): UserRole => {
+  // ADDED_ROLE_FLOW: sidebar menu is split by the locally selected dummy role.
+  return localStorage.getItem("userRole") === "MENTOR" ? "MENTOR" : "MENTEE";
+};
+
+const getRoleLabel = (role: UserRole) => (role === "MENTOR" ? "멘토" : "멘티");
 
 export default function SideBar({
   pathname,
@@ -37,16 +50,26 @@ export default function SideBar({
 }: SideBarProps) {
   const navigate = useNavigate();
   const { logout } = useLogoutMutation();
+  const userRole = getStoredUserRole();
+  const roleLabel = getRoleLabel(userRole);
 
-  const handleToPage = (path: string) => {
-    navigate(path);
+  const handleToPage = (item: MenuItem) => {
+    if (!item.path) {
+      // ADDED_ROLE_FLOW: pages that are not implemented yet only log for now.
+      console.log(
+        item.logMessage ?? `${item.label} 페이지는 아직 준비 중입니다.`,
+      );
+      return;
+    }
+
+    navigate(item.path);
   };
 
   const handleLogout = () => {
     logout();
   };
 
-  const menuItems: MenuItem[] = [
+  const menteeMenuItems: MenuItem[] = [
     {
       label: "대시보드",
       path: ROUTES.DASHBOARD,
@@ -55,7 +78,7 @@ export default function SideBar({
       isActive: pathname === ROUTES.DASHBOARD,
     },
     {
-      label: "영상 업로드",
+      label: "동영상 업로드",
       path: ROUTES.VIDEO_UPLOAD,
       defaultIcon: <Upload size={32} color="#71718A" />,
       selectedIcon: <Upload size={32} color="#6868FF" />,
@@ -69,6 +92,14 @@ export default function SideBar({
       isActive: pathname.startsWith(ROUTES.VIDEO_HISTORY),
     },
     {
+      label: "멘토 목록",
+      logMessage:
+        "ADDED_ROLE_FLOW: 멘토 목록 페이지는 2번 태스크에서 연결 예정입니다.",
+      defaultIcon: <Users size={32} color="#71718A" />,
+      selectedIcon: <Users size={32} color="#6868FF" />,
+      isActive: false,
+    },
+    {
       label: "내 정보",
       path: ROUTES.MYPAGE,
       defaultIcon: <User size={32} color="#71718A" />,
@@ -76,6 +107,51 @@ export default function SideBar({
       isActive: pathname.startsWith(ROUTES.MYPAGE),
     },
   ];
+
+  // ADDED_ROLE_FLOW: mentor-only sidebar structure is prepared before mentor pages are implemented.
+  const mentorMenuItems: MenuItem[] = [
+    {
+      label: "대시보드",
+      logMessage:
+        "ADDED_ROLE_FLOW: 멘토 대시보드 페이지는 6번 태스크에서 연결 예정입니다.",
+      defaultIcon: <LayoutDashboard size={32} color="#71718A" />,
+      selectedIcon: <LayoutDashboard size={32} color="#6868FF" />,
+      isActive: false,
+    },
+    {
+      label: "요청받은 동영상",
+      logMessage:
+        "ADDED_ROLE_FLOW: 요청받은 동영상 페이지는 9번 태스크에서 연결 예정입니다.",
+      defaultIcon: <Video size={32} color="#71718A" />,
+      selectedIcon: <Video size={32} color="#6868FF" />,
+      isActive: false,
+    },
+    {
+      label: "피드백 히스토리",
+      logMessage:
+        "ADDED_ROLE_FLOW: 피드백 히스토리 페이지는 10번 태스크에서 연결 예정입니다.",
+      defaultIcon: <ClipboardList size={32} color="#71718A" />,
+      selectedIcon: <ClipboardList size={32} color="#6868FF" />,
+      isActive: false,
+    },
+    {
+      label: "멘티 목록",
+      logMessage:
+        "ADDED_ROLE_FLOW: 멘티 목록 페이지는 11번 태스크에서 연결 예정입니다.",
+      defaultIcon: <MessageSquareText size={32} color="#71718A" />,
+      selectedIcon: <MessageSquareText size={32} color="#6868FF" />,
+      isActive: false,
+    },
+    {
+      label: "내 정보",
+      path: ROUTES.MYPAGE,
+      defaultIcon: <User size={32} color="#71718A" />,
+      selectedIcon: <User size={32} color="#6868FF" />,
+      isActive: pathname.startsWith(ROUTES.MYPAGE),
+    },
+  ];
+
+  const menuItems = userRole === "MENTOR" ? mentorMenuItems : menteeMenuItems;
 
   return (
     <div
@@ -97,7 +173,9 @@ export default function SideBar({
             </button>
             <div className="flex flex-row items-center gap-3">
               <Logo size="sm" />
-              <h2 className="text-3xl font-bold text-[#6868FF]">PitchMate</h2>
+              <div className="flex flex-col gap-1">
+                <h2 className="text-3xl font-bold text-[#6868FF]">PitchMate</h2>
+              </div>
             </div>
           </div>
         ) : (
@@ -108,16 +186,27 @@ export default function SideBar({
       </div>
       <div className="flex h-full flex-col justify-between">
         <div className="flex flex-col gap-1.5 pt-4.5 pr-3 pl-3">
+          {/* ADDED_ROLE_FLOW: sidebar shows the current dummy user role. */}
+          <div
+            className={cn(
+              "mb-3",
+              isOpen ? "flex pr-2.5 pl-2.5" : "flex justify-center",
+            )}
+          >
+            <span className="w-fit rounded-full bg-[rgba(104,104,255,0.10)] px-3 py-1 text-lg font-semibold text-[#6868FF]">
+              {roleLabel}
+            </span>
+          </div>
           {menuItems.map((item) => (
             <button
-              key={item.path}
+              key={item.path ?? item.label}
               className={cn(
                 "flex h-17 w-full flex-row items-center gap-4.5",
                 item.isActive && "rounded-2xl bg-[rgba(104,104,255,0.10)]",
                 isOpen ? "pr-4.5 pl-4.5" : "justify-center",
               )}
               type="button"
-              onClick={() => handleToPage(item.path)}
+              onClick={() => handleToPage(item)}
             >
               {item.isActive ? item.selectedIcon : item.defaultIcon}
               {isOpen && (

@@ -1,6 +1,8 @@
 export { default as Logo } from "./logo";
 export { default as InputBar } from "./input-bar";
 export { default as Button } from "./button";
+// ADDED_ROLE_FLOW: shared role radio selector for login/signup.
+export { default as RoleSelect } from "./role-select";
 export { default as SideBar } from "./side-bar";
 export { default as Overview } from "./overview";
 export { default as VideoEmptyView } from "./video-empty-view";
