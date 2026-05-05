@@ -1,4 +1,4 @@
-import { Clock, Loader2, ArrowRight } from "lucide-react";
+import { Clock, Loader2, ArrowRight, TriangleAlert } from "lucide-react";
 
 import { cn } from "@utils/cn";
 import { formatDate, formatDuration } from "@utils/formatter";
@@ -10,7 +10,7 @@ interface HistoryCardProps {
   createdAt: string;
   durationSeconds: number;
   totalScore: number;
-  isAnalyzing: boolean;
+  analysisStatus: string;
   compareMode: boolean;
   selectedOrder?: number | null;
   handleClick: (videoId: number) => void;
@@ -22,18 +22,37 @@ export default function HistoryCard({
   videoThumbnailUrl,
   createdAt,
   durationSeconds,
-  isAnalyzing,
+  analysisStatus,
   totalScore,
   compareMode,
   selectedOrder,
   handleClick,
 }: HistoryCardProps) {
+  const failedColor =
+    analysisStatus === "FAILED" && "text-[#FB2C36] border-[#FB2C36]";
+  const statusText =
+    analysisStatus === "PENDING"
+      ? "분석 대기 중"
+      : analysisStatus === "IN_PROGRESS"
+        ? "분석 중"
+        : analysisStatus === "FAILED"
+          ? "분석 실패"
+          : "오류";
+  const statusIcon =
+    analysisStatus === "FAILED" ? (
+      <TriangleAlert size={20} />
+    ) : (
+      <Loader2 className="animate-spin" size={20} />
+    );
+
+  const notCompleted = analysisStatus !== "COMPLETED";
+
   return (
     <button
       className="flex h-45 min-w-200 flex-row items-center justify-between rounded-2xl pr-6 pl-6 shadow-[0_2px_5px_0_rgba(0,0,0,0.10),0_2px_3px_-2px_rgba(0,0,0,0.10)]"
       type="button"
+      disabled={notCompleted}
       onClick={() => handleClick(videoId)}
-      disabled={isAnalyzing}
     >
       <div className="flex flex-row items-center gap-5">
         <div className="relative">
@@ -52,10 +71,15 @@ export default function HistoryCard({
         <div className="flex flex-col gap-2">
           <div className="flex flex-row items-center gap-4">
             <p className="text-xl font-semibold">{videoTitle}</p>
-            {isAnalyzing && (
-              <div className="flex flex-row items-center gap-2 rounded-xl border border-[#FEE685] pt-1 pr-2 pb-1 pl-2 text-[#FE9A00]">
-                <Loader2 className="animate-spin" size={20} />
-                <span>분석 중</span>
+            {notCompleted && (
+              <div
+                className={cn(
+                  "flex flex-row items-center gap-2 rounded-xl border border-[#FEE685] pt-1 pr-2 pb-1 pl-2 text-[#FE9A00]",
+                  failedColor,
+                )}
+              >
+                {statusIcon}
+                <span>{statusText}</span>
               </div>
             )}
           </div>
@@ -66,7 +90,7 @@ export default function HistoryCard({
           </div>
         </div>
       </div>
-      {!isAnalyzing && (
+      {!analysisStatus && (
         <div className="flex flex-row items-center gap-6">
           <span className="flex h-16 w-16 items-center justify-center rounded-full bg-[rgba(104,104,255,0.10)] text-xl font-bold text-[#6868FF]">
             {totalScore}

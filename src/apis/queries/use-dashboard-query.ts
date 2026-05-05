@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { DASHBOARD_QUERY_KEY } from "@apis/query-key";
 import { dashboardApi } from "@apis/dashboard";
 import type { DashboardResponse } from "@apis/types";
+import { ROUTES } from "@router/constants";
 
 export const useDashboardQuery = () => {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ export const useDashboardQuery = () => {
       isErrorDashboard &&
       (dashboardError.status === 403 || dashboardError.status === 401)
     ) {
-      navigate("/login", { replace: true });
+      navigate(ROUTES.LOGIN, { replace: true });
     }
   }, [isErrorDashboard, dashboardError, navigate]);
 
