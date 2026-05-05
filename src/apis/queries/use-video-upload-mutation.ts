@@ -27,7 +27,7 @@ export const useVideoUploadMutation = () => {
     onError: (error) => {
       toast.error(`업로드 실패: ${error.message}`);
     },
-    retry: 2,
+    retry: 0, // 동영상 업로드의 경우 retry를 진행하면 중복 업로드가 발생할 수 있음
   });
 
   return { uploadVideo, isPendingUploadVideo };

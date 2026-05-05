@@ -2,7 +2,7 @@ import { useState } from "react";
 import { GitCompare } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-import { Button, PageLoading, VideoEmptyView } from "@shared/ui";
+import { Button, PageError, PageLoading, VideoEmptyView } from "@shared/ui";
 import { ROUTES } from "@router/constants";
 import { useVideoHistoryQuery } from "@apis/queries";
 
@@ -10,7 +10,8 @@ import { HistoryCard, SearchBar } from "./components";
 
 export default function VideoHistory() {
   const navigate = useNavigate();
-  const { allHistoryList, isPendingHistoryList } = useVideoHistoryQuery();
+  const { allHistoryList, isPendingHistoryList, isErrorHistoryList } =
+    useVideoHistoryQuery();
 
   const [search, setSearch] = useState("");
   const [compareMode, setCompareMode] = useState(false);
@@ -22,7 +23,7 @@ export default function VideoHistory() {
     history.videoTitle.toLowerCase().includes(search.trim().toLowerCase()),
   );
 
-  const isEmpty = allHistoryList?.length === 0;
+  const isEmpty = !allHistoryList || allHistoryList.length === 0;
 
   const handleCompareMode = () => {
     setCompareMode((prev) => {
@@ -67,6 +68,10 @@ export default function VideoHistory() {
 
   if (isPendingHistoryList) {
     return <PageLoading />;
+  }
+
+  if (isErrorHistoryList) {
+    return <PageError />;
   }
 
   return (
