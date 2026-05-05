@@ -31,6 +31,7 @@ export default function MentorSearchSection({
         <Search color="#71718A" />
         <input
           className="w-full text-xl placeholder:text-[#71718A]"
+          id="mentor-search"
           type="search"
           placeholder="멘토 닉네임 검색"
           value={search}

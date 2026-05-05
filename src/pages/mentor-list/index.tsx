@@ -37,7 +37,9 @@ export default function MentorList() {
 
   const handleRequestMentor = (mentorId: number) => {
     if (!canRequestMentor) {
-      toast.error("최대 5명까지 신청/연결할 수 있습니다.");
+      toast.error(
+        `최대 ${MAX_MENTOR_CONNECTIONS}명까지 신청/연결할 수 있습니다.`,
+      );
       return;
     }
 
