@@ -16,3 +16,5 @@ export const ALLOWED_VIDEO_EXTENSIONS = [
 ] as const;
 
 export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export const PROFILE_BIO_MAX_LENGTH = 100;

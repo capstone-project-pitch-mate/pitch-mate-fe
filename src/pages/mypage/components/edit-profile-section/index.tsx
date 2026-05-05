@@ -2,16 +2,26 @@ import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { Camera, User, Save, Mail, Calendar } from "lucide-react";
 
 import { Button, InputBar } from "@shared/ui";
-import { MAX_PROFILE_IMAGE_SIZE } from "@shared/constants";
+import {
+  MAX_PROFILE_IMAGE_SIZE,
+  PROFILE_BIO_MAX_LENGTH,
+} from "@shared/constants";
 
 // TODO: 서버에서 정보 받아오기
 const DUMMY_NICKNAME = "김발표";
 const DUMMY_PROFILE_IMAGE = "https://placehold.co/120/png";
 const DUMMY_EMAIL = "user@example.com";
 const DUMMY_JOIN_DATE = "2025-12-01";
+// ADDED_PROFILE_BIO: mentor and mentee can both edit a short introduction from My Page.
+const DUMMY_BIO =
+  "안녕하세요. 발표와 면접 커뮤니케이션을 꾸준히 개선하고 있습니다.";
 
 export default function EditProfileSection() {
   const [newNickname, setNewNickname] = useState(DUMMY_NICKNAME);
+  // ADDED_PROFILE_BIO: local dummy bio state until profile API is connected.
+  const [bio, setBio] = useState(DUMMY_BIO);
+  // ADDED_PROFILE_BIO: dummy saved baseline lets the save button reset after saving.
+  const [savedBio, setSavedBio] = useState(DUMMY_BIO);
   const [selectedProfileImage, setSelectedProfileImage] = useState<File | null>(
     null,
   );
@@ -23,10 +33,12 @@ export default function EditProfileSection() {
   const trimmedNickname = newNickname.trim();
   const isNicknameValid = trimmedNickname.length >= 2;
   const isNicknameChanged = trimmedNickname !== DUMMY_NICKNAME;
+  const isBioChanged = bio.trim() !== savedBio;
   const isProfileImageChanged = selectedProfileImage !== null;
 
   const disabled =
-    !isNicknameValid || (!isNicknameChanged && !isProfileImageChanged);
+    !isNicknameValid ||
+    (!isNicknameChanged && !isProfileImageChanged && !isBioChanged);
 
   const handleProfileImage = () => {
     fileInputRef.current?.click();
@@ -65,6 +77,8 @@ export default function EditProfileSection() {
   };
 
   const handleEditProfile = () => {
+    // ADDED_PROFILE_BIO: include bio in the future profile update payload.
+    setSavedBio(bio.trim());
     console.log("변경사항 수정");
   };
 
@@ -158,6 +172,22 @@ export default function EditProfileSection() {
           handleChangeText={() => {}}
           disabled
         />
+        <div className="flex w-full flex-col gap-3">
+          <InputBar
+            label={
+              <label className="text-xl leading-6 font-medium" htmlFor="bio">
+                짧은 자기소개
+              </label>
+            }
+            text={bio}
+            placeholder="자기소개를 입력해주세요."
+            handleChangeText={setBio}
+            maxLength={PROFILE_BIO_MAX_LENGTH}
+          />
+          <span className="self-end text-lg text-[#71718A]">
+            {bio.length} / {PROFILE_BIO_MAX_LENGTH}
+          </span>
+        </div>
       </div>
 
       <div className="flex self-end">

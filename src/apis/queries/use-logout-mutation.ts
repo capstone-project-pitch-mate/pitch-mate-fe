@@ -1,7 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
-import { logoutApi } from "@apis/auth";
+// TEMP_DUMMY_AUTH: restore this import and mutationFn call when API integration resumes.
+// import { logoutApi } from "@apis/auth";
 import useToast from "@hooks/use-toast";
 import { ROUTES } from "@router/constants";
 
@@ -11,9 +12,11 @@ export const useLogoutMutation = () => {
 
   const { mutate: logout } = useMutation({
     mutationFn: () => {
-      const refreshToken = localStorage.getItem("refreshToken");
-      if (!refreshToken) return Promise.resolve();
-      return logoutApi(refreshToken);
+      // TEMP_DUMMY_AUTH: original API logout flow is preserved below while dummy auth is used.
+      // const refreshToken = localStorage.getItem("refreshToken");
+      // if (!refreshToken) return Promise.resolve();
+      // return logoutApi(refreshToken);
+      return Promise.resolve();
     },
     onSuccess: () => {
       toast.info("로그아웃되었습니다.");
@@ -26,6 +29,8 @@ export const useLogoutMutation = () => {
     onSettled: () => {
       localStorage.removeItem("accessToken");
       localStorage.removeItem("refreshToken");
+      // ADDED_ROLE_FLOW: clear locally selected user role on logout.
+      localStorage.removeItem("userRole");
       navigate(ROUTES.LOGIN, { replace: true });
     },
     retry: 3,
