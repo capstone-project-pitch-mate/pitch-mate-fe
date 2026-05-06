@@ -118,7 +118,6 @@ export default function SideBar({
     },
     {
       label: "요청받은 동영상",
-      // ADDED_MENTOR_DASHBOARD: temporary route connects dashboard arrow and sidebar until task 9 builds the full page.
       path: ROUTES.MENTOR_REQUESTED_VIDEOS,
       defaultIcon: <Video size={32} color="#71718A" />,
       selectedIcon: <Video size={32} color="#6868FF" />,
@@ -126,7 +125,6 @@ export default function SideBar({
     },
     {
       label: "피드백 히스토리",
-      // ADDED_MENTOR_DASHBOARD: temporary route connects dashboard arrow and sidebar until task 10 builds the full page.
       path: ROUTES.MENTOR_FEEDBACK_HISTORY,
       defaultIcon: <ClipboardList size={32} color="#71718A" />,
       selectedIcon: <ClipboardList size={32} color="#6868FF" />,
@@ -134,11 +132,11 @@ export default function SideBar({
     },
     {
       label: "멘티 목록",
-      logMessage:
-        "ADDED_ROLE_FLOW: 멘티 목록 페이지는 11번 태스크에서 연결 예정입니다.",
+      // ADDED_MENTEE_LIST: mentor can now manage mentee requests and connections.
+      path: ROUTES.MENTEE_LIST,
       defaultIcon: <MessageSquareText size={32} color="#71718A" />,
       selectedIcon: <MessageSquareText size={32} color="#6868FF" />,
-      isActive: false,
+      isActive: pathname.startsWith(ROUTES.MENTEE_LIST),
     },
     {
       label: "내 정보",

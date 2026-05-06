@@ -12,6 +12,7 @@ import MentorRequestedVideos from "@pages/mentor-requested-videos";
 import MentorRequestedVideoDetail from "@pages/mentor-requested-videos/detail";
 import MentorFeedbackHistory from "@pages/mentor-feedback-history";
 import MentorFeedbackHistoryDetail from "@pages/mentor-feedback-history/detail";
+import MenteeList from "@pages/mentee-list";
 import VideoHistoryDetail from "@pages/video-history-detail";
 import HistoryCompare from "@pages/history-compare";
 import MyPage from "@pages/mypage";
@@ -61,6 +62,10 @@ export const router = createBrowserRouter([
           {
             path: ROUTES.MENTOR_FEEDBACK_HISTORY_DETAIL(":feedbackId"),
             element: <MentorFeedbackHistoryDetail />,
+          },
+          {
+            path: ROUTES.MENTEE_LIST,
+            element: <MenteeList />,
           },
           {
             path: ROUTES.VIDEO_HISTORY_DETAIL(":videoId"),

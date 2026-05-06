@@ -17,6 +17,8 @@ export const ROUTES = {
   // ADDED_MENTOR_FEEDBACK_HISTORY: mentor completed feedback detail page.
   MENTOR_FEEDBACK_HISTORY_DETAIL: (feedbackId: string) =>
     `/mentor-feedback-history/${feedbackId}`,
+  // ADDED_MENTEE_LIST: mentor page for managing mentee connection requests and connected mentees.
+  MENTEE_LIST: "/mentee-list",
   VIDEO_HISTORY_DETAIL: (videoId: string) => `/video-history/${videoId}`,
   HISTORY_COMPARE: (videoId1: string, videoId2: string) =>
     `/history-compare/${videoId1}/${videoId2}`,
