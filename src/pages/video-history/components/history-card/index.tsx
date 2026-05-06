@@ -1,4 +1,10 @@
-import { Clock, Loader2, ArrowRight, TriangleAlert } from "lucide-react";
+import {
+  ArrowRight,
+  Check,
+  Clock,
+  Loader2,
+  TriangleAlert,
+} from "lucide-react";
 
 import { cn } from "@utils/cn";
 import { formatDate, formatDuration } from "@utils/formatter";
@@ -28,12 +34,13 @@ export default function HistoryCard({
   selectedOrder,
   handleClick,
 }: HistoryCardProps) {
+  const notCompleted = analysisStatus !== "COMPLETED";
   const failedColor =
     analysisStatus === "FAILED" && "text-[#FB2C36] border-[#FB2C36]";
   const statusText =
     analysisStatus === "PENDING"
-      ? "분석 대기 중"
-      : analysisStatus === "IN_PROGRESS"
+      ? "분석 대기중"
+      : analysisStatus === "IN_PROGRESS" || analysisStatus === "PROCESSING"
         ? "분석 중"
         : analysisStatus === "FAILED"
           ? "분석 실패"
@@ -45,11 +52,12 @@ export default function HistoryCard({
       <Loader2 className="animate-spin" size={20} />
     );
 
-  const notCompleted = analysisStatus !== "COMPLETED";
-
   return (
     <button
-      className="flex h-45 min-w-200 flex-row items-center justify-between rounded-2xl pr-6 pl-6 shadow-[0_2px_5px_0_rgba(0,0,0,0.10),0_2px_3px_-2px_rgba(0,0,0,0.10)]"
+      className={cn(
+        "flex h-45 min-w-200 flex-row items-center justify-between rounded-2xl pr-6 pl-6 shadow-[0_2px_5px_0_rgba(0,0,0,0.10),0_2px_3px_-2px_rgba(0,0,0,0.10)]",
+        compareMode && !notCompleted && "cursor-pointer",
+      )}
       type="button"
       disabled={notCompleted}
       onClick={() => handleClick(videoId)}
@@ -61,7 +69,7 @@ export default function HistoryCard({
             src={videoThumbnailUrl}
             alt="영상 썸네일"
           />
-          <div className="absolute right-2 bottom-2 rounded-lg bg-[rgba(0,0,0,0.70)] pt-0.5 pr-2 pb-0.5 pl-2">
+          <div className="absolute right-2 bottom-2 rounded-lg bg-[rgba(0,0,0,0.70)] px-2 py-0.5">
             <span className="text-sm text-white">
               {formatDuration(durationSeconds)}
             </span>
@@ -74,7 +82,7 @@ export default function HistoryCard({
             {notCompleted && (
               <div
                 className={cn(
-                  "flex flex-row items-center gap-2 rounded-xl border border-[#FEE685] pt-1 pr-2 pb-1 pl-2 text-[#FE9A00]",
+                  "flex flex-row items-center gap-2 rounded-xl border border-[#FEE685] px-2 py-1 text-[#FE9A00]",
                   failedColor,
                 )}
               >
@@ -90,7 +98,8 @@ export default function HistoryCard({
           </div>
         </div>
       </div>
-      {!analysisStatus && (
+
+      {!notCompleted && (
         <div className="flex flex-row items-center gap-6">
           <span className="flex h-16 w-16 items-center justify-center rounded-full bg-[rgba(104,104,255,0.10)] text-xl font-bold text-[#6868FF]">
             {totalScore}
@@ -98,13 +107,13 @@ export default function HistoryCard({
           {compareMode ? (
             <div
               className={cn(
-                "flex h-7.5 w-7.5 items-center justify-center rounded-full",
+                "flex h-8 w-8 items-center justify-center rounded-lg border-2",
                 selectedOrder
-                  ? "bg-[#6868FF] text-white"
-                  : "border-2 border-[rgba(113,113,138,0.30)]",
+                  ? "border-[#6868FF] bg-[#6868FF] text-white"
+                  : "border-[rgba(113,113,138,0.40)] bg-white",
               )}
             >
-              {selectedOrder}
+              {selectedOrder ? <Check size={20} /> : null}
             </div>
           ) : (
             <ArrowRight color="#1A1A2E" size={30} />

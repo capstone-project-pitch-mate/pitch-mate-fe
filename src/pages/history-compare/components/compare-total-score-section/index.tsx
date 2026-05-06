@@ -1,9 +1,9 @@
-import { TrendingUp, TrendingDown, ArrowRight, Equal } from "lucide-react";
+import { ArrowRight, Equal, TrendingDown, TrendingUp } from "lucide-react";
 
+import { cn } from "@utils/cn";
 import { formatDate } from "@utils/formatter";
 
 import type { ComparedTotalScoreType } from "../../types";
-import { cn } from "@utils/cn";
 
 interface CompareTotalScoreSectionProps {
   session1: ComparedTotalScoreType;
@@ -18,7 +18,7 @@ export default function CompareTotalScoreSection({
 
   return (
     <section className="flex w-full flex-row items-center justify-between gap-9">
-      <div className="flex aspect-2/1 flex-1 flex-col items-center justify-center gap-5 rounded-3xl pt-6 pb-6 shadow-[0_1.6px_4.8px_0_rgba(0,0,0,0.10),0_1.6px_3.2px_-1.6px_rgba(0,0,0,0.10)]">
+      <div className="flex aspect-2/1 flex-1 flex-col items-center justify-center gap-5 rounded-3xl py-6 shadow-[0_1.6px_4.8px_0_rgba(0,0,0,0.10),0_1.6px_3.2px_-1.6px_rgba(0,0,0,0.10)]">
         <div className="flex h-25 w-25 items-center justify-center rounded-full bg-[rgba(104,104,255,0.10)] text-3xl font-bold text-[#6868FF]">
           {session1.totalScore}
         </div>
@@ -49,7 +49,7 @@ export default function CompareTotalScoreSection({
           <ArrowRight color="#71718A" />
         )}
       </div>
-      <div className="flex aspect-2/1 flex-1 flex-col items-center justify-center gap-5 rounded-3xl pt-6 pb-6 shadow-[0_1.6px_4.8px_0_rgba(0,0,0,0.10),0_1.6px_3.2px_-1.6px_rgba(0,0,0,0.10)]">
+      <div className="flex aspect-2/1 flex-1 flex-col items-center justify-center gap-5 rounded-3xl py-6 shadow-[0_1.6px_4.8px_0_rgba(0,0,0,0.10),0_1.6px_3.2px_-1.6px_rgba(0,0,0,0.10)]">
         <div className="flex h-25 w-25 items-center justify-center rounded-full bg-[rgba(104,104,255,0.10)] text-3xl font-bold text-[#6868FF]">
           {session2.totalScore}
         </div>
