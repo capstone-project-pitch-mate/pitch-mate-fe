@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 import { ROUTES } from "@router/constants";
 
 import {
@@ -13,10 +15,14 @@ import {
 import type { MentorDashboardVideo } from "./types";
 
 export default function MentorDashboard() {
-  const handleClickVideo = (sectionName: string, video: MentorDashboardVideo) => {
-    console.log(
-      `[mentor-dashboard] ${sectionName} 상세 페이지는 이후 태스크에서 연결 예정입니다. videoId=${video.id}, title=${video.title}`,
-    );
+  const navigate = useNavigate();
+
+  const handleClickRequestedVideo = (video: MentorDashboardVideo) => {
+    navigate(ROUTES.MENTOR_REQUESTED_VIDEO_DETAIL(String(video.id)));
+  };
+
+  const handleClickHistoryVideo = (video: MentorDashboardVideo) => {
+    navigate(ROUTES.MENTOR_FEEDBACK_HISTORY_DETAIL(String(video.id)));
   };
 
   return (
@@ -36,7 +42,7 @@ export default function MentorDashboard() {
           videos={FEEDBACK_REQUEST_VIDEOS}
           emptyMessage="새로운 피드백 요청이 없습니다."
           viewAllPath={ROUTES.MENTOR_REQUESTED_VIDEOS}
-          handleClickVideo={(video) => handleClickVideo("요청받은 동영상", video)}
+          handleClickVideo={handleClickRequestedVideo}
         />
 
         <VideoListSection
@@ -46,7 +52,7 @@ export default function MentorDashboard() {
           emptyMessage="아직 완료한 피드백이 없습니다."
           viewAllPath={ROUTES.MENTOR_FEEDBACK_HISTORY}
           compact
-          handleClickVideo={(video) => handleClickVideo("피드백 히스토리", video)}
+          handleClickVideo={handleClickHistoryVideo}
         />
       </section>
     </div>

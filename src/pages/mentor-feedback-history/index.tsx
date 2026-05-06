@@ -1,10 +1,31 @@
+import { useNavigate } from "react-router-dom";
+
+import { ROUTES } from "@router/constants";
+
+import { HistoryCard, PageHeader } from "./components";
+import { DUMMY_MENTOR_FEEDBACK_HISTORY } from "./constants";
+
 export default function MentorFeedbackHistory() {
+  const navigate = useNavigate();
+
   return (
-    <div className="flex min-h-screen min-w-300 flex-col gap-4 p-10">
-      <h1 className="text-4xl leading-14 font-medium">피드백 히스토리</h1>
-      <p className="text-2xl leading-9 text-[#71718A]">
-        상세 목록 화면은 10번 태스크에서 구현 예정입니다.
-      </p>
+    <div className="flex min-h-screen min-w-300 flex-col gap-9 p-10 pb-30">
+      <PageHeader
+        title="피드백 히스토리"
+        description="멘토가 완료한 피드백 기록을 확인하세요."
+      />
+
+      <section className="grid grid-cols-2 gap-6">
+        {DUMMY_MENTOR_FEEDBACK_HISTORY.map((item) => (
+          <HistoryCard
+            key={item.id}
+            item={item}
+            handleClick={(feedbackId) =>
+              navigate(ROUTES.MENTOR_FEEDBACK_HISTORY_DETAIL(String(feedbackId)))
+            }
+          />
+        ))}
+      </section>
     </div>
   );
 }

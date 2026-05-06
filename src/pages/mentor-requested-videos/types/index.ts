@@ -1,0 +1,35 @@
+export interface MentorRequestedVideo {
+  id: number;
+  title: string;
+  menteeNickname: string;
+  thumbnailUrl: string;
+  videoUrl: string;
+  durationSeconds: number;
+  requestedAt: string;
+  description: string;
+}
+
+export interface SegmentComment {
+  id: number;
+  startTimeSeconds: number;
+  endTimeSeconds: number;
+  content: string;
+}
+
+export interface SegmentCommentDraft {
+  startTimeSeconds: number;
+  endTimeSeconds: number;
+  content: string;
+}
+
+export interface MentorRubricItem {
+  id: number;
+  title: string;
+  category: "speech" | "nonVerbal" | "delivery";
+}
+
+export interface MentorRubricScore extends MentorRubricItem {
+  score: number;
+}
+
+export type FeedbackWritingStep = "COMMENT" | "RUBRIC";
