@@ -7,6 +7,9 @@ import NotFound from "@pages/not-found";
 import VideoUpload from "@pages/video-upload";
 import VideoHistory from "@pages/video-history";
 import MentorList from "@pages/mentor-list";
+import MentorDashboard from "@pages/mentor-dashboard";
+import MentorRequestedVideos from "@pages/mentor-requested-videos";
+import MentorFeedbackHistory from "@pages/mentor-feedback-history";
 import VideoHistoryDetail from "@pages/video-history-detail";
 import HistoryCompare from "@pages/history-compare";
 import MyPage from "@pages/mypage";
@@ -36,6 +39,18 @@ export const router = createBrowserRouter([
           {
             path: ROUTES.MENTOR_LIST,
             element: <MentorList />,
+          },
+          {
+            path: ROUTES.MENTOR_DASHBOARD,
+            element: <MentorDashboard />,
+          },
+          {
+            path: ROUTES.MENTOR_REQUESTED_VIDEOS,
+            element: <MentorRequestedVideos />,
+          },
+          {
+            path: ROUTES.MENTOR_FEEDBACK_HISTORY,
+            element: <MentorFeedbackHistory />,
           },
           {
             path: ROUTES.VIDEO_HISTORY_DETAIL(":videoId"),

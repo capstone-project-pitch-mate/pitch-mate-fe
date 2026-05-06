@@ -41,7 +41,8 @@ const getStoredUserRole = (): UserRole => {
   return localStorage.getItem("userRole") === "MENTOR" ? "MENTOR" : "MENTEE";
 };
 
-const getRoleLabel = (role: UserRole) => (role === "MENTOR" ? "멘토" : "멘티");
+const getRoleLabel = (role: UserRole) =>
+  role === "MENTOR" ? "멘토" : "멘티";
 
 export default function SideBar({
   pathname,
@@ -56,9 +57,7 @@ export default function SideBar({
   const handleToPage = (item: MenuItem) => {
     if (!item.path) {
       // ADDED_ROLE_FLOW: pages that are not implemented yet only log for now.
-      console.log(
-        item.logMessage ?? `${item.label} 페이지는 아직 준비 중입니다.`,
-      );
+      console.log(item.logMessage ?? `${item.label} 페이지는 아직 준비 중입니다.`);
       return;
     }
 
@@ -108,31 +107,30 @@ export default function SideBar({
     },
   ];
 
-  // ADDED_ROLE_FLOW: mentor-only sidebar structure is prepared before mentor pages are implemented.
   const mentorMenuItems: MenuItem[] = [
     {
       label: "대시보드",
-      logMessage:
-        "ADDED_ROLE_FLOW: 멘토 대시보드 페이지는 6번 태스크에서 연결 예정입니다.",
+      // ADDED_MENTOR_DASHBOARD: mentor dashboard is now connected.
+      path: ROUTES.MENTOR_DASHBOARD,
       defaultIcon: <LayoutDashboard size={32} color="#71718A" />,
       selectedIcon: <LayoutDashboard size={32} color="#6868FF" />,
-      isActive: false,
+      isActive: pathname.startsWith(ROUTES.MENTOR_DASHBOARD),
     },
     {
       label: "요청받은 동영상",
-      logMessage:
-        "ADDED_ROLE_FLOW: 요청받은 동영상 페이지는 9번 태스크에서 연결 예정입니다.",
+      // ADDED_MENTOR_DASHBOARD: temporary route connects dashboard arrow and sidebar until task 9 builds the full page.
+      path: ROUTES.MENTOR_REQUESTED_VIDEOS,
       defaultIcon: <Video size={32} color="#71718A" />,
       selectedIcon: <Video size={32} color="#6868FF" />,
-      isActive: false,
+      isActive: pathname.startsWith(ROUTES.MENTOR_REQUESTED_VIDEOS),
     },
     {
       label: "피드백 히스토리",
-      logMessage:
-        "ADDED_ROLE_FLOW: 피드백 히스토리 페이지는 10번 태스크에서 연결 예정입니다.",
+      // ADDED_MENTOR_DASHBOARD: temporary route connects dashboard arrow and sidebar until task 10 builds the full page.
+      path: ROUTES.MENTOR_FEEDBACK_HISTORY,
       defaultIcon: <ClipboardList size={32} color="#71718A" />,
       selectedIcon: <ClipboardList size={32} color="#6868FF" />,
-      isActive: false,
+      isActive: pathname.startsWith(ROUTES.MENTOR_FEEDBACK_HISTORY),
     },
     {
       label: "멘티 목록",
@@ -173,9 +171,7 @@ export default function SideBar({
             </button>
             <div className="flex flex-row items-center gap-3">
               <Logo size="sm" />
-              <div className="flex flex-col gap-1">
-                <h2 className="text-3xl font-bold text-[#6868FF]">PitchMate</h2>
-              </div>
+              <h2 className="text-3xl font-bold text-[#6868FF]">PitchMate</h2>
             </div>
           </div>
         ) : (
@@ -190,7 +186,7 @@ export default function SideBar({
           <div
             className={cn(
               "mb-3",
-              isOpen ? "flex pr-2.5 pl-2.5" : "flex justify-center",
+              isOpen ? "flex px-2.5" : "flex justify-center",
             )}
           >
             <span className="w-fit rounded-full bg-[rgba(104,104,255,0.10)] px-3 py-1 text-lg font-semibold text-[#6868FF]">

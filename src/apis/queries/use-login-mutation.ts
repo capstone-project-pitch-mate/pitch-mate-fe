@@ -20,7 +20,8 @@ export const useLoginMutation = () => {
       localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("refreshToken", refreshToken);
       localStorage.setItem("userRole", role);
-      navigate(ROUTES.DASHBOARD);
+      // ADDED_MENTOR_DASHBOARD: mentor users land on the mentor dashboard.
+      navigate(role === "MENTOR" ? ROUTES.MENTOR_DASHBOARD : ROUTES.DASHBOARD);
     },
   });
 
