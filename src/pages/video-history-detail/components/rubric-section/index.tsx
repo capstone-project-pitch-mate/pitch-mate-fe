@@ -2,6 +2,7 @@ import type { RubricDetailType } from "@pages/video-history-detail/types";
 import { CategoryChart, DetailBarChart } from "@shared/ui";
 
 interface RubricSectionProps {
+  sectionTitle: string;
   title: string;
   totalScore: number;
   speechAvg: number;
@@ -11,6 +12,7 @@ interface RubricSectionProps {
 }
 
 export default function RubricSection({
+  sectionTitle,
   title,
   totalScore,
   speechAvg,
@@ -28,14 +30,14 @@ export default function RubricSection({
       [title]: nonVerbalAvg,
     },
     {
-      category: "전달력/표현력",
+      category: "전달 표현",
       [title]: deliveryAvg,
     },
   ];
 
   return (
-    <section className="flex flex-col gap-9 rounded-3xl p-9 shadow-[0_1.6px_4.8px_0_rgba(0,0,0,0.10),0_1.6px_3.2px_-1.6px_rgba(0,0,0,0.10)]">
-      <h3 className="text-2xl font-medium">AI 평가 루브릭</h3>
+    <div className="flex flex-col gap-9 rounded-3xl p-9 shadow-[0_1.6px_4.8px_0_rgba(0,0,0,0.10),0_1.6px_3.2px_-1.6px_rgba(0,0,0,0.10)]">
+      <h3 className="text-2xl font-medium">{sectionTitle}</h3>
       <div className="flex flex-row gap-8">
         <div className="flex flex-col items-center justify-center">
           <div className="flex flex-col items-center gap-5">
@@ -65,6 +67,6 @@ export default function RubricSection({
           ))}
         </div>
       </div>
-    </section>
+    </div>
   );
 }

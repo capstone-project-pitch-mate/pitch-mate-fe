@@ -1,45 +1,27 @@
+import { useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-import {
-  CompareCategoryChartSection,
-  CompareDetailBarChartSection,
-  CompareOverallComment,
-  CompareTotalScoreSection,
-} from "./components";
-import {
-  DUMMY_COMPARE_OVERALL_COMMENT,
-  DUMMY_COMPARED_CATEGORY,
-  DUMMY_COMPARED_DETAIL,
-  DUMMY_COMPARED_SESSION1,
-  DUMMY_COMPARED_SESSION2,
-  EVAL_CATEGORY,
-} from "./constants";
+import { FeedbackViewSelector } from "@pages/video-history-detail/components";
+import type { FeedbackViewType } from "@pages/video-history-detail/types";
+
+import { CompareFeedbackResultSection } from "./components";
+import { AI_COMPARE_RESULT, MENTOR_COMPARE_RESULT } from "./constants";
 
 export default function HistoryCompare() {
   const navigate = useNavigate();
+  const [selectedView, setSelectedView] = useState<FeedbackViewType>("AI");
 
   const handleBack = () => {
     navigate(-1);
   };
 
-  const categoryScoreKeys = [
-    "speechAvg",
-    "nonVerbalAvg",
-    "deliveryAvg",
-  ] as const;
-
-  const comparedCategoryData = EVAL_CATEGORY.map((category, index) => {
-    const scoreKey = categoryScoreKeys[index];
-
-    return {
-      category,
-      [DUMMY_COMPARED_SESSION1.videoTitle]:
-        DUMMY_COMPARED_CATEGORY.session1[scoreKey],
-      [DUMMY_COMPARED_SESSION2.videoTitle]:
-        DUMMY_COMPARED_CATEGORY.session2[scoreKey],
-    };
-  });
+  const compareResults =
+    selectedView === "AI"
+      ? [AI_COMPARE_RESULT]
+      : selectedView === "MENTOR"
+        ? [MENTOR_COMPARE_RESULT]
+        : [AI_COMPARE_RESULT, MENTOR_COMPARE_RESULT];
 
   return (
     <div className="flex min-h-screen min-w-300 flex-col gap-10 p-10 pb-30">
@@ -50,30 +32,17 @@ export default function HistoryCompare() {
         <div className="flex flex-col gap-1.5">
           <h1 className="text-4xl leading-14 font-medium">히스토리 비교</h1>
           <p className="text-2xl leading-9 text-[#71718A]">
-            두 영상의 평가 결과를 비교합니다.
+            AI와 멘토의 피드백 기준으로 두 영상의 평가 결과를 비교합니다.
           </p>
         </div>
       </section>
-      <CompareTotalScoreSection
-        session1={DUMMY_COMPARED_SESSION1}
-        session2={DUMMY_COMPARED_SESSION2}
+      <FeedbackViewSelector
+        selectedView={selectedView}
+        handleChangeView={setSelectedView}
       />
-      <CompareCategoryChartSection
-        data={comparedCategoryData}
-        session1Name={DUMMY_COMPARED_SESSION1.videoTitle}
-        session2Name={DUMMY_COMPARED_SESSION2.videoTitle}
-      />
-      <CompareDetailBarChartSection
-        rubricDetailScores={DUMMY_COMPARED_DETAIL}
-        session1Name={DUMMY_COMPARED_SESSION1.videoTitle}
-        session2Name={DUMMY_COMPARED_SESSION2.videoTitle}
-      />
-      <CompareOverallComment
-        session1Name={DUMMY_COMPARED_SESSION1.videoTitle}
-        session2Name={DUMMY_COMPARED_SESSION2.videoTitle}
-        session1Comment={DUMMY_COMPARE_OVERALL_COMMENT.session1OverallComment}
-        session2Comment={DUMMY_COMPARE_OVERALL_COMMENT.session2OverallComment}
-      />
+      {compareResults.map((result) => (
+        <CompareFeedbackResultSection key={result.label} result={result} />
+      ))}
     </div>
   );
 }

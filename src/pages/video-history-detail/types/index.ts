@@ -13,3 +13,20 @@ export interface RubricDetailType {
   rubricTitle: string;
   score: number;
 }
+
+export type FeedbackViewType = "AI" | "MENTOR" | "ALL";
+
+export interface FeedbackCategoryScore {
+  speechAvg: number;
+  nonVerbalAvg: number;
+  deliveryAvg: number;
+}
+
+export interface FeedbackResult {
+  label: string;
+  overallComment: string;
+  feedbacks: FeedbackType[];
+  totalScore: number;
+  categoryScore: FeedbackCategoryScore;
+  rubricScores: RubricDetailType[];
+}

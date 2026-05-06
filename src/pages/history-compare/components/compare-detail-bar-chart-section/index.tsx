@@ -2,19 +2,21 @@ import type { CompareRubricDetailType } from "@pages/history-compare/types";
 import { DetailBarChart } from "@shared/ui";
 
 interface CompareDetailBarChartSectionProps {
+  title: string;
   rubricDetailScores: CompareRubricDetailType[];
   session1Name: string;
   session2Name: string;
 }
 
 export default function CompareDetailBarChartSection({
+  title,
   rubricDetailScores,
   session1Name,
   session2Name,
 }: CompareDetailBarChartSectionProps) {
   return (
     <section className="flex flex-col gap-10 rounded-3xl p-9 shadow-[0_1.6px_4.8px_0_rgba(0,0,0,0.10),0_1.6px_3.2px_-1.6px_rgba(0,0,0,0.10)]">
-      <h2 className="text-2xl font-medium">항목별 점수 비교</h2>
+      <h2 className="text-2xl font-medium">{title}</h2>
       <div className="flex flex-col gap-6">
         {rubricDetailScores.map((item) => (
           <DetailBarChart

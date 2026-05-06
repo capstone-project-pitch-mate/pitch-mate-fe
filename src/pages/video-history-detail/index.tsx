@@ -1,37 +1,42 @@
+import { useState } from "react";
+
 import {
+  DUMMY_AI_FEEDBACK_RESULT,
   DUMMY_DETAIL_VIDEO_INFO,
-  DUMMY_FEEDBACKS,
-  DUMMY_HISTORY_TOTAL_SCORE,
-  DUMMY_OVERALL_COMMENT,
-  DUMMY_RUBRIC_CATEGORY,
-  DUMMY_RUBRIC_SCORE,
+  DUMMY_MENTOR_FEEDBACK_RESULT,
 } from "./constants";
 import {
-  FeedbackSection,
+  FeedbackResultSection,
+  FeedbackViewSelector,
   HistoryDetailHeader,
   HistoryDetailVideo,
-  OverallComment,
-  RubricSection,
 } from "./components";
+import type { FeedbackViewType } from "./types";
 
 export default function VideoHistoryDetail() {
+  const [selectedView, setSelectedView] = useState<FeedbackViewType>("AI");
+
+  const feedbackResults =
+    selectedView === "AI"
+      ? [DUMMY_AI_FEEDBACK_RESULT]
+      : selectedView === "MENTOR"
+        ? [DUMMY_MENTOR_FEEDBACK_RESULT]
+        : [DUMMY_AI_FEEDBACK_RESULT, DUMMY_MENTOR_FEEDBACK_RESULT];
+
   return (
-    <div className="flex min-h-screen min-w-300 flex-col gap-10 p-10 pb-30">
+    <div className="flex flex-col gap-10 p-10">
       <HistoryDetailHeader
         title={DUMMY_DETAIL_VIDEO_INFO.title}
         createdAt={DUMMY_DETAIL_VIDEO_INFO.createdAt}
       />
       <HistoryDetailVideo videoUrl={DUMMY_DETAIL_VIDEO_INFO.videoUrl} />
-      <OverallComment overallComment={DUMMY_OVERALL_COMMENT} />
-      <FeedbackSection feedbacks={DUMMY_FEEDBACKS} />
-      <RubricSection
-        title={DUMMY_DETAIL_VIDEO_INFO.title}
-        totalScore={DUMMY_HISTORY_TOTAL_SCORE}
-        speechAvg={DUMMY_RUBRIC_CATEGORY.speechAvg}
-        nonVerbalAvg={DUMMY_RUBRIC_CATEGORY.nonVerbalAvg}
-        deliveryAvg={DUMMY_RUBRIC_CATEGORY.deliveryAvg}
-        rubricDetailScores={DUMMY_RUBRIC_SCORE}
+      <FeedbackViewSelector
+        selectedView={selectedView}
+        handleChangeView={setSelectedView}
       />
+      {feedbackResults.map((result) => (
+        <FeedbackResultSection key={result.label} result={result} />
+      ))}
     </div>
   );
 }
