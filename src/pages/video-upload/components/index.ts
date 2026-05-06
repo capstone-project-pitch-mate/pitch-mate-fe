@@ -3,3 +3,4 @@ export { default as VideoUploadSection } from "./video-upload-section";
 export { default as VideoDescSection } from "./video-desc-section";
 export { default as UploadFooter } from "./upload-footer";
 export { default as VideoRecordSection } from "./video-record-section";
+export { default as MentorFeedbackSection } from "./mentor-feedback-section";
