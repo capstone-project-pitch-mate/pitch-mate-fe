@@ -9,7 +9,10 @@ import { useVideoUploadMutation } from "@apis/queries";
 import useToast from "@hooks/use-toast";
 import { PageLoading } from "@shared/ui";
 
+import { DUMMY_CONNECTED_MENTORS } from "./constants";
+import type { SelectedMentorId } from "./types";
 import {
+  MentorFeedbackSection,
   UploadFooter,
   UploadTopContent,
   VideoDescSection,
@@ -39,6 +42,9 @@ export default function VideoUpload() {
   const [videoDesc, setVideoDesc] = useState("");
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [videoPreviewUrl, setVideoPreviewUrl] = useState<string | null>(null);
+  // ADDED_UPLOAD_MENTOR_REQUEST: mentor feedback is optional; null means AI feedback only.
+  const [selectedMentorId, setSelectedMentorId] =
+    useState<SelectedMentorId>(null);
 
   const objectUrlRef = useRef<string | null>(null);
 
@@ -103,13 +109,20 @@ export default function VideoUpload() {
       description: videoDesc,
       videoType: uploadType,
       file: videoFile,
+      // ADDED_UPLOAD_MENTOR_REQUEST: include selectedMentorId in the future upload API payload.
+      // selectedMentorId,
     });
   };
 
   const handleReset = () => {
     setVideoTitle("");
     setVideoDesc("");
+    setSelectedMentorId(null);
     clearSelectedVideo();
+  };
+
+  const handleSelectMentor = (mentorId: number) => {
+    setSelectedMentorId((prev) => (prev === mentorId ? null : mentorId));
   };
 
   useEffect(() => {
@@ -150,6 +163,11 @@ export default function VideoUpload() {
           videoDesc={videoDesc}
           handleChangeTitle={setVideoTitle}
           handleChangeDesc={setVideoDesc}
+        />
+        <MentorFeedbackSection
+          connectedMentors={DUMMY_CONNECTED_MENTORS}
+          selectedMentorId={selectedMentorId}
+          handleSelectMentor={handleSelectMentor}
         />
         <UploadFooter
           handleUpload={handleUpload}
