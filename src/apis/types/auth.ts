@@ -12,7 +12,6 @@ export interface SignupFormBody {
   email: string;
   password: string;
   nickname: string;
-  // ADDED_ROLE_FLOW: selected role is included in the signup payload.
   role: UserRole;
 }
 
@@ -20,6 +19,7 @@ export interface SignupRequestBody {
   email: string;
   password: string;
   nickname: string;
+  role: UserRole;
 }
 
 export interface LoginFormBoby {
