@@ -21,3 +21,7 @@ export const VIDEO_URL = {
 export const HISTORY_URL = {
   DEFAULT: "/history",
 };
+
+export const CONNECTIONS_URL = {
+  DEFAULT: "/connections",
+};

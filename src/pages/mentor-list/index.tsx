@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react";
 
+import { useConnectionsQuery } from "@apis/queries";
 import useToast from "@hooks/use-toast";
+import type { ConnectionsResponse } from "@apis/types";
 
 import { DUMMY_MENTORS, MAX_MENTOR_CONNECTIONS } from "./constants";
 import {
@@ -8,17 +10,39 @@ import {
   MentorSearchSection,
   MyMentorSection,
 } from "./components";
+import type { Mentor, MentorStatus } from "./types";
+
+const toMentorStatus = (
+  status: ConnectionsResponse[number]["status"],
+): MentorStatus => {
+  return status === "CONNECTED" || status === "ACCEPTED"
+    ? "CONNECTED"
+    : "PENDING";
+};
+
+const toMentor = (connection: ConnectionsResponse[number]): Mentor => ({
+  id: connection.mentorId,
+  nickname: connection.mentorNickname,
+  bio: connection.mentorIntro ?? "",
+  status: toMentorStatus(connection.status),
+});
 
 export default function MentorList() {
   const toast = useToast();
+  const { connectionsData, isPendingConnections, isErrorConnections } =
+    useConnectionsQuery();
   const [search, setSearch] = useState("");
   const [mentors, setMentors] = useState(DUMMY_MENTORS);
 
   const trimmedSearch = search.trim();
   const hasSearched = trimmedSearch.length > 0;
 
-  const myMentors = mentors.filter(
-    (mentor) => mentor.status === "CONNECTED" || mentor.status === "PENDING",
+  const myMentors = useMemo(
+    () =>
+      (connectionsData ?? [])
+        .filter((connection) => connection.status !== "REJECTED")
+        .map(toMentor),
+    [connectionsData],
   );
   const connectedOrPendingCount = myMentors.length;
   const canRequestMentor = connectedOrPendingCount < MAX_MENTOR_CONNECTIONS;
@@ -70,11 +94,21 @@ export default function MentorList() {
         handleChangeSearch={setSearch}
         handleRequestMentor={handleRequestMentor}
       />
-      <MyMentorSection
-        connectedOrPendingCount={connectedOrPendingCount}
-        myMentors={myMentors}
-        handleRemoveMentor={handleRemoveMentor}
-      />
+      {isPendingConnections ? (
+        <div className="flex min-h-36 items-center justify-center rounded-2xl bg-white text-xl text-[#71718A] shadow-[0_2px_5px_0_rgba(0,0,0,0.10),0_2px_3px_-2px_rgba(0,0,0,0.10)]">
+          연결 목록을 불러오는 중입니다.
+        </div>
+      ) : isErrorConnections ? (
+        <div className="flex min-h-36 items-center justify-center rounded-2xl bg-white text-xl text-[#71718A] shadow-[0_2px_5px_0_rgba(0,0,0,0.10),0_2px_3px_-2px_rgba(0,0,0,0.10)]">
+          연결 목록을 불러오지 못했습니다.
+        </div>
+      ) : (
+        <MyMentorSection
+          connectedOrPendingCount={connectedOrPendingCount}
+          myMentors={myMentors}
+          handleRemoveMentor={handleRemoveMentor}
+        />
+      )}
     </div>
   );
 }
