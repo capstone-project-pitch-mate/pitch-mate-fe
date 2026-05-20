@@ -17,4 +17,4 @@ export type {
 } from "./video";
 
 export type { UserInfoResponse, EditUserInfoRequest } from "./user";
-export type { ConnectionsResponse } from "./connections";
+export type { ConnectionsResponse, ConnectionStatus } from "./connections";

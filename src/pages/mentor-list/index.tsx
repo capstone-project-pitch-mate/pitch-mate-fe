@@ -15,9 +15,15 @@ import type { Mentor, MentorStatus } from "./types";
 const toMentorStatus = (
   status: ConnectionsResponse[number]["status"],
 ): MentorStatus => {
-  return status === "CONNECTED" || status === "ACCEPTED"
-    ? "CONNECTED"
-    : "PENDING";
+  if (status === "ACCEPTED") {
+    return "CONNECTED";
+  }
+
+  if (status === "PENDING") {
+    return "PENDING";
+  }
+
+  return "AVAILABLE";
 };
 
 const toMentor = (connection: ConnectionsResponse[number]): Mentor => ({
@@ -40,7 +46,10 @@ export default function MentorList() {
   const myMentors = useMemo(
     () =>
       (connectionsData ?? [])
-        .filter((connection) => connection.status !== "REJECTED")
+        .filter(
+          (connection) =>
+            connection.status === "PENDING" || connection.status === "ACCEPTED",
+        )
         .map(toMentor),
     [connectionsData],
   );

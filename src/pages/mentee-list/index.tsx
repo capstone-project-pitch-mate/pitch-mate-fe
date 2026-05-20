@@ -15,9 +15,7 @@ import type { Mentee, MenteeConnectionStatus } from "./types";
 const toMenteeStatus = (
   status: ConnectionsResponse[number]["status"],
 ): MenteeConnectionStatus => {
-  return status === "CONNECTED" || status === "ACCEPTED"
-    ? "CONNECTED"
-    : "REQUESTED";
+  return status === "ACCEPTED" ? "CONNECTED" : "REQUESTED";
 };
 
 const toMentee = (connection: ConnectionsResponse[number]): Mentee => {
@@ -41,7 +39,10 @@ export default function MenteeList() {
   const mentees = useMemo(
     () =>
       (connectionsData ?? [])
-        .filter((connection) => connection.status !== "REJECTED")
+        .filter(
+          (connection) =>
+            connection.status === "PENDING" || connection.status === "ACCEPTED",
+        )
         .map(toMentee),
     [connectionsData],
   );
