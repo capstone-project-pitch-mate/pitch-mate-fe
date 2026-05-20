@@ -11,6 +11,7 @@ export const DASHBOARD_URL = {
 
 export const USER_URL = {
   DEFAULT: "/users/me",
+  EDIT: "/users/me",
 };
 
 export const VIDEO_URL = {

@@ -14,3 +14,9 @@ export interface UserInfoResponse {
   averageScore: number | null;
   recentVideos: RecentVideosType[];
 }
+
+export interface EditUserInfoRequest {
+  nickname?: string;
+  profileImage?: string;
+  intro?: string;
+}

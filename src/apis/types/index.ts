@@ -16,4 +16,4 @@ export type {
   VideoUploadResponse,
 } from "./video";
 
-export type { UserInfoResponse } from "./user";
+export type { UserInfoResponse, EditUserInfoRequest } from "./user";
