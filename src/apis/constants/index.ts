@@ -9,6 +9,10 @@ export const DASHBOARD_URL = {
   DEFAULT: "/users/me",
 };
 
+export const USER_URL = {
+  DEFAULT: "/users/me",
+};
+
 export const VIDEO_URL = {
   DEFAULT: "/videos",
 };

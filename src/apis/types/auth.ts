@@ -1,5 +1,4 @@
-// ADDED_ROLE_FLOW: mentor/mentee role selection support for auth screens.
-export type UserRole = "MENTOR" | "MENTEE";
+import type { UserRole } from "@shared/types";
 
 export interface SignupResponse {
   userId: number;
@@ -19,13 +18,6 @@ export interface SignupRequestBody {
   email: string;
   password: string;
   nickname: string;
-  role: UserRole;
-}
-
-export interface LoginFormBoby {
-  email: string;
-  password: string;
-  // ADDED_ROLE_FLOW: selected role is included in the login payload while dummy auth is used.
   role: UserRole;
 }
 

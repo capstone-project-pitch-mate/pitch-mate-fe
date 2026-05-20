@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 
 import { Button, InputBar, RoleSelect } from "@shared/ui";
-import type { UserRole } from "@apis/types";
 import { ROUTES } from "@router/constants";
 import { EMAIL_REGEX } from "@shared/constants";
 import { useSignupMutation } from "@apis/queries";
+import type { UserRole } from "@shared/types";
 
 export default function Signup() {
   const [email, setEmail] = useState("");
@@ -23,6 +23,8 @@ export default function Signup() {
   const handleSignup = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrorMessage("");
+
+    console.log(email, nickname, password, role);
 
     signup(
       {

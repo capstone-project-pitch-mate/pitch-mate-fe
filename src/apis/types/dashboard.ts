@@ -1,4 +1,4 @@
-import type { UserRole } from "./auth";
+import type { UserRole } from "@shared/types";
 
 export interface RecentVideosType {
   videoId: number;

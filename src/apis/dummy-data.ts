@@ -1,10 +1,6 @@
 import type {
   AllVideoHistoryResponse,
   DashboardResponse,
-  LoginFormBoby,
-  LoginResponse,
-  SignupFormBody,
-  SignupResponse,
   VideoUploadRequest,
   VideoUploadResponse,
 } from "./types";
@@ -100,29 +96,6 @@ const writeDummyHistory = (historyList: AllVideoHistoryResponse) => {
 
 // ADDED_DUMMY_DATA: exposes mutable local history so dummy uploads appear in the history screen.
 export const getDummyVideoHistoryResponse = () => readDummyHistory();
-
-// ADDED_DUMMY_DATA: local auth response mirrors the real login response shape.
-export const createDummyLoginResponse = ({
-  role,
-}: LoginFormBoby): LoginResponse => ({
-  accessToken: "dummy-access-token",
-  refreshToken: "dummy-refresh-token",
-  userId: role === "MENTOR" ? 10 : 1,
-  nickname: role === "MENTOR" ? "멘토발표" : "김발표",
-  role,
-});
-
-// ADDED_DUMMY_DATA: local signup response mirrors the real signup response shape.
-export const createDummySignupResponse = ({
-  email,
-  nickname,
-  role,
-}: SignupFormBody): SignupResponse => ({
-  userId: role === "MENTOR" ? 10 : 1,
-  email,
-  nickname,
-  role,
-});
 
 // ADDED_DUMMY_DATA: local upload response keeps the upload flow usable without the video API.
 export const createDummyVideoUploadResponse = ({

@@ -2,16 +2,13 @@ import { useState, type SubmitEvent } from "react";
 import { Link } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 
-import { Button, InputBar, RoleSelect } from "@shared/ui";
-import type { UserRole } from "@apis/types";
+import { Button, InputBar } from "@shared/ui";
 import { ROUTES } from "@router/constants";
 import { useLoginMutation } from "@apis/queries";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // ADDED_ROLE_FLOW: login now selects whether the user enters as mentor or mentee.
-  const [role, setRole] = useState<UserRole>("MENTEE");
   const [errorMessage, setErrorMessage] = useState("");
 
   const { login, isPendingLogin } = useLoginMutation();
@@ -22,12 +19,8 @@ export default function Login() {
 
     login(
       {
-        // TEMP_DUMMY_AUTH: original payload had only email/password; role is added for dummy role routing.
-        // email: email.trim(),
-        // password: password.trim(),
         email: email.trim(),
         password: password.trim(),
-        role,
       },
       {
         onError: (error) => {
@@ -59,7 +52,6 @@ export default function Login() {
           handleChangeText={setPassword}
           placeholder="비밀번호 입력"
         />
-        <RoleSelect selectedRole={role} handleChangeRole={setRole} />
         <div className="relative">
           <Button
             size="full"
