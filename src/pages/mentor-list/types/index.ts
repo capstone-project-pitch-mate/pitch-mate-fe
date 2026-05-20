@@ -1,5 +1,5 @@
 // ADDED_MENTOR_LIST: mentor list page local types until mentor APIs are connected.
-export type MentorStatus = "CONNECTED" | "PENDING" | "AVAILABLE";
+export type MentorStatus = "CONNECTED" | "PENDING" | "REJECTED" | "AVAILABLE";
 
 export interface Mentor {
   id: number;

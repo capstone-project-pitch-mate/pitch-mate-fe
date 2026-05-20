@@ -1,10 +1,15 @@
 import { useMemo, useState } from "react";
 
-import { useConnectionsQuery } from "@apis/queries";
+import { useConnectionsQuery, useSearchMentorsQuery } from "@apis/queries";
+import useDebounce from "@hooks/use-debounce";
 import useToast from "@hooks/use-toast";
-import type { ConnectionsResponse } from "@apis/types";
+import type {
+  ConnectionStatus,
+  ConnectionsResponse,
+  SearchMentorResponse,
+} from "@apis/types";
 
-import { DUMMY_MENTORS, MAX_MENTOR_CONNECTIONS } from "./constants";
+import { MAX_MENTOR_CONNECTIONS } from "./constants";
 import {
   MentorListHeader,
   MentorSearchSection,
@@ -12,9 +17,7 @@ import {
 } from "./components";
 import type { Mentor, MentorStatus } from "./types";
 
-const toMentorStatus = (
-  status: ConnectionsResponse[number]["status"],
-): MentorStatus => {
+const toMentorStatus = (status: ConnectionStatus): MentorStatus => {
   if (status === "ACCEPTED") {
     return "CONNECTED";
   }
@@ -33,15 +36,24 @@ const toMentor = (connection: ConnectionsResponse[number]): Mentor => ({
   status: toMentorStatus(connection.status),
 });
 
+const toSearchedMentor = (mentor: SearchMentorResponse[number]): Mentor => ({
+  id: mentor.mentorId,
+  nickname: mentor.nickname,
+  bio: mentor.intro ?? "",
+  status: toMentorStatus(mentor.connectionStatus),
+});
+
 export default function MentorList() {
   const toast = useToast();
   const { connectionsData, isPendingConnections, isErrorConnections } =
     useConnectionsQuery();
   const [search, setSearch] = useState("");
-  const [mentors, setMentors] = useState(DUMMY_MENTORS);
 
   const trimmedSearch = search.trim();
+  const debouncedSearch = useDebounce(trimmedSearch, 300);
   const hasSearched = trimmedSearch.length > 0;
+  const { searchMentorsData, isPendingSearchMentors, isErrorSearchMentors } =
+    useSearchMentorsQuery(debouncedSearch);
 
   const myMentors = useMemo(
     () =>
@@ -57,16 +69,8 @@ export default function MentorList() {
   const canRequestMentor = connectedOrPendingCount < MAX_MENTOR_CONNECTIONS;
 
   const filteredMentors = useMemo(() => {
-    if (!hasSearched) {
-      return [];
-    }
-
-    const lowerCaseSearch = trimmedSearch.toLowerCase();
-
-    return mentors.filter((mentor) =>
-      mentor.nickname.toLowerCase().includes(lowerCaseSearch),
-    );
-  }, [hasSearched, mentors, trimmedSearch]);
+    return (searchMentorsData ?? []).map(toSearchedMentor);
+  }, [searchMentorsData]);
 
   const handleRequestMentor = (mentorId: number) => {
     if (!canRequestMentor) {
@@ -76,21 +80,13 @@ export default function MentorList() {
       return;
     }
 
-    // ADDED_MENTOR_LIST: request is stored locally until mentor request APIs exist.
-    setMentors((prev) =>
-      prev.map((mentor) =>
-        mentor.id === mentorId ? { ...mentor, status: "PENDING" } : mentor,
-      ),
-    );
+    void mentorId;
+    toast.info("멘토 신청 API가 준비되면 처리됩니다.");
   };
 
   const handleRemoveMentor = (mentorId: number) => {
-    // ADDED_MENTOR_LIST: removing locally represents deleting both sides after API integration.
-    setMentors((prev) =>
-      prev.map((mentor) =>
-        mentor.id === mentorId ? { ...mentor, status: "AVAILABLE" } : mentor,
-      ),
-    );
+    void mentorId;
+    toast.info("연결 해제 API가 준비되면 처리됩니다.");
   };
 
   return (
@@ -100,6 +96,8 @@ export default function MentorList() {
         search={search}
         hasSearched={hasSearched}
         filteredMentors={filteredMentors}
+        isPending={isPendingSearchMentors}
+        isError={isErrorSearchMentors}
         handleChangeSearch={setSearch}
         handleRequestMentor={handleRequestMentor}
       />

@@ -8,6 +8,7 @@ export const USER_INFO_QUERY_KEY = {
 
 export const CONNECTIONS_QUERY_KEY = {
   DEFAULT: ["connections"],
+  MENTOR_SEARCH: (nickname: string) => ["connections", "mentors", nickname],
 };
 
 export const HISTORY_QUERY_KEY = {

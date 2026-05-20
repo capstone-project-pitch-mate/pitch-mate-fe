@@ -24,4 +24,5 @@ export const HISTORY_URL = {
 
 export const CONNECTIONS_URL = {
   DEFAULT: "/connections",
+  SEARCH: "/connections/mentors/search",
 };

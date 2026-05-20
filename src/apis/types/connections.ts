@@ -11,3 +11,11 @@ export type ConnectionsResponse = {
   status: ConnectionStatus;
   createdAt: string;
 }[];
+
+export type SearchMentorResponse = {
+  mentorId: number;
+  nickname: string;
+  intro: string | null;
+  profileImage: string | null;
+  connectionStatus: ConnectionStatus;
+}[];

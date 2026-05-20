@@ -1,7 +1,10 @@
 export { useDashboardQuery } from "./use-dashboard-query";
 export { useUserInfoQuery } from "./use-user-info-query";
 export { useEditUserInfoMutation } from "./use-edit-user-info-mutation";
-export { useConnectionsQuery } from "./use-connections-query";
+export {
+  useConnectionsQuery,
+  useSearchMentorsQuery,
+} from "./use-connections-query";
 export { useLoginMutation } from "./use-login-mutation";
 export { useSignupMutation } from "./use-signup-mutation";
 export { useLogoutMutation } from "./use-logout-mutation";
