@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { getConnectionsApi, searchMentorApi } from "@apis/connections";
 import { CONNECTIONS_QUERY_KEY } from "@apis/query-key";
-import type { ConnectionsResponse, SearchMentorResponse } from "@apis/types";
+import type { ConnectionListResponse, SearchMentorResponse } from "@apis/types";
 import { ROUTES } from "@router/constants";
 
 export const useConnectionsQuery = () => {
@@ -15,7 +15,7 @@ export const useConnectionsQuery = () => {
     isPending: isPendingConnections,
     isError: isErrorConnections,
     error: connectionsError,
-  } = useQuery<ConnectionsResponse>({
+  } = useQuery<ConnectionListResponse>({
     queryKey: CONNECTIONS_QUERY_KEY.DEFAULT,
     queryFn: () => getConnectionsApi(),
     retry: 2,

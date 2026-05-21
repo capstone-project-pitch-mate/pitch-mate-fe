@@ -1,15 +1,16 @@
 import { useMemo, useState } from "react";
 
 import {
-  useApplyConnectionsMutation,
+  useApplyConnectionMutation,
   useConnectionsQuery,
+  useDeleteConnectionMutation,
   useSearchMentorsQuery,
 } from "@apis/queries";
 import useDebounce from "@hooks/use-debounce";
 import useToast from "@hooks/use-toast";
 import type {
   ConnectionStatus,
-  ConnectionsResponse,
+  ConnectionListResponse,
   SearchMentorResponse,
 } from "@apis/types";
 
@@ -33,8 +34,9 @@ const toMentorStatus = (status: ConnectionStatus): MentorStatus => {
   return "AVAILABLE";
 };
 
-const toMentor = (connection: ConnectionsResponse[number]): Mentor => ({
+const toMentor = (connection: ConnectionListResponse[number]): Mentor => ({
   id: connection.mentorId,
+  connectionId: connection.connectionId,
   nickname: connection.mentorNickname,
   bio: connection.mentorIntro ?? "",
   status: toMentorStatus(connection.status),
@@ -58,8 +60,10 @@ export default function MentorList() {
   const hasSearched = trimmedSearch.length > 0;
   const { searchMentorsData, isPendingSearchMentors, isErrorSearchMentors } =
     useSearchMentorsQuery(debouncedSearch);
-  const { applyConnections, isPendingApplyConnections } =
-    useApplyConnectionsMutation();
+  const { applyConnection, isPendingApplyConnection } =
+    useApplyConnectionMutation();
+  const { deleteConnection, isPendingDeleteConnection } =
+    useDeleteConnectionMutation();
 
   const myMentors = useMemo(
     () =>
@@ -86,12 +90,11 @@ export default function MentorList() {
       return;
     }
 
-    applyConnections(mentorId);
+    applyConnection(mentorId);
   };
 
-  const handleRemoveMentor = (mentorId: number) => {
-    void mentorId;
-    toast.info("연결 해제 API가 준비되면 처리됩니다.");
+  const handleRemoveMentor = (connectionId: number) => {
+    deleteConnection(connectionId);
   };
 
   return (
@@ -103,7 +106,7 @@ export default function MentorList() {
         filteredMentors={filteredMentors}
         isPending={isPendingSearchMentors}
         isError={isErrorSearchMentors}
-        isPendingRequest={isPendingApplyConnections}
+        isPendingRequest={isPendingApplyConnection}
         handleChangeSearch={setSearch}
         handleRequestMentor={handleRequestMentor}
       />
@@ -119,6 +122,7 @@ export default function MentorList() {
         <MyMentorSection
           connectedOrPendingCount={connectedOrPendingCount}
           myMentors={myMentors}
+          isPendingRemove={isPendingDeleteConnection}
           handleRemoveMentor={handleRemoveMentor}
         />
       )}

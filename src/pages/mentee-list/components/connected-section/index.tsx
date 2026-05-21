@@ -4,11 +4,13 @@ import ConnectedMenteeCard from "../connected-mentee-card";
 
 interface ConnectedSectionProps {
   connectedMentees: Mentee[];
-  handleRemove: (menteeId: number) => void;
+  isPendingDelete: boolean;
+  handleRemove: (connectionId: number) => void;
 }
 
 export default function ConnectedSection({
   connectedMentees,
+  isPendingDelete,
   handleRemove,
 }: ConnectedSectionProps) {
   return (
@@ -35,6 +37,7 @@ export default function ConnectedSection({
             <ConnectedMenteeCard
               key={mentee.id}
               mentee={mentee}
+              isPendingDelete={isPendingDelete}
               handleRemove={handleRemove}
             />
           ))}

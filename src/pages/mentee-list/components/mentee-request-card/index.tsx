@@ -6,12 +6,14 @@ import type { Mentee } from "../../types";
 
 interface MenteeRequestCardProps {
   mentee: Mentee;
+  isPendingDelete: boolean;
   handleAccept: (menteeId: number) => void;
-  handleReject: (menteeId: number) => void;
+  handleReject: (connectionId: number) => void;
 }
 
 export default function MenteeRequestCard({
   mentee,
+  isPendingDelete,
   handleAccept,
   handleReject,
 }: MenteeRequestCardProps) {
@@ -45,7 +47,8 @@ export default function MenteeRequestCard({
         <button
           className="rounded-xl border border-[rgba(0,0,0,0.08)] bg-white px-5 py-3 text-xl font-semibold text-[#71718A]"
           type="button"
-          onClick={() => handleReject(mentee.id)}
+          disabled={isPendingDelete}
+          onClick={() => handleReject(mentee.connectionId)}
         >
           거절
         </button>

@@ -18,8 +18,9 @@ export type {
 
 export type { UserInfoResponse, EditUserInfoRequest } from "./user";
 export type {
-  ConnectionsResponse,
+  ConnectionListResponse,
   ConnectionStatus,
   SearchMentorResponse,
-  ApplyMentorResponse,
+  ConnectionReponse,
+  DeleteConnectionResponse,
 } from "./connections";

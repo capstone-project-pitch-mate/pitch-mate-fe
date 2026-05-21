@@ -1,7 +1,10 @@
 import { useMemo } from "react";
 
-import { useConnectionsQuery } from "@apis/queries";
-import type { ConnectionsResponse } from "@apis/types";
+import {
+  useConnectionsQuery,
+  useDeleteConnectionMutation,
+} from "@apis/queries";
+import type { ConnectionListResponse } from "@apis/types";
 import useToast from "@hooks/use-toast";
 
 import { MAX_CONNECTED_MENTEES } from "./constants";
@@ -13,16 +16,17 @@ import {
 import type { Mentee, MenteeConnectionStatus } from "./types";
 
 const toMenteeStatus = (
-  status: ConnectionsResponse[number]["status"],
+  status: ConnectionListResponse[number]["status"],
 ): MenteeConnectionStatus => {
   return status === "ACCEPTED" ? "CONNECTED" : "REQUESTED";
 };
 
-const toMentee = (connection: ConnectionsResponse[number]): Mentee => {
+const toMentee = (connection: ConnectionListResponse[number]): Mentee => {
   const status = toMenteeStatus(connection.status);
 
   return {
     id: connection.menteeId,
+    connectionId: connection.connectionId,
     nickname: connection.menteeNickname,
     bio: connection.menteeIntro ?? "",
     requestedAt: connection.createdAt,
@@ -35,6 +39,8 @@ export default function MenteeList() {
   const toast = useToast();
   const { connectionsData, isPendingConnections, isErrorConnections } =
     useConnectionsQuery();
+  const { deleteConnection, isPendingDeleteConnection } =
+    useDeleteConnectionMutation();
 
   const mentees = useMemo(
     () =>
@@ -62,12 +68,12 @@ export default function MenteeList() {
     toast.info("연결 수락 API가 준비되면 처리됩니다.");
   };
 
-  const handleRejectMentee = () => {
-    toast.info("연결 거절 API가 준비되면 처리됩니다.");
+  const handleRejectMentee = (connectionId: number) => {
+    deleteConnection(connectionId);
   };
 
-  const handleRemoveMentee = () => {
-    toast.info("연결 해제 API가 준비되면 처리됩니다.");
+  const handleRemoveMentee = (connectionId: number) => {
+    deleteConnection(connectionId);
   };
 
   return (
@@ -85,11 +91,13 @@ export default function MenteeList() {
         <>
           <RequestSection
             requestedMentees={requestedMentees}
+            isPendingDelete={isPendingDeleteConnection}
             handleAccept={handleAcceptMentee}
             handleReject={handleRejectMentee}
           />
           <ConnectedSection
             connectedMentees={connectedMentees}
+            isPendingDelete={isPendingDeleteConnection}
             handleRemove={handleRemoveMentee}
           />
         </>

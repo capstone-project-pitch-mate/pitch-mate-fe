@@ -3,6 +3,7 @@ export type MentorStatus = "CONNECTED" | "PENDING" | "REJECTED" | "AVAILABLE";
 
 export interface Mentor {
   id: number;
+  connectionId?: number;
   nickname: string;
   bio: string;
   status: MentorStatus;

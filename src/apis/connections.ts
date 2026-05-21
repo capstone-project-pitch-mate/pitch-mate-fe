@@ -2,13 +2,14 @@ import apiInstance from "@shared/apis";
 
 import { CONNECTIONS_URL } from "./constants";
 import type {
-  ApplyMentorResponse,
-  ConnectionsResponse,
+  ConnectionReponse,
+  ConnectionListResponse,
+  DeleteConnectionResponse,
   SearchMentorResponse,
 } from "./types";
 
 export const getConnectionsApi = async () => {
-  const response = await apiInstance.get<ConnectionsResponse>(
+  const response = await apiInstance.get<ConnectionListResponse>(
     CONNECTIONS_URL.DEFAULT,
   );
 
@@ -26,13 +27,22 @@ export const searchMentorApi = async (nickname: string) => {
   return response.result;
 };
 
-export const applyMentorApi = async (mentorId: number) => {
-  const response = await apiInstance.post<ApplyMentorResponse>(
+// TODO: 추후 서버 측에서 menteeIntro 넣지 않고 보내도록 수정하면 반영
+export const applyConnectionApi = async (mentorId: number) => {
+  const response = await apiInstance.post<ConnectionReponse>(
     CONNECTIONS_URL.DEFAULT,
     {
       mentorId,
       menteeIntro: "",
     },
+  );
+
+  return response.result;
+};
+
+export const deleteConnectionApi = async (connectionId: number) => {
+  const response = await apiInstance.delete<DeleteConnectionResponse>(
+    `${CONNECTIONS_URL.DEFAULT}/${connectionId}`,
   );
 
   return response.result;
