@@ -38,6 +38,9 @@ export const useDeleteConnectionMutation = () => {
       mutationFn: (connectionId) => deleteConnectionApi(connectionId),
       onSuccess: () => {
         qc.invalidateQueries({ queryKey: CONNECTIONS_QUERY_KEY.DEFAULT });
+        qc.invalidateQueries({
+          queryKey: CONNECTIONS_QUERY_KEY.ACCEPTED_MENTORS,
+        });
         toast.info("연결이 삭제되었습니다.");
       },
       onError: (error) => {
@@ -57,6 +60,9 @@ export const useAcceptConnectionMutation = () => {
       mutationFn: (connectionId) => acceptConnectionApi(connectionId),
       onSuccess: () => {
         qc.invalidateQueries({ queryKey: CONNECTIONS_QUERY_KEY.DEFAULT });
+        qc.invalidateQueries({
+          queryKey: CONNECTIONS_QUERY_KEY.ACCEPTED_MENTORS,
+        });
         toast.info("연결 요청을 수락했습니다.");
       },
       onError: (error) => {
@@ -76,6 +82,9 @@ export const useRejectConnectionMutation = () => {
       mutationFn: (connectionId) => rejectConnectionApi(connectionId),
       onSuccess: () => {
         qc.invalidateQueries({ queryKey: CONNECTIONS_QUERY_KEY.DEFAULT });
+        qc.invalidateQueries({
+          queryKey: CONNECTIONS_QUERY_KEY.ACCEPTED_MENTORS,
+        });
         toast.info("연결 요청을 거절했습니다.");
       },
       onError: (error) => {

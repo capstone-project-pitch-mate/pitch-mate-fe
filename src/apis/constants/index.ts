@@ -25,4 +25,7 @@ export const HISTORY_URL = {
 export const CONNECTIONS_URL = {
   DEFAULT: "/connections",
   SEARCH: "/connections/mentors/search",
+  ACCEPT: (connectionId: number) => `/connections/${connectionId}/accept`,
+  REJECT: (connectionId: number) => `/connections/${connectionId}/reject`,
+  ACCEPTED_CONNECTIONS: "/connections/mentors/accepted",
 };

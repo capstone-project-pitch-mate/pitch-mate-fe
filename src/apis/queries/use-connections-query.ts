@@ -2,7 +2,11 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
-import { getConnectionsApi, searchMentorApi } from "@apis/connections";
+import {
+  getAcceptedMentorsApi,
+  getConnectionsApi,
+  searchMentorApi,
+} from "@apis/connections";
 import { CONNECTIONS_QUERY_KEY } from "@apis/query-key";
 import type { ConnectionListResponse, SearchMentorResponse } from "@apis/types";
 import { ROUTES } from "@router/constants";
@@ -68,5 +72,37 @@ export const useSearchMentorsQuery = (nickname: string) => {
     isPendingSearchMentors,
     isErrorSearchMentors,
     searchMentorsError,
+  };
+};
+
+export const useAcceptedMentorsQuery = () => {
+  const navigate = useNavigate();
+
+  const {
+    data: acceptedMentorsData,
+    isPending: isPendingAcceptedMentors,
+    isError: isErrorAcceptedMentors,
+    error: acceptedMentorsError,
+  } = useQuery<ConnectionListResponse>({
+    queryKey: CONNECTIONS_QUERY_KEY.ACCEPTED_MENTORS,
+    queryFn: () => getAcceptedMentorsApi(),
+    retry: 2,
+  });
+
+  useEffect(() => {
+    if (
+      isErrorAcceptedMentors &&
+      (acceptedMentorsError.status === 403 ||
+        acceptedMentorsError.status === 401)
+    ) {
+      navigate(ROUTES.LOGIN, { replace: true });
+    }
+  }, [isErrorAcceptedMentors, acceptedMentorsError, navigate]);
+
+  return {
+    acceptedMentorsData,
+    isPendingAcceptedMentors,
+    isErrorAcceptedMentors,
+    acceptedMentorsError,
   };
 };

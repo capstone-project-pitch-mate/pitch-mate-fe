@@ -27,6 +27,14 @@ export const searchMentorApi = async (nickname: string) => {
   return response.result;
 };
 
+export const getAcceptedMentorsApi = async () => {
+  const response = await apiInstance.get<ConnectionListResponse>(
+    CONNECTIONS_URL.ACCEPTED_CONNECTIONS,
+  );
+
+  return response.result;
+};
+
 // TODO: 추후 서버 측에서 menteeIntro 넣지 않고 보내도록 수정하면 반영
 export const applyConnectionApi = async (mentorId: number) => {
   const response = await apiInstance.post<ConnectionReponse>(
@@ -50,7 +58,7 @@ export const deleteConnectionApi = async (connectionId: number) => {
 
 export const acceptConnectionApi = async (connectionId: number) => {
   const response = await apiInstance.patch<ConnectionReponse>(
-    `${CONNECTIONS_URL.DEFAULT}/${connectionId}/accept`,
+    CONNECTIONS_URL.ACCEPT(connectionId),
   );
 
   return response.result;
@@ -58,7 +66,7 @@ export const acceptConnectionApi = async (connectionId: number) => {
 
 export const rejectConnectionApi = async (connectionId: number) => {
   const response = await apiInstance.patch<ConnectionReponse>(
-    `${CONNECTIONS_URL.DEFAULT}/${connectionId}/reject`,
+    CONNECTIONS_URL.REJECT(connectionId),
   );
 
   return response.result;
