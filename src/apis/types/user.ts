@@ -17,6 +17,6 @@ export interface UserInfoResponse {
 
 export interface EditUserInfoRequest {
   nickname?: string;
-  profileImage?: string;
+  profileImage?: File;
   intro?: string;
 }

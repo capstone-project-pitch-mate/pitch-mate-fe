@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Calendar, Image, Mail, Save, User } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Calendar, Camera, Mail, Save, User } from "lucide-react";
 
 import { useEditUserInfoMutation } from "@apis/queries";
 import type { EditUserInfoRequest, UserInfoResponse } from "@apis/types";
@@ -27,18 +27,18 @@ export default function EditProfileSection({
   const [bio, setBio] = useState(intro);
   const [savedBio, setSavedBio] = useState(intro);
   const [profileImageUrl, setProfileImageUrl] = useState(initialProfileImage);
-  const [savedProfileImageUrl, setSavedProfileImageUrl] =
-    useState(initialProfileImage);
+  const [selectedProfileImageFile, setSelectedProfileImageFile] =
+    useState<File | null>(null);
+  const profileImageObjectUrlRef = useRef<string | null>(null);
+  const profileImageInputRef = useRef<HTMLInputElement | null>(null);
 
   const trimmedNickname = newNickname.trim();
   const trimmedBio = bio.trim();
-  const trimmedProfileImageUrl = profileImageUrl.trim();
 
   const isNicknameValid = trimmedNickname.length >= 2;
   const isNicknameChanged = trimmedNickname !== nickname;
   const isBioChanged = trimmedBio !== savedBio;
-  const isProfileImageChanged =
-    trimmedProfileImageUrl !== savedProfileImageUrl;
+  const isProfileImageChanged = selectedProfileImageFile !== null;
 
   const disabled =
     isPendingEditUserInfo ||
@@ -53,7 +53,7 @@ export default function EditProfileSection({
     }
 
     if (isProfileImageChanged) {
-      payload.profileImage = trimmedProfileImageUrl;
+      payload.profileImage = selectedProfileImageFile;
     }
 
     if (isBioChanged) {
@@ -63,21 +63,67 @@ export default function EditProfileSection({
     editUserInfo(payload, {
       onSuccess: () => {
         setSavedBio(trimmedBio);
-        setSavedProfileImageUrl(trimmedProfileImageUrl);
+        setSelectedProfileImageFile(null);
       },
     });
   };
 
-  const profileImage = trimmedProfileImageUrl ? (
-    <img
-      className="h-30 w-30 rounded-full border border-[#6868FF] object-cover"
-      src={trimmedProfileImageUrl}
-      alt="프로필 사진"
-    />
-  ) : (
-    <div className="flex h-30 w-30 items-center justify-center rounded-full bg-[rgba(104,104,255,0.10)]">
-      <User size={55} color="#6868FF" />
-    </div>
+  const handleChangeProfileImage = (file: File | undefined) => {
+    if (!file) {
+      return;
+    }
+
+    if (profileImageObjectUrlRef.current) {
+      URL.revokeObjectURL(profileImageObjectUrlRef.current);
+    }
+
+    const previewUrl = URL.createObjectURL(file);
+    profileImageObjectUrlRef.current = previewUrl;
+    setSelectedProfileImageFile(file);
+    setProfileImageUrl(previewUrl);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (profileImageObjectUrlRef.current) {
+        URL.revokeObjectURL(profileImageObjectUrlRef.current);
+      }
+    };
+  }, []);
+
+  const profileImage = (
+    <>
+      <button
+        className="relative flex h-30 w-30 shrink-0 items-center justify-center rounded-full bg-[rgba(104,104,255,0.10)]"
+        type="button"
+        aria-label="프로필 사진 선택"
+        disabled={isPendingEditUserInfo}
+        onClick={() => profileImageInputRef.current?.click()}
+      >
+        {profileImageUrl ? (
+          <img
+            className="h-full w-full rounded-full border border-[#6868FF] object-cover"
+            src={profileImageUrl}
+            alt="프로필 사진"
+          />
+        ) : (
+          <User size={55} color="#6868FF" />
+        )}
+        <span className="absolute right-0 bottom-0 flex h-12 w-12 items-center justify-center rounded-full bg-[#6868FF] shadow-[0_10px_20px_rgba(104,104,255,0.30)]">
+          <Camera size={24} color="#fff" />
+        </span>
+      </button>
+      <input
+        ref={profileImageInputRef}
+        className="hidden"
+        type="file"
+        accept="image/*"
+        onChange={(e) => {
+          handleChangeProfileImage(e.target.files?.[0]);
+          e.target.value = "";
+        }}
+      />
+    </>
   );
 
   return (
@@ -85,7 +131,7 @@ export default function EditProfileSection({
       <div className="flex flex-col gap-3">
         <h3 className="text-2xl leading-6 font-semibold">프로필 수정</h3>
         <p className="text-2xl leading-6 text-[#71718A]">
-          닉네임, 프로필 이미지 URL, 자기소개를 수정할 수 있습니다.
+          닉네임, 프로필 이미지, 자기소개를 수정할 수 있습니다.
         </p>
       </div>
 
@@ -122,17 +168,6 @@ export default function EditProfileSection({
           placeholder="닉네임을 입력해주세요."
           handleChangeText={setNewNickname}
           maxLength={10}
-        />
-        <InputBar
-          label={
-            <div className="flex flex-row items-center gap-3">
-              <Image />
-              <span className="text-2xl font-medium">프로필 이미지 URL</span>
-            </div>
-          }
-          text={profileImageUrl}
-          placeholder="이미지 URL을 입력해주세요."
-          handleChangeText={setProfileImageUrl}
         />
         <InputBar
           label={

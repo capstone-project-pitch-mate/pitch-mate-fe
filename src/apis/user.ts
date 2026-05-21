@@ -9,18 +9,26 @@ export const getUserInfoApi = async () => {
   return response.result;
 };
 
-// TODO: 추후 form data 타입으로 수정 예정
 export const editUserInfoApi = async ({
   nickname,
   profileImage,
   intro,
 }: EditUserInfoRequest) => {
-  const response = await apiInstance.put<UserInfoResponse, EditUserInfoRequest>(
+  const formData = new FormData();
+
+  if (profileImage !== undefined) {
+    formData.append("profileImage", profileImage);
+  }
+
+  const response = await apiInstance.put<UserInfoResponse, FormData>(
     USER_URL.EDIT,
+    formData,
     {
-      ...(nickname !== undefined && { nickname }),
-      ...(profileImage !== undefined && { profileImage }),
-      ...(intro !== undefined && { intro }),
+      contentType: "form-data",
+      params: {
+        ...(nickname !== undefined && { nickname }),
+        ...(intro !== undefined && { intro }),
+      },
     },
   );
 
