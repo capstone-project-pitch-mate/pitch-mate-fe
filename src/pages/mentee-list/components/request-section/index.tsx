@@ -3,14 +3,14 @@ import MenteeRequestCard from "../mentee-request-card";
 
 interface RequestSectionProps {
   requestedMentees: Mentee[];
-  isPendingDelete: boolean;
-  handleAccept: (menteeId: number) => void;
+  isPendingRequestAction: boolean;
+  handleAccept: (connectionId: number) => void;
   handleReject: (connectionId: number) => void;
 }
 
 export default function RequestSection({
   requestedMentees,
-  isPendingDelete,
+  isPendingRequestAction,
   handleAccept,
   handleReject,
 }: RequestSectionProps) {
@@ -35,7 +35,7 @@ export default function RequestSection({
             <MenteeRequestCard
               key={mentee.id}
               mentee={mentee}
-              isPendingDelete={isPendingDelete}
+              isPendingRequestAction={isPendingRequestAction}
               handleAccept={handleAccept}
               handleReject={handleReject}
             />

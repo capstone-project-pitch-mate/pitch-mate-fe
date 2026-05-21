@@ -47,3 +47,19 @@ export const deleteConnectionApi = async (connectionId: number) => {
 
   return response.result;
 };
+
+export const acceptConnectionApi = async (connectionId: number) => {
+  const response = await apiInstance.patch<ConnectionReponse>(
+    `${CONNECTIONS_URL.DEFAULT}/${connectionId}/accept`,
+  );
+
+  return response.result;
+};
+
+export const rejectConnectionApi = async (connectionId: number) => {
+  const response = await apiInstance.patch<ConnectionReponse>(
+    `${CONNECTIONS_URL.DEFAULT}/${connectionId}/reject`,
+  );
+
+  return response.result;
+};

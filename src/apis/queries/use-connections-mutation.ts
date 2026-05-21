@@ -1,6 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { applyConnectionApi, deleteConnectionApi } from "@apis/connections";
+import {
+  acceptConnectionApi,
+  applyConnectionApi,
+  deleteConnectionApi,
+  rejectConnectionApi,
+} from "@apis/connections";
 import { CONNECTIONS_QUERY_KEY } from "@apis/query-key";
 import type { ConnectionReponse, DeleteConnectionResponse } from "@apis/types";
 import useToast from "@hooks/use-toast";
@@ -41,4 +46,42 @@ export const useDeleteConnectionMutation = () => {
     });
 
   return { deleteConnection, isPendingDeleteConnection };
+};
+
+export const useAcceptConnectionMutation = () => {
+  const qc = useQueryClient();
+  const toast = useToast();
+
+  const { mutate: acceptConnection, isPending: isPendingAcceptConnection } =
+    useMutation<ConnectionReponse, Error, number>({
+      mutationFn: (connectionId) => acceptConnectionApi(connectionId),
+      onSuccess: () => {
+        qc.invalidateQueries({ queryKey: CONNECTIONS_QUERY_KEY.DEFAULT });
+        toast.info("연결 요청을 수락했습니다.");
+      },
+      onError: (error) => {
+        toast.error(`연결 수락 실패: ${error.message}`);
+      },
+    });
+
+  return { acceptConnection, isPendingAcceptConnection };
+};
+
+export const useRejectConnectionMutation = () => {
+  const qc = useQueryClient();
+  const toast = useToast();
+
+  const { mutate: rejectConnection, isPending: isPendingRejectConnection } =
+    useMutation<ConnectionReponse, Error, number>({
+      mutationFn: (connectionId) => rejectConnectionApi(connectionId),
+      onSuccess: () => {
+        qc.invalidateQueries({ queryKey: CONNECTIONS_QUERY_KEY.DEFAULT });
+        toast.info("연결 요청을 거절했습니다.");
+      },
+      onError: (error) => {
+        toast.error(`연결 거절 실패: ${error.message}`);
+      },
+    });
+
+  return { rejectConnection, isPendingRejectConnection };
 };

@@ -31,6 +31,10 @@ const toMentorStatus = (status: ConnectionStatus): MentorStatus => {
     return "PENDING";
   }
 
+  if (status === "REJECTED") {
+    return "REJECTED";
+  }
+
   return "AVAILABLE";
 };
 

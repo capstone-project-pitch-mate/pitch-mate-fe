@@ -1,8 +1,10 @@
 import { useMemo } from "react";
 
 import {
+  useAcceptConnectionMutation,
   useConnectionsQuery,
   useDeleteConnectionMutation,
+  useRejectConnectionMutation,
 } from "@apis/queries";
 import type { ConnectionListResponse } from "@apis/types";
 import useToast from "@hooks/use-toast";
@@ -41,6 +43,10 @@ export default function MenteeList() {
     useConnectionsQuery();
   const { deleteConnection, isPendingDeleteConnection } =
     useDeleteConnectionMutation();
+  const { acceptConnection, isPendingAcceptConnection } =
+    useAcceptConnectionMutation();
+  const { rejectConnection, isPendingRejectConnection } =
+    useRejectConnectionMutation();
 
   const mentees = useMemo(
     () =>
@@ -60,16 +66,16 @@ export default function MenteeList() {
   );
   const canAcceptMentee = connectedMentees.length < MAX_CONNECTED_MENTEES;
 
-  const handleAcceptMentee = () => {
+  const handleAcceptMentee = (connectionId: number) => {
     if (!canAcceptMentee) {
       toast.error(`최대 ${MAX_CONNECTED_MENTEES}명까지 연결할 수 있습니다.`);
       return;
     }
-    toast.info("연결 수락 API가 준비되면 처리됩니다.");
+    acceptConnection(connectionId);
   };
 
   const handleRejectMentee = (connectionId: number) => {
-    deleteConnection(connectionId);
+    rejectConnection(connectionId);
   };
 
   const handleRemoveMentee = (connectionId: number) => {
@@ -91,7 +97,9 @@ export default function MenteeList() {
         <>
           <RequestSection
             requestedMentees={requestedMentees}
-            isPendingDelete={isPendingDeleteConnection}
+            isPendingRequestAction={
+              isPendingAcceptConnection || isPendingRejectConnection
+            }
             handleAccept={handleAcceptMentee}
             handleReject={handleRejectMentee}
           />
