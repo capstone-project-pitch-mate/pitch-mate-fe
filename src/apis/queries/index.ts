@@ -5,6 +5,7 @@ export {
   useConnectionsQuery,
   useSearchMentorsQuery,
 } from "./use-connections-query";
+export { useApplyConnectionsMutation } from "./use-connections-mutation";
 export { useLoginMutation } from "./use-login-mutation";
 export { useSignupMutation } from "./use-signup-mutation";
 export { useLogoutMutation } from "./use-logout-mutation";

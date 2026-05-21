@@ -19,3 +19,15 @@ export type SearchMentorResponse = {
   profileImage: string | null;
   connectionStatus: ConnectionStatus;
 }[];
+
+export interface ApplyMentorResponse {
+  connectionId: number;
+  mentorId: number;
+  mentorNickname: string;
+  mentorIntro: string;
+  menteeId: number;
+  menteeNickname: string;
+  menteeIntro: string;
+  status: string;
+  createdAt: string;
+}

@@ -21,4 +21,5 @@ export type {
   ConnectionsResponse,
   ConnectionStatus,
   SearchMentorResponse,
+  ApplyMentorResponse,
 } from "./connections";

@@ -1,7 +1,11 @@
 import apiInstance from "@shared/apis";
 
 import { CONNECTIONS_URL } from "./constants";
-import type { ConnectionsResponse, SearchMentorResponse } from "./types";
+import type {
+  ApplyMentorResponse,
+  ConnectionsResponse,
+  SearchMentorResponse,
+} from "./types";
 
 export const getConnectionsApi = async () => {
   const response = await apiInstance.get<ConnectionsResponse>(
@@ -16,6 +20,18 @@ export const searchMentorApi = async (nickname: string) => {
     CONNECTIONS_URL.SEARCH,
     {
       params: { nickname },
+    },
+  );
+
+  return response.result;
+};
+
+export const applyMentorApi = async (mentorId: number) => {
+  const response = await apiInstance.post<ApplyMentorResponse>(
+    CONNECTIONS_URL.DEFAULT,
+    {
+      mentorId,
+      menteeIntro: "",
     },
   );
 

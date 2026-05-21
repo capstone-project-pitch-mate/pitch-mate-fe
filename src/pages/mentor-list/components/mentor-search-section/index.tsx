@@ -9,6 +9,7 @@ interface MentorSearchSectionProps {
   filteredMentors: Mentor[];
   isPending: boolean;
   isError: boolean;
+  isPendingRequest: boolean;
   handleChangeSearch: (value: string) => void;
   handleRequestMentor: (mentorId: number) => void;
 }
@@ -19,6 +20,7 @@ export default function MentorSearchSection({
   filteredMentors,
   isPending,
   isError,
+  isPendingRequest,
   handleChangeSearch,
   handleRequestMentor,
 }: MentorSearchSectionProps) {
@@ -63,6 +65,7 @@ export default function MentorSearchSection({
             <MentorCard
               key={mentor.id}
               mentor={mentor}
+              isPendingRequest={isPendingRequest}
               handleRequestMentor={handleRequestMentor}
             />
           ))}

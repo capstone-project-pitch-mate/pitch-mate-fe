@@ -1,6 +1,10 @@
 import { useMemo, useState } from "react";
 
-import { useConnectionsQuery, useSearchMentorsQuery } from "@apis/queries";
+import {
+  useApplyConnectionsMutation,
+  useConnectionsQuery,
+  useSearchMentorsQuery,
+} from "@apis/queries";
 import useDebounce from "@hooks/use-debounce";
 import useToast from "@hooks/use-toast";
 import type {
@@ -54,6 +58,8 @@ export default function MentorList() {
   const hasSearched = trimmedSearch.length > 0;
   const { searchMentorsData, isPendingSearchMentors, isErrorSearchMentors } =
     useSearchMentorsQuery(debouncedSearch);
+  const { applyConnections, isPendingApplyConnections } =
+    useApplyConnectionsMutation();
 
   const myMentors = useMemo(
     () =>
@@ -80,8 +86,7 @@ export default function MentorList() {
       return;
     }
 
-    void mentorId;
-    toast.info("멘토 신청 API가 준비되면 처리됩니다.");
+    applyConnections(mentorId);
   };
 
   const handleRemoveMentor = (mentorId: number) => {
@@ -98,6 +103,7 @@ export default function MentorList() {
         filteredMentors={filteredMentors}
         isPending={isPendingSearchMentors}
         isError={isErrorSearchMentors}
+        isPendingRequest={isPendingApplyConnections}
         handleChangeSearch={setSearch}
         handleRequestMentor={handleRequestMentor}
       />
