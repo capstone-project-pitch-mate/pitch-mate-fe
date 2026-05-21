@@ -4,6 +4,8 @@ import { AUTH_URL } from "./constants";
 import type {
   LoginRequestBoby,
   LoginResponse,
+  ReissueRequestBody,
+  ReissueResponse,
   SignupRequestBody,
   SignupResponse,
 } from "./types";
@@ -28,4 +30,13 @@ export const loginApi = async (data: LoginRequestBoby) => {
 
 export const logoutApi = async (refreshToken: string) => {
   await apiInstance.post(AUTH_URL.LOGOUT, { refreshToken });
+};
+
+export const reissueApi = async (refreshToken: string) => {
+  const response = await apiInstance.post<ReissueResponse, ReissueRequestBody>(
+    AUTH_URL.REISSUE,
+    { refreshToken },
+  );
+
+  return response.result;
 };

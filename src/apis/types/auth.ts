@@ -33,3 +33,15 @@ export interface LoginResponse {
   nickname: string;
   role: UserRole;
 }
+
+export interface ReissueRequestBody {
+  refreshToken: string;
+}
+
+export interface ReissueResponse {
+  accessToken: string;
+  refreshToken: string;
+  userId: number;
+  nickname: string;
+  role: UserRole;
+}

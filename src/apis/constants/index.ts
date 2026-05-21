@@ -2,6 +2,7 @@ export const AUTH_URL = {
   SIGNUP: "/auth/signup",
   LOGIN: "/auth/login",
   LOGOUT: "/auth/logout",
+  REISSUE: "/auth/reissue",
 };
 
 export const DASHBOARD_URL = {

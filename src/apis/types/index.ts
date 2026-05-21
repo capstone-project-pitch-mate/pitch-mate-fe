@@ -4,6 +4,8 @@ export type {
   SignupResponse,
   LoginRequestBoby,
   LoginResponse,
+  ReissueRequestBody,
+  ReissueResponse,
 } from "./auth";
 
 export type { UserRole } from "@shared/types";
