@@ -3,6 +3,10 @@ import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 import { reissueApi } from "@apis/auth";
 import { ROUTES } from "@router/constants";
+import {
+  isRefreshTokenAuthFailure,
+  setAuthRedirectMessage,
+} from "@shared/apis";
 import { PageLoading, SideBar } from "@shared/ui";
 
 export default function AppLayout() {
@@ -45,10 +49,13 @@ export default function AppLayout() {
         localStorage.setItem("userRole", role);
         setHasAccessToken(true);
       })
-      .catch(() => {
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        localStorage.removeItem("userRole");
+      .catch((error) => {
+        if (isRefreshTokenAuthFailure(error)) {
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+          localStorage.removeItem("userRole");
+          setAuthRedirectMessage();
+        }
       })
       .finally(() => {
         if (!ignore) {

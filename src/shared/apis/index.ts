@@ -8,6 +8,8 @@ import axios, {
 const DEFAULT_TIMEOUT_MS = 10_000;
 const AUTH_REISSUE_PATH = "/auth/reissue";
 const LOGIN_PATH = "/login";
+const AUTH_REDIRECT_MESSAGE_KEY = "authRedirectMessage";
+const AUTH_EXPIRED_MESSAGE = "인증 정보가 만료되어 다시 로그인해주세요.";
 const AUTH_BYPASS_PATHS = new Set([
   "/auth/login",
   "/auth/signup",
@@ -100,6 +102,28 @@ const clearAuthStorage = () => {
   window.localStorage.removeItem("userRole");
 };
 
+export const setAuthRedirectMessage = () => {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  window.sessionStorage.setItem(
+    AUTH_REDIRECT_MESSAGE_KEY,
+    AUTH_EXPIRED_MESSAGE,
+  );
+};
+
+export const consumeAuthRedirectMessage = () => {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  const message = window.sessionStorage.getItem(AUTH_REDIRECT_MESSAGE_KEY);
+  window.sessionStorage.removeItem(AUTH_REDIRECT_MESSAGE_KEY);
+
+  return message;
+};
+
 const redirectToLogin = () => {
   if (
     typeof window === "undefined" ||
@@ -108,6 +132,7 @@ const redirectToLogin = () => {
     return;
   }
 
+  setAuthRedirectMessage();
   window.location.replace(LOGIN_PATH);
 };
 
@@ -158,6 +183,10 @@ const shouldBypassAuth = (url?: string): boolean =>
   AUTH_BYPASS_PATHS.has(getRequestPathname(url));
 
 const getApiErrorCode = (error: unknown): number | undefined => {
+  if (error instanceof ApiError) {
+    return error.code;
+  }
+
   if (!axios.isAxiosError(error)) {
     return undefined;
   }
@@ -165,6 +194,23 @@ const getApiErrorCode = (error: unknown): number | undefined => {
   const data = error.response?.data as ApiErrorResponse | undefined;
 
   return data?.code;
+};
+
+export const isRefreshTokenAuthFailure = (error: unknown): boolean => {
+  const code = getApiErrorCode(error);
+
+  if (
+    code === AUTH_ERROR_CODE.INVALID_TOKEN ||
+    code === AUTH_ERROR_CODE.EXPIRED_REFRESH_TOKEN
+  ) {
+    return true;
+  }
+
+  if (error instanceof ApiError) {
+    return error.status === 401;
+  }
+
+  return axios.isAxiosError(error) && error.response?.status === 401;
 };
 
 const shouldAttemptReissue = (error: unknown): boolean => {
@@ -239,8 +285,11 @@ axiosInstance.interceptors.response.use(
 
       return axiosInstance.request(error.config);
     } catch (reissueError) {
-      clearAuthStorage();
-      redirectToLogin();
+      if (isRefreshTokenAuthFailure(reissueError)) {
+        clearAuthStorage();
+        redirectToLogin();
+      }
+
       throw reissueError;
     }
   },

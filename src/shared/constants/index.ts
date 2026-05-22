@@ -1,6 +1,12 @@
 export const MAX_PROFILE_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB
 export const MAX_VIDEO_FILE_SIZE = 500 * 1024 * 1024; // 500MB
 
+export const ALLOWED_PROFILE_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+];
+
 export const ALLOWED_VIDEO_MIME_TYPES = [
   "video/mp4",
   "video/quicktime", // mov

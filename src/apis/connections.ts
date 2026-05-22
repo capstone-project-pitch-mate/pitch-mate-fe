@@ -2,7 +2,7 @@ import apiInstance from "@shared/apis";
 
 import { CONNECTIONS_URL } from "./constants";
 import type {
-  ConnectionReponse,
+  ConnectionResponse,
   ConnectionListResponse,
   DeleteConnectionResponse,
   SearchMentorResponse,
@@ -37,11 +37,10 @@ export const getAcceptedMentorsApi = async () => {
 
 // TODO: 추후 서버 측에서 menteeIntro 넣지 않고 보내도록 수정하면 반영
 export const applyConnectionApi = async (mentorId: number) => {
-  const response = await apiInstance.post<ConnectionReponse>(
+  const response = await apiInstance.post<ConnectionResponse>(
     CONNECTIONS_URL.DEFAULT,
     {
       mentorId,
-      menteeIntro: "",
     },
   );
 
@@ -57,7 +56,7 @@ export const deleteConnectionApi = async (connectionId: number) => {
 };
 
 export const acceptConnectionApi = async (connectionId: number) => {
-  const response = await apiInstance.patch<ConnectionReponse>(
+  const response = await apiInstance.patch<ConnectionResponse>(
     CONNECTIONS_URL.ACCEPT(connectionId),
   );
 
@@ -65,7 +64,7 @@ export const acceptConnectionApi = async (connectionId: number) => {
 };
 
 export const rejectConnectionApi = async (connectionId: number) => {
-  const response = await apiInstance.patch<ConnectionReponse>(
+  const response = await apiInstance.patch<ConnectionResponse>(
     CONNECTIONS_URL.REJECT(connectionId),
   );
 

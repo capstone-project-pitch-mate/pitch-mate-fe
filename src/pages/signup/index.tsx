@@ -24,14 +24,8 @@ export default function Signup() {
     e.preventDefault();
     setErrorMessage("");
 
-    console.log(email, nickname, password, role);
-
     signup(
       {
-        // TEMP_DUMMY_AUTH: original payload had email/nickname/password; role is added for dummy role routing.
-        // email: email.trim(),
-        // nickname: nickname.trim(),
-        // password: password.trim(),
         email: email.trim(),
         nickname: nickname.trim(),
         password: password.trim(),

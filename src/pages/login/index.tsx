@@ -1,17 +1,28 @@
-import { useState, type SubmitEvent } from "react";
+import { useEffect, useState, type SubmitEvent } from "react";
 import { Link } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 
 import { Button, InputBar } from "@shared/ui";
 import { ROUTES } from "@router/constants";
 import { useLoginMutation } from "@apis/queries";
+import { consumeAuthRedirectMessage } from "@shared/apis";
+import useToast from "@hooks/use-toast";
 
 export default function Login() {
+  const toast = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
   const { login, isPendingLogin } = useLoginMutation();
+
+  useEffect(() => {
+    const message = consumeAuthRedirectMessage();
+
+    if (message) {
+      toast.error(message);
+    }
+  }, [toast]);
 
   const handleLogin = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();

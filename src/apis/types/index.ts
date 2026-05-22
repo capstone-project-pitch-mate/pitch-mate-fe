@@ -23,6 +23,6 @@ export type {
   ConnectionListResponse,
   ConnectionStatus,
   SearchMentorResponse,
-  ConnectionReponse,
+  ConnectionResponse,
   DeleteConnectionResponse,
 } from "./connections";

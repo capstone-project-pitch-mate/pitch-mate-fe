@@ -7,7 +7,7 @@ import {
   rejectConnectionApi,
 } from "@apis/connections";
 import { CONNECTIONS_QUERY_KEY } from "@apis/query-key";
-import type { ConnectionReponse, DeleteConnectionResponse } from "@apis/types";
+import type { ConnectionResponse, DeleteConnectionResponse } from "@apis/types";
 import useToast from "@hooks/use-toast";
 
 export const useApplyConnectionMutation = () => {
@@ -15,7 +15,7 @@ export const useApplyConnectionMutation = () => {
   const toast = useToast();
 
   const { mutate: applyConnection, isPending: isPendingApplyConnection } =
-    useMutation<ConnectionReponse, Error, number>({
+    useMutation<ConnectionResponse, Error, number>({
       mutationFn: (mentorId) => applyConnectionApi(mentorId),
       onSuccess: () => {
         qc.invalidateQueries({ queryKey: CONNECTIONS_QUERY_KEY.DEFAULT });
@@ -56,7 +56,7 @@ export const useAcceptConnectionMutation = () => {
   const toast = useToast();
 
   const { mutate: acceptConnection, isPending: isPendingAcceptConnection } =
-    useMutation<ConnectionReponse, Error, number>({
+    useMutation<ConnectionResponse, Error, number>({
       mutationFn: (connectionId) => acceptConnectionApi(connectionId),
       onSuccess: () => {
         qc.invalidateQueries({ queryKey: CONNECTIONS_QUERY_KEY.DEFAULT });
@@ -78,7 +78,7 @@ export const useRejectConnectionMutation = () => {
   const toast = useToast();
 
   const { mutate: rejectConnection, isPending: isPendingRejectConnection } =
-    useMutation<ConnectionReponse, Error, number>({
+    useMutation<ConnectionResponse, Error, number>({
       mutationFn: (connectionId) => rejectConnectionApi(connectionId),
       onSuccess: () => {
         qc.invalidateQueries({ queryKey: CONNECTIONS_QUERY_KEY.DEFAULT });

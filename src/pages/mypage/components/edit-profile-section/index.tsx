@@ -1,10 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { Calendar, Camera, Mail, Save, User } from "lucide-react";
 
+import useToast from "@hooks/use-toast";
 import { useEditUserInfoMutation } from "@apis/queries";
 import type { EditUserInfoRequest, UserInfoResponse } from "@apis/types";
 import { Button, InputBar } from "@shared/ui";
-import { PROFILE_BIO_MAX_LENGTH } from "@shared/constants";
+import {
+  ALLOWED_PROFILE_IMAGE_TYPES,
+  MAX_PROFILE_IMAGE_SIZE,
+  PROFILE_BIO_MAX_LENGTH,
+} from "@shared/constants";
 
 interface EditProfileSectionProps {
   userInfoData: UserInfoResponse;
@@ -15,6 +20,7 @@ const formatJoinDate = (createdAt: string) => createdAt.split("T")[0];
 export default function EditProfileSection({
   userInfoData,
 }: EditProfileSectionProps) {
+  const toast = useToast();
   const { editUserInfo, isPendingEditUserInfo } = useEditUserInfoMutation();
 
   const nickname = userInfoData.nickname;
@@ -70,6 +76,14 @@ export default function EditProfileSection({
 
   const handleChangeProfileImage = (file: File | undefined) => {
     if (!file) {
+      return;
+    }
+
+    if (
+      !ALLOWED_PROFILE_IMAGE_TYPES.includes(file.type) ||
+      file.size > MAX_PROFILE_IMAGE_SIZE
+    ) {
+      toast.error("이미지 파일의 용량이 너무 크거나 형식에 맞지 않습니다.");
       return;
     }
 
