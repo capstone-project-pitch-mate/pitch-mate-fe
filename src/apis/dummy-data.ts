@@ -101,13 +101,19 @@ export const getDummyVideoHistoryResponse = () => readDummyHistory();
 export const createDummyVideoUploadResponse = ({
   title,
   description,
+  videoType,
+  requestedMentorId,
   file,
 }: VideoUploadRequest): VideoUploadResponse => ({
   videoId: Date.now(),
+  ownerId: 1,
+  ownerNickname: "김발표",
   title,
   description,
   videoUrl: URL.createObjectURL(file),
   thumbnailUrl: "https://placehold.co/640x360/png",
+  type: videoType,
+  requestedMentorId: requestedMentorId ?? null,
   durationSeconds: 180,
   createdAt: new Date().toISOString(),
 });
