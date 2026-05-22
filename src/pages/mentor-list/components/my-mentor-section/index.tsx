@@ -6,12 +6,14 @@ import MyMentorCard from "../my-mentor-card";
 interface MyMentorSectionProps {
   connectedOrPendingCount: number;
   myMentors: Mentor[];
-  handleRemoveMentor: (mentorId: number) => void;
+  isPendingRemove: boolean;
+  handleRemoveMentor: (connectionId: number) => void;
 }
 
 export default function MyMentorSection({
   connectedOrPendingCount,
   myMentors,
+  isPendingRemove,
   handleRemoveMentor,
 }: MyMentorSectionProps) {
   return (
@@ -41,6 +43,7 @@ export default function MyMentorSection({
             <MyMentorCard
               key={mentor.id}
               mentor={mentor}
+              isPendingRemove={isPendingRemove}
               handleRemoveMentor={handleRemoveMentor}
             />
           ))}

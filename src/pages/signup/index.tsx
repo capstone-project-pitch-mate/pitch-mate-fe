@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 
 import { Button, InputBar, RoleSelect } from "@shared/ui";
-import type { UserRole } from "@apis/types";
 import { ROUTES } from "@router/constants";
 import { EMAIL_REGEX } from "@shared/constants";
 import { useSignupMutation } from "@apis/queries";
+import type { UserRole } from "@shared/types";
 
 export default function Signup() {
   const [email, setEmail] = useState("");
@@ -26,10 +26,6 @@ export default function Signup() {
 
     signup(
       {
-        // TEMP_DUMMY_AUTH: original payload had email/nickname/password; role is added for dummy role routing.
-        // email: email.trim(),
-        // nickname: nickname.trim(),
-        // password: password.trim(),
         email: email.trim(),
         nickname: nickname.trim(),
         password: password.trim(),

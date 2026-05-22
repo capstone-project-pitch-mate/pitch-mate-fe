@@ -7,11 +7,13 @@ import type { Mentor } from "../../types";
 
 interface MentorCardProps {
   mentor: Mentor;
+  isPendingRequest: boolean;
   handleRequestMentor: (mentorId: number) => void;
 }
 
 export default function MentorCard({
   mentor,
+  isPendingRequest,
   handleRequestMentor,
 }: MentorCardProps) {
   const alreadyRequested = mentor.status !== "AVAILABLE";
@@ -40,7 +42,7 @@ export default function MentorCard({
       <div className="flex justify-end">
         <Button
           color={alreadyRequested ? "secondary" : "primary"}
-          disabled={alreadyRequested}
+          disabled={alreadyRequested || isPendingRequest}
           handleClick={() => handleRequestMentor(mentor.id)}
         >
           <span className="text-xl font-medium">

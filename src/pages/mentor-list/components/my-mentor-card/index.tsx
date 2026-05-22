@@ -5,13 +5,17 @@ import type { Mentor } from "../../types";
 
 interface MyMentorCardProps {
   mentor: Mentor;
-  handleRemoveMentor: (mentorId: number) => void;
+  isPendingRemove: boolean;
+  handleRemoveMentor: (connectionId: number) => void;
 }
 
 export default function MyMentorCard({
   mentor,
+  isPendingRemove,
   handleRemoveMentor,
 }: MyMentorCardProps) {
+  const canRemove = mentor.connectionId !== undefined && !isPendingRemove;
+
   return (
     <article className="flex min-h-36 flex-row items-center justify-between gap-5 rounded-2xl border border-[rgba(0,0,0,0.08)] bg-white p-6">
       <div className="flex min-w-0 flex-row items-center gap-4">
@@ -36,7 +40,12 @@ export default function MyMentorCard({
         className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full hover:bg-[#F5F5FA]"
         type="button"
         aria-label={`${mentor.nickname} 삭제`}
-        onClick={() => handleRemoveMentor(mentor.id)}
+        disabled={!canRemove}
+        onClick={() => {
+          if (mentor.connectionId !== undefined) {
+            handleRemoveMentor(mentor.connectionId);
+          }
+        }}
       >
         <X size={22} color="#71718A" />
       </button>

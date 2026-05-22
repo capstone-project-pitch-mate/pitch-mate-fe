@@ -6,7 +6,15 @@ import axios, {
 } from "axios";
 
 const DEFAULT_TIMEOUT_MS = 10_000;
-const AUTH_BYPASS_PATHS = new Set(["/auth/login", "/auth/signup"]);
+const AUTH_REISSUE_PATH = "/auth/reissue";
+const LOGIN_PATH = "/login";
+const AUTH_REDIRECT_MESSAGE_KEY = "authRedirectMessage";
+const AUTH_EXPIRED_MESSAGE = "인증 정보가 만료되어 다시 로그인해주세요.";
+const AUTH_BYPASS_PATHS = new Set([
+  "/auth/login",
+  "/auth/signup",
+  AUTH_REISSUE_PATH,
+]);
 
 export type ApiRequestConfig<TData = unknown> = AxiosRequestConfig<TData>;
 export type ApiContentType = "json" | "form-data";
@@ -25,6 +33,19 @@ interface ApiErrorResponse {
   status?: number;
   message?: string;
   [key: string]: unknown;
+}
+
+const AUTH_ERROR_CODE = {
+  INVALID_TOKEN: 4004,
+  EXPIRED_REFRESH_TOKEN: 4005,
+} as const;
+
+interface ReissueResult {
+  accessToken: string;
+  refreshToken: string;
+  userId: number;
+  nickname: string;
+  role: string;
 }
 
 export class ApiError extends Error {
@@ -69,6 +90,80 @@ export const axiosInstance: AxiosInstance = axios.create({
   timeout: DEFAULT_TIMEOUT_MS,
 });
 
+let reissuePromise: Promise<ReissueResult> | null = null;
+
+const clearAuthStorage = () => {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  window.localStorage.removeItem("accessToken");
+  window.localStorage.removeItem("refreshToken");
+  window.localStorage.removeItem("userRole");
+};
+
+export const setAuthRedirectMessage = () => {
+  if (typeof window === "undefined") {
+    return;
+  }
+
+  window.sessionStorage.setItem(
+    AUTH_REDIRECT_MESSAGE_KEY,
+    AUTH_EXPIRED_MESSAGE,
+  );
+};
+
+export const consumeAuthRedirectMessage = () => {
+  if (typeof window === "undefined") {
+    return null;
+  }
+
+  const message = window.sessionStorage.getItem(AUTH_REDIRECT_MESSAGE_KEY);
+  window.sessionStorage.removeItem(AUTH_REDIRECT_MESSAGE_KEY);
+
+  return message;
+};
+
+const redirectToLogin = () => {
+  if (
+    typeof window === "undefined" ||
+    window.location.pathname === LOGIN_PATH
+  ) {
+    return;
+  }
+
+  setAuthRedirectMessage();
+  window.location.replace(LOGIN_PATH);
+};
+
+const saveReissuedAuth = ({
+  accessToken,
+  refreshToken,
+  role,
+}: ReissueResult) => {
+  window.localStorage.setItem("accessToken", accessToken);
+  window.localStorage.setItem("refreshToken", refreshToken);
+  window.localStorage.setItem("userRole", role);
+};
+
+const reissueTokens = async (refreshToken: string) => {
+  const response = await axiosInstance.post<
+    ApiResponse<ReissueResult>,
+    AxiosResponse<ApiResponse<ReissueResult>>,
+    { refreshToken: string }
+  >(AUTH_REISSUE_PATH, { refreshToken });
+
+  return response.data.result;
+};
+
+const getReissuePromise = (refreshToken: string) => {
+  reissuePromise ??= reissueTokens(refreshToken).finally(() => {
+    reissuePromise = null;
+  });
+
+  return reissuePromise;
+};
+
 const stripTrailingSlash = (path: string): string =>
   path.length > 1 && path.endsWith("/") ? path.slice(0, -1) : path;
 
@@ -86,6 +181,51 @@ const getRequestPathname = (url?: string): string => {
 
 const shouldBypassAuth = (url?: string): boolean =>
   AUTH_BYPASS_PATHS.has(getRequestPathname(url));
+
+const getApiErrorCode = (error: unknown): number | undefined => {
+  if (error instanceof ApiError) {
+    return error.code;
+  }
+
+  if (!axios.isAxiosError(error)) {
+    return undefined;
+  }
+
+  const data = error.response?.data as ApiErrorResponse | undefined;
+
+  return data?.code;
+};
+
+export const isRefreshTokenAuthFailure = (error: unknown): boolean => {
+  const code = getApiErrorCode(error);
+
+  if (
+    code === AUTH_ERROR_CODE.INVALID_TOKEN ||
+    code === AUTH_ERROR_CODE.EXPIRED_REFRESH_TOKEN
+  ) {
+    return true;
+  }
+
+  if (error instanceof ApiError) {
+    return error.status === 401;
+  }
+
+  return axios.isAxiosError(error) && error.response?.status === 401;
+};
+
+const shouldAttemptReissue = (error: unknown): boolean => {
+  if (!axios.isAxiosError(error)) {
+    return false;
+  }
+
+  const code = getApiErrorCode(error);
+
+  if (code === AUTH_ERROR_CODE.EXPIRED_REFRESH_TOKEN) {
+    return false;
+  }
+
+  return error.response?.status === 401 || code === AUTH_ERROR_CODE.INVALID_TOKEN;
+};
 
 axiosInstance.interceptors.request.use((config) => {
   if (shouldBypassAuth(config.url) || typeof window === "undefined") {
@@ -105,6 +245,55 @@ axiosInstance.interceptors.request.use((config) => {
 
   return config;
 });
+
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (
+      !axios.isAxiosError(error) ||
+      !shouldAttemptReissue(error) ||
+      !error.config ||
+      shouldBypassAuth(error.config.url) ||
+      error.config.headers?.["X-Auth-Retry"] === "true"
+    ) {
+      throw error;
+    }
+
+    if (typeof window === "undefined") {
+      throw error;
+    }
+
+    const refreshToken = window.localStorage.getItem("refreshToken");
+
+    if (!refreshToken) {
+      clearAuthStorage();
+      redirectToLogin();
+      throw error;
+    }
+
+    try {
+      const auth = await getReissuePromise(refreshToken);
+      saveReissuedAuth(auth);
+
+      error.config.headers = error.config.headers ?? {};
+      error.config.headers.Authorization = auth.accessToken.startsWith(
+        "Bearer ",
+      )
+        ? auth.accessToken
+        : `Bearer ${auth.accessToken}`;
+      error.config.headers["X-Auth-Retry"] = "true";
+
+      return axiosInstance.request(error.config);
+    } catch (reissueError) {
+      if (isRefreshTokenAuthFailure(reissueError)) {
+        clearAuthStorage();
+        redirectToLogin();
+      }
+
+      throw reissueError;
+    }
+  },
+);
 
 const toApiError = (error: unknown): ApiError => {
   if (error instanceof ApiError) {

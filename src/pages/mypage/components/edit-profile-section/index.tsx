@@ -1,107 +1,143 @@
-import { useEffect, useRef, useState, type ChangeEvent } from "react";
-import { Camera, User, Save, Mail, Calendar } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Calendar, Camera, Mail, Save, User } from "lucide-react";
 
+import useToast from "@hooks/use-toast";
+import { useEditUserInfoMutation } from "@apis/queries";
+import type { EditUserInfoRequest, UserInfoResponse } from "@apis/types";
 import { Button, InputBar } from "@shared/ui";
 import {
+  ALLOWED_PROFILE_IMAGE_TYPES,
   MAX_PROFILE_IMAGE_SIZE,
   PROFILE_BIO_MAX_LENGTH,
 } from "@shared/constants";
 
-// TODO: 서버에서 정보 받아오기
-const DUMMY_NICKNAME = "김발표";
-const DUMMY_PROFILE_IMAGE = "https://placehold.co/120/png";
-const DUMMY_EMAIL = "user@example.com";
-const DUMMY_JOIN_DATE = "2025-12-01";
-// ADDED_PROFILE_BIO: mentor and mentee can both edit a short introduction from My Page.
-const DUMMY_BIO =
-  "안녕하세요. 발표와 면접 커뮤니케이션을 꾸준히 개선하고 있습니다.";
+interface EditProfileSectionProps {
+  userInfoData: UserInfoResponse;
+}
 
-export default function EditProfileSection() {
-  const [newNickname, setNewNickname] = useState(DUMMY_NICKNAME);
-  // ADDED_PROFILE_BIO: local dummy bio state until profile API is connected.
-  const [bio, setBio] = useState(DUMMY_BIO);
-  // ADDED_PROFILE_BIO: dummy saved baseline lets the save button reset after saving.
-  const [savedBio, setSavedBio] = useState(DUMMY_BIO);
-  const [selectedProfileImage, setSelectedProfileImage] = useState<File | null>(
-    null,
-  );
-  const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
+const formatJoinDate = (createdAt: string) => createdAt.split("T")[0];
 
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const objectUrlRef = useRef<string | null>(null);
+export default function EditProfileSection({
+  userInfoData,
+}: EditProfileSectionProps) {
+  const toast = useToast();
+  const { editUserInfo, isPendingEditUserInfo } = useEditUserInfoMutation();
+
+  const nickname = userInfoData.nickname;
+  const email = userInfoData.email;
+  const intro = userInfoData.intro ?? "";
+  const initialProfileImage = userInfoData.profileImage ?? "";
+  const joinDate = formatJoinDate(userInfoData.createdAt);
+
+  const [newNickname, setNewNickname] = useState(nickname);
+  const [bio, setBio] = useState(intro);
+  const [savedBio, setSavedBio] = useState(intro);
+  const [profileImageUrl, setProfileImageUrl] = useState(initialProfileImage);
+  const [selectedProfileImageFile, setSelectedProfileImageFile] =
+    useState<File | null>(null);
+  const profileImageObjectUrlRef = useRef<string | null>(null);
+  const profileImageInputRef = useRef<HTMLInputElement | null>(null);
 
   const trimmedNickname = newNickname.trim();
+  const trimmedBio = bio.trim();
+
   const isNicknameValid = trimmedNickname.length >= 2;
-  const isNicknameChanged = trimmedNickname !== DUMMY_NICKNAME;
-  const isBioChanged = bio.trim() !== savedBio;
-  const isProfileImageChanged = selectedProfileImage !== null;
+  const isNicknameChanged = trimmedNickname !== nickname;
+  const isBioChanged = trimmedBio !== savedBio;
+  const isProfileImageChanged = selectedProfileImageFile !== null;
 
   const disabled =
+    isPendingEditUserInfo ||
     !isNicknameValid ||
     (!isNicknameChanged && !isProfileImageChanged && !isBioChanged);
 
-  const handleProfileImage = () => {
-    fileInputRef.current?.click();
+  const handleEditProfile = () => {
+    const payload: EditUserInfoRequest = {};
+
+    if (isNicknameChanged) {
+      payload.nickname = trimmedNickname;
+    }
+
+    if (isProfileImageChanged) {
+      payload.profileImage = selectedProfileImageFile;
+    }
+
+    if (isBioChanged) {
+      payload.intro = trimmedBio;
+    }
+
+    editUserInfo(payload, {
+      onSuccess: () => {
+        setSavedBio(trimmedBio);
+        setSelectedProfileImageFile(null);
+      },
+    });
   };
 
-  const handleChangeProfileImage = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-
+  const handleChangeProfileImage = (file: File | undefined) => {
     if (!file) {
       return;
     }
 
-    if (!file.type.startsWith("image/")) {
-      alert("이미지 파일만 선택할 수 있습니다.");
-      e.target.value = "";
+    if (
+      !ALLOWED_PROFILE_IMAGE_TYPES.includes(file.type) ||
+      file.size > MAX_PROFILE_IMAGE_SIZE
+    ) {
+      toast.error("이미지 파일의 용량이 너무 크거나 형식에 맞지 않습니다.");
       return;
     }
 
-    if (file.size > MAX_PROFILE_IMAGE_SIZE) {
-      alert("5MB 이하 이미지 파일만 선택할 수 있습니다.");
-      e.target.value = "";
-      return;
+    if (profileImageObjectUrlRef.current) {
+      URL.revokeObjectURL(profileImageObjectUrlRef.current);
     }
 
-    if (objectUrlRef.current) {
-      URL.revokeObjectURL(objectUrlRef.current);
-    }
-
-    const objectUrl = URL.createObjectURL(file);
-    objectUrlRef.current = objectUrl;
-
-    setSelectedProfileImage(file);
-    setPreviewImageUrl(objectUrl);
-
-    e.target.value = "";
-  };
-
-  const handleEditProfile = () => {
-    // ADDED_PROFILE_BIO: include bio in the future profile update payload.
-    setSavedBio(bio.trim());
-    console.log("변경사항 수정");
+    const previewUrl = URL.createObjectURL(file);
+    profileImageObjectUrlRef.current = previewUrl;
+    setSelectedProfileImageFile(file);
+    setProfileImageUrl(previewUrl);
   };
 
   useEffect(() => {
     return () => {
-      if (objectUrlRef.current) {
-        URL.revokeObjectURL(objectUrlRef.current);
+      if (profileImageObjectUrlRef.current) {
+        URL.revokeObjectURL(profileImageObjectUrlRef.current);
       }
     };
   }, []);
 
-  const profileImageSrc = previewImageUrl ?? DUMMY_PROFILE_IMAGE;
-
-  const profileImage = profileImageSrc ? (
-    <img
-      className="h-30 w-30 rounded-full border border-[#6868FF] object-cover"
-      src={profileImageSrc}
-      alt="프로필 사진"
-    />
-  ) : (
-    <div className="flex h-30 w-30 items-center justify-center rounded-full bg-[rgba(104,104,255,0.10)]">
-      <User size={55} color="#6868FF" />
-    </div>
+  const profileImage = (
+    <>
+      <button
+        className="relative flex h-30 w-30 shrink-0 items-center justify-center rounded-full bg-[rgba(104,104,255,0.10)]"
+        type="button"
+        aria-label="프로필 사진 선택"
+        disabled={isPendingEditUserInfo}
+        onClick={() => profileImageInputRef.current?.click()}
+      >
+        {profileImageUrl ? (
+          <img
+            className="h-full w-full rounded-full border border-[#6868FF] object-cover"
+            src={profileImageUrl}
+            alt="프로필 사진"
+          />
+        ) : (
+          <User size={55} color="#6868FF" />
+        )}
+        <span className="absolute right-0 bottom-0 flex h-12 w-12 items-center justify-center rounded-full bg-[#6868FF] shadow-[0_10px_20px_rgba(104,104,255,0.30)]">
+          <Camera size={24} color="#fff" />
+        </span>
+      </button>
+      <input
+        ref={profileImageInputRef}
+        className="hidden"
+        type="file"
+        accept="image/*"
+        onChange={(e) => {
+          handleChangeProfileImage(e.target.files?.[0]);
+          e.target.value = "";
+        }}
+      />
+    </>
   );
 
   return (
@@ -109,29 +145,16 @@ export default function EditProfileSection() {
       <div className="flex flex-col gap-3">
         <h3 className="text-2xl leading-6 font-semibold">프로필 수정</h3>
         <p className="text-2xl leading-6 text-[#71718A]">
-          닉네임과 프로필 이미지를 수정할 수 있습니다.
+          닉네임, 프로필 이미지, 자기소개를 수정할 수 있습니다.
         </p>
       </div>
 
       <div className="flex flex-row items-center gap-9">
-        <button type="button" className="relative" onClick={handleProfileImage}>
-          {profileImage}
-          <div className="absolute right-0 bottom-0 flex h-12 w-12 items-center justify-center rounded-full bg-[#6868FF] shadow-[0_16px_24px_-5px_rgba(0,0,0,0.10),0_6px_10px_-6px_rgba(0,0,0,0.10)]">
-            <Camera color="#fff" />
-          </div>
-        </button>
-
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          className="hidden"
-          onChange={handleChangeProfileImage}
-        />
+        {profileImage}
 
         <div className="flex flex-col gap-2">
-          <span className="text-3xl font-medium">{DUMMY_NICKNAME}</span>
-          <span className="text-xl text-[#71718A]">{DUMMY_EMAIL}</span>
+          <span className="text-3xl font-medium">{nickname}</span>
+          <span className="text-xl text-[#71718A]">{email}</span>
         </div>
       </div>
 
@@ -143,8 +166,8 @@ export default function EditProfileSection() {
               <span className="text-2xl font-medium">이메일</span>
             </div>
           }
-          text=""
-          placeholder={DUMMY_EMAIL}
+          text={email}
+          placeholder={email}
           handleChangeText={() => {}}
           disabled
         />
@@ -167,8 +190,8 @@ export default function EditProfileSection() {
               <span className="text-2xl font-medium">가입일</span>
             </div>
           }
-          text=""
-          placeholder={DUMMY_JOIN_DATE}
+          text={joinDate}
+          placeholder={joinDate}
           handleChangeText={() => {}}
           disabled
         />
@@ -176,7 +199,7 @@ export default function EditProfileSection() {
           <InputBar
             label={
               <label className="text-xl leading-6 font-medium" htmlFor="bio">
-                짧은 자기소개
+                자기소개
               </label>
             }
             text={bio}

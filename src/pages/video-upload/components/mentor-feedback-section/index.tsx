@@ -7,16 +7,20 @@ import type { SelectedMentorId } from "../../types";
 
 interface MentorFeedbackSectionProps {
   connectedMentors: Mentor[];
+  isPending: boolean;
+  isError: boolean;
   selectedMentorId: SelectedMentorId;
   handleSelectMentor: (mentorId: number) => void;
 }
 
 export default function MentorFeedbackSection({
   connectedMentors,
+  isPending,
+  isError,
   selectedMentorId,
   handleSelectMentor,
 }: MentorFeedbackSectionProps) {
-  if (connectedMentors.length === 0) {
+  if (isPending || isError || connectedMentors.length === 0) {
     return null;
   }
 

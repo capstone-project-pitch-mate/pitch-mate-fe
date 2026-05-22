@@ -3,10 +3,12 @@ export type {
   SignupFormBody,
   SignupResponse,
   LoginRequestBoby,
-  LoginFormBoby,
   LoginResponse,
-  UserRole,
+  ReissueRequestBody,
+  ReissueResponse,
 } from "./auth";
+
+export type { UserRole } from "@shared/types";
 
 export type { RecentVideosType, DashboardResponse } from "./dashboard";
 
@@ -15,3 +17,12 @@ export type {
   VideoUploadRequest,
   VideoUploadResponse,
 } from "./video";
+
+export type { UserInfoResponse, EditUserInfoRequest } from "./user";
+export type {
+  ConnectionListResponse,
+  ConnectionStatus,
+  SearchMentorResponse,
+  ConnectionResponse,
+  DeleteConnectionResponse,
+} from "./connections";

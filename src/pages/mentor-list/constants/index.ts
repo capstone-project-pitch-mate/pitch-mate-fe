@@ -2,7 +2,7 @@ import type { Mentor, MentorStatus } from "../types";
 
 export const MAX_MENTOR_CONNECTIONS = 5;
 
-// ADDED_MENTOR_LIST: local mentor fixtures replace mentor search/request APIs for now.
+// TEMP_DUMMY_MENTOR_LIST: mentor search now uses API, but local fixtures remain for non-search fallback flows.
 export const DUMMY_MENTORS: Mentor[] = [
   {
     id: 1,
@@ -19,7 +19,7 @@ export const DUMMY_MENTORS: Mentor[] = [
   {
     id: 3,
     nickname: "스피치 은서",
-    bio: "시선, 제스처, 목소리 톤 같은 비언어 표현을 자세히 봅니다.",
+    bio: "시선, 제스처, 목소리 같은 비언어 표현을 자세히 봅니다.",
     status: "AVAILABLE",
   },
   {
@@ -43,19 +43,21 @@ export const DUMMY_MENTORS: Mentor[] = [
   {
     id: 7,
     nickname: "발성코치 도윤",
-    bio: "말의 속도, 발음, 호흡을 중심으로 전달력을 높이는 코칭을 합니다.",
+    bio: "말의 속도, 발음, 톤을 중심으로 전달력을 높이는 코칭을 합니다.",
     status: "AVAILABLE",
   },
 ];
 
 export const MENTOR_STATUS_LABEL: Record<MentorStatus, string> = {
   CONNECTED: "연결됨",
-  PENDING: "승낙 대기중",
+  PENDING: "수락 대기중",
+  REJECTED: "거절됨",
   AVAILABLE: "신청 가능",
 };
 
 export const MENTOR_STATUS_STYLE: Record<MentorStatus, string> = {
   CONNECTED: "bg-[rgba(104,104,255,0.10)] text-[#6868FF]",
   PENDING: "bg-[#FFF4DE] text-[#FE9A00]",
+  REJECTED: "bg-[#FFF0F0] text-[#FF5C5C]",
   AVAILABLE: "bg-[#F5F5FA] text-[#71718A]",
 };

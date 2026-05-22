@@ -79,6 +79,7 @@ export const router = createBrowserRouter([
             path: ROUTES.MYPAGE,
             element: <MyPage />,
           },
+          { path: "*", element: <NotFound /> },
         ],
       },
       {
@@ -88,7 +89,6 @@ export const router = createBrowserRouter([
           { path: ROUTES.SIGNUP, element: <Signup /> },
         ],
       },
-      { path: "*", element: <NotFound /> },
     ],
   },
 ]);

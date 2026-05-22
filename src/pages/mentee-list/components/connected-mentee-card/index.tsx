@@ -6,11 +6,13 @@ import type { Mentee } from "../../types";
 
 interface ConnectedMenteeCardProps {
   mentee: Mentee;
-  handleRemove: (menteeId: number) => void;
+  isPendingDelete: boolean;
+  handleRemove: (connectionId: number) => void;
 }
 
 export default function ConnectedMenteeCard({
   mentee,
+  isPendingDelete,
   handleRemove,
 }: ConnectedMenteeCardProps) {
   return (
@@ -44,7 +46,8 @@ export default function ConnectedMenteeCard({
         className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full hover:bg-[#F5F5FA]"
         type="button"
         aria-label={`${mentee.nickname} 삭제`}
-        onClick={() => handleRemove(mentee.id)}
+        disabled={isPendingDelete}
+        onClick={() => handleRemove(mentee.connectionId)}
       >
         <X size={22} color="#71718A" />
       </button>

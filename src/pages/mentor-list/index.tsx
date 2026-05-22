@@ -1,39 +1,90 @@
 import { useMemo, useState } from "react";
 
+import {
+  useApplyConnectionMutation,
+  useConnectionsQuery,
+  useDeleteConnectionMutation,
+  useSearchMentorsQuery,
+} from "@apis/queries";
+import useDebounce from "@hooks/use-debounce";
 import useToast from "@hooks/use-toast";
+import type {
+  ConnectionStatus,
+  ConnectionListResponse,
+  SearchMentorResponse,
+} from "@apis/types";
 
-import { DUMMY_MENTORS, MAX_MENTOR_CONNECTIONS } from "./constants";
+import { MAX_MENTOR_CONNECTIONS } from "./constants";
 import {
   MentorListHeader,
   MentorSearchSection,
   MyMentorSection,
 } from "./components";
+import type { Mentor, MentorStatus } from "./types";
+
+const toMentorStatus = (status: ConnectionStatus): MentorStatus => {
+  if (status === "ACCEPTED") {
+    return "CONNECTED";
+  }
+
+  if (status === "PENDING") {
+    return "PENDING";
+  }
+
+  if (status === "REJECTED") {
+    return "REJECTED";
+  }
+
+  return "AVAILABLE";
+};
+
+const toMentor = (connection: ConnectionListResponse[number]): Mentor => ({
+  id: connection.mentorId,
+  connectionId: connection.connectionId,
+  nickname: connection.mentorNickname,
+  bio: connection.mentorIntro ?? "",
+  status: toMentorStatus(connection.status),
+});
+
+const toSearchedMentor = (mentor: SearchMentorResponse[number]): Mentor => ({
+  id: mentor.mentorId,
+  nickname: mentor.nickname,
+  bio: mentor.intro ?? "",
+  status: toMentorStatus(mentor.connectionStatus),
+});
 
 export default function MentorList() {
   const toast = useToast();
+  const { connectionsData, isPendingConnections, isErrorConnections } =
+    useConnectionsQuery();
   const [search, setSearch] = useState("");
-  const [mentors, setMentors] = useState(DUMMY_MENTORS);
 
   const trimmedSearch = search.trim();
+  const debouncedSearch = useDebounce(trimmedSearch, 300);
   const hasSearched = trimmedSearch.length > 0;
+  const { searchMentorsData, isPendingSearchMentors, isErrorSearchMentors } =
+    useSearchMentorsQuery(debouncedSearch);
+  const { applyConnection, isPendingApplyConnection } =
+    useApplyConnectionMutation();
+  const { deleteConnection, isPendingDeleteConnection } =
+    useDeleteConnectionMutation();
 
-  const myMentors = mentors.filter(
-    (mentor) => mentor.status === "CONNECTED" || mentor.status === "PENDING",
+  const myMentors = useMemo(
+    () =>
+      (connectionsData ?? [])
+        .filter(
+          (connection) =>
+            connection.status === "PENDING" || connection.status === "ACCEPTED",
+        )
+        .map(toMentor),
+    [connectionsData],
   );
   const connectedOrPendingCount = myMentors.length;
   const canRequestMentor = connectedOrPendingCount < MAX_MENTOR_CONNECTIONS;
 
   const filteredMentors = useMemo(() => {
-    if (!hasSearched) {
-      return [];
-    }
-
-    const lowerCaseSearch = trimmedSearch.toLowerCase();
-
-    return mentors.filter((mentor) =>
-      mentor.nickname.toLowerCase().includes(lowerCaseSearch),
-    );
-  }, [hasSearched, mentors, trimmedSearch]);
+    return (searchMentorsData ?? []).map(toSearchedMentor);
+  }, [searchMentorsData]);
 
   const handleRequestMentor = (mentorId: number) => {
     if (!canRequestMentor) {
@@ -43,21 +94,11 @@ export default function MentorList() {
       return;
     }
 
-    // ADDED_MENTOR_LIST: request is stored locally until mentor request APIs exist.
-    setMentors((prev) =>
-      prev.map((mentor) =>
-        mentor.id === mentorId ? { ...mentor, status: "PENDING" } : mentor,
-      ),
-    );
+    applyConnection(mentorId);
   };
 
-  const handleRemoveMentor = (mentorId: number) => {
-    // ADDED_MENTOR_LIST: removing locally represents deleting both sides after API integration.
-    setMentors((prev) =>
-      prev.map((mentor) =>
-        mentor.id === mentorId ? { ...mentor, status: "AVAILABLE" } : mentor,
-      ),
-    );
+  const handleRemoveMentor = (connectionId: number) => {
+    deleteConnection(connectionId);
   };
 
   return (
@@ -67,14 +108,28 @@ export default function MentorList() {
         search={search}
         hasSearched={hasSearched}
         filteredMentors={filteredMentors}
+        isPending={isPendingSearchMentors}
+        isError={isErrorSearchMentors}
+        isPendingRequest={isPendingApplyConnection}
         handleChangeSearch={setSearch}
         handleRequestMentor={handleRequestMentor}
       />
-      <MyMentorSection
-        connectedOrPendingCount={connectedOrPendingCount}
-        myMentors={myMentors}
-        handleRemoveMentor={handleRemoveMentor}
-      />
+      {isPendingConnections ? (
+        <div className="flex min-h-36 items-center justify-center rounded-2xl bg-white text-xl text-[#71718A] shadow-[0_2px_5px_0_rgba(0,0,0,0.10),0_2px_3px_-2px_rgba(0,0,0,0.10)]">
+          연결 목록을 불러오는 중입니다.
+        </div>
+      ) : isErrorConnections ? (
+        <div className="flex min-h-36 items-center justify-center rounded-2xl bg-white text-xl text-[#71718A] shadow-[0_2px_5px_0_rgba(0,0,0,0.10),0_2px_3px_-2px_rgba(0,0,0,0.10)]">
+          연결 목록을 불러오지 못했습니다.
+        </div>
+      ) : (
+        <MyMentorSection
+          connectedOrPendingCount={connectedOrPendingCount}
+          myMentors={myMentors}
+          isPendingRemove={isPendingDeleteConnection}
+          handleRemoveMentor={handleRemoveMentor}
+        />
+      )}
     </div>
   );
 }

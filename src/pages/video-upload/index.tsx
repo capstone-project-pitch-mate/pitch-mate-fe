@@ -5,11 +5,10 @@ import {
   ALLOWED_VIDEO_MIME_TYPES,
   MAX_VIDEO_FILE_SIZE,
 } from "@shared/constants";
-import { useVideoUploadMutation } from "@apis/queries";
+import { useAcceptedMentorsQuery, useVideoUploadMutation } from "@apis/queries";
 import useToast from "@hooks/use-toast";
 import { PageLoading } from "@shared/ui";
 
-import { DUMMY_CONNECTED_MENTORS } from "./constants";
 import type { SelectedMentorId } from "./types";
 import {
   MentorFeedbackSection,
@@ -19,6 +18,8 @@ import {
   VideoRecordSection,
   VideoUploadSection,
 } from "./components";
+import type { Mentor } from "@pages/mentor-list/types";
+import type { ConnectionListResponse } from "@apis/types";
 
 const isAllowedVideoFile = (file: File) => {
   const lowerCaseName = file.name.toLowerCase();
@@ -33,9 +34,24 @@ const isAllowedVideoFile = (file: File) => {
   return hasAllowedExtension || hasAllowedMimeType;
 };
 
+const toConnectedMentor = (
+  connection: ConnectionListResponse[number],
+): Mentor => ({
+  id: connection.mentorId,
+  connectionId: connection.connectionId,
+  nickname: connection.mentorNickname,
+  bio: connection.mentorIntro ?? "",
+  status: "CONNECTED",
+});
+
 export default function VideoUpload() {
   const toast = useToast();
   const { uploadVideo, isPendingUploadVideo } = useVideoUploadMutation();
+  const {
+    acceptedMentorsData,
+    isPendingAcceptedMentors,
+    isErrorAcceptedMentors,
+  } = useAcceptedMentorsQuery();
 
   const [uploadType, setUploadType] = useState<"UPLOAD" | "RECORD">("UPLOAD");
   const [videoTitle, setVideoTitle] = useState("");
@@ -135,6 +151,7 @@ export default function VideoUpload() {
 
   const disabledToUpload =
     videoTitle.trim() === "" || videoDesc.trim() === "" || videoFile === null;
+  const connectedMentors = (acceptedMentorsData ?? []).map(toConnectedMentor);
 
   if (isPendingUploadVideo) {
     return <PageLoading />;
@@ -165,7 +182,9 @@ export default function VideoUpload() {
           handleChangeDesc={setVideoDesc}
         />
         <MentorFeedbackSection
-          connectedMentors={DUMMY_CONNECTED_MENTORS}
+          connectedMentors={connectedMentors}
+          isPending={isPendingAcceptedMentors}
+          isError={isErrorAcceptedMentors}
           selectedMentorId={selectedMentorId}
           handleSelectMentor={handleSelectMentor}
         />

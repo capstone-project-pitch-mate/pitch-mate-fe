@@ -1,5 +1,9 @@
 # React + TypeScript + Vite
 
+## Project Notes
+
+- API path constants should not include a leading `/api`; `VITE_API_BASE_URL` already includes the API prefix.
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:
