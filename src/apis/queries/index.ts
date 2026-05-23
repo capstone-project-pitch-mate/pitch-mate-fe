@@ -17,6 +17,7 @@ export { useSignupMutation } from "./use-signup-mutation";
 export { useLogoutMutation } from "./use-logout-mutation";
 export { useRequestedVideosQuery } from "./use-requested-videos-query";
 export { useRubricsQuery } from "./use-rubrics-query";
+export { useSubmitMentorFeedbackMutation } from "./use-submit-mentor-feedback-mutation";
 export { useVideoUploadMutation } from "./use-video-upload-mutation";
 export {
   useVideoCompareQuery,

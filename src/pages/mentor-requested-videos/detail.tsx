@@ -1,7 +1,7 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 
-import { useRubricsQuery } from "@apis/queries";
+import { useRubricsQuery, useSubmitMentorFeedbackMutation } from "@apis/queries";
 import type { VideoMetadata } from "@apis/types";
 import { ROUTES } from "@router/constants";
 import { PageError, PageLoading } from "@shared/ui";
@@ -23,6 +23,8 @@ export default function MentorRequestedVideoDetail() {
   const location = useLocation();
   const { videoId } = useParams();
   const { rubrics, isPendingRubrics, isErrorRubrics } = useRubricsQuery();
+  const { submitMentorFeedbackAsync, isPendingSubmitMentorFeedback } =
+    useSubmitMentorFeedbackMutation();
   const routeState = location.state as { video?: VideoMetadata } | null;
   const video = routeState?.video
     ? toRequestedVideo(routeState.video)
@@ -30,6 +32,7 @@ export default function MentorRequestedVideoDetail() {
   const feedbackForm = useMentorFeedbackForm({
     rubrics,
     videoId: video?.id,
+    handleSubmitFeedback: submitMentorFeedbackAsync,
     handleCompleteFeedback: () => navigate(ROUTES.MENTOR_FEEDBACK_HISTORY),
   });
 
@@ -112,6 +115,7 @@ export default function MentorRequestedVideoDetail() {
           handleChangeScore={feedbackForm.handleChangeScore}
           handleChangeOverallComment={feedbackForm.setOverallComment}
           handleComplete={feedbackForm.handleComplete}
+          isPending={isPendingSubmitMentorFeedback}
         />
       )}
     </div>

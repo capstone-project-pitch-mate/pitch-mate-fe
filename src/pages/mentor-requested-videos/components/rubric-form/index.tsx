@@ -6,6 +6,7 @@ interface RubricFormProps {
   handleChangeScore: (rubricId: number, score: number) => void;
   handleChangeOverallComment: (value: string) => void;
   handleComplete: () => void;
+  isPending?: boolean;
 }
 
 const categoryLabel = {
@@ -20,6 +21,7 @@ export default function RubricForm({
   handleChangeScore,
   handleChangeOverallComment,
   handleComplete,
+  isPending = false,
 }: RubricFormProps) {
   const maxTotalScore = rubricScores.reduce(
     (sum, item) => sum + (item.maxScore ?? 10),
@@ -100,10 +102,10 @@ export default function RubricForm({
         <button
           className="rounded-2xl bg-[#6868FF] px-8 py-4 text-xl font-bold text-white disabled:bg-[#ADADAD]"
           type="button"
-          disabled={!overallComment.trim()}
+          disabled={!overallComment.trim() || isPending}
           onClick={handleComplete}
         >
-          평가 완료
+          {isPending ? "제출 중..." : "평가 완료"}
         </button>
       </div>
     </section>

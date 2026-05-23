@@ -24,6 +24,11 @@ export const RUBRICS_URL = {
   DEFAULT: "/rubrics",
 };
 
+export const FEEDBACK_URL = {
+  FEEDBACKS: (videoId: number) => `/videos/${videoId}/feedbacks`,
+  EVALUATIONS: (videoId: number) => `/videos/${videoId}/evaluations`,
+};
+
 export const HISTORY_URL = {
   DEFAULT: "/history",
   DETAIL: (videoId: number) => `/history/video/${videoId}`,

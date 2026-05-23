@@ -1,14 +1,14 @@
 import { useMemo, useState } from "react";
 import { toast } from "react-toastify";
 
-import type { Rubric } from "@apis/types";
+import type { Rubric, SubmitMentorFeedbackRequest } from "@apis/types";
 
 import type {
   FeedbackWritingStep,
   SegmentComment,
   SegmentCommentDraft,
 } from "../types";
-import { calculateRubricTotalScore, toMentorRubricScores } from "../utils";
+import { toMentorRubricScores } from "../utils";
 
 const INITIAL_COMMENT_DRAFT: SegmentCommentDraft = {
   startTimeSeconds: 0,
@@ -19,12 +19,14 @@ const INITIAL_COMMENT_DRAFT: SegmentCommentDraft = {
 interface UseMentorFeedbackFormParams {
   rubrics?: Rubric[];
   videoId?: number;
+  handleSubmitFeedback: (data: SubmitMentorFeedbackRequest) => Promise<unknown>;
   handleCompleteFeedback: () => void;
 }
 
 export const useMentorFeedbackForm = ({
   rubrics,
   videoId,
+  handleSubmitFeedback,
   handleCompleteFeedback,
 }: UseMentorFeedbackFormParams) => {
   const [selectedStep, setSelectedStep] =
@@ -42,11 +44,6 @@ export const useMentorFeedbackForm = ({
     () => toMentorRubricScores(rubrics ?? [], rubricScoreOverrides),
     [rubricScoreOverrides, rubrics],
   );
-  const totalScore = useMemo(
-    () => calculateRubricTotalScore(rubricScores),
-    [rubricScores],
-  );
-
   const handleAddComment = () => {
     if (commentDraft.endTimeSeconds <= commentDraft.startTimeSeconds) {
       toast.error("타임라인에서 시작 시간과 종료 시간을 선택해주세요.");
@@ -94,21 +91,44 @@ export const useMentorFeedbackForm = ({
     }));
   };
 
-  const handleComplete = () => {
+  const handleComplete = async () => {
+    if (videoId === undefined) {
+      toast.error("피드백을 작성할 영상을 찾을 수 없습니다.");
+      return;
+    }
+
+    if (comments.length === 0) {
+      toast.error("구간 코멘트를 1개 이상 남겨주세요.");
+      return;
+    }
+
     if (!overallComment.trim()) {
       toast.error("멘토 피드백 총평을 입력해주세요.");
       return;
     }
 
-    console.log("[mentor-feedback-complete]", {
-      videoId,
-      comments,
-      rubricScores,
-      overallComment,
-      totalScore,
-    });
-    toast.info("멘토 피드백이 완료되었습니다.");
-    handleCompleteFeedback();
+    try {
+      await handleSubmitFeedback({
+        videoId,
+        feedbacks: comments.map((comment) => ({
+          rating: "GOOD",
+          startTimeSeconds: comment.startTimeSeconds,
+          endTimeSeconds: comment.endTimeSeconds,
+          content: comment.content,
+        })),
+        evaluation: {
+          scores: rubricScores.map((rubric) => ({
+            rubricId: rubric.id,
+            score: rubric.score,
+            comment: "",
+          })),
+          comment: overallComment.trim(),
+        },
+      });
+      handleCompleteFeedback();
+    } catch {
+      // Mutation handles error toast.
+    }
   };
 
   return {

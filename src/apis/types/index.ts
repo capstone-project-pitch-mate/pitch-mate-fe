@@ -12,7 +12,19 @@ export type { UserRole } from "@shared/types";
 
 export type { RecentVideosType, DashboardResponse } from "./dashboard";
 
-export type { Rubric, RubricCategory, RubricsResponse } from "./feedback";
+export type {
+  CreateMentorEvaluationRequest,
+  CreateMentorEvaluationScore,
+  CreateMentorFeedbackRequest,
+  FeedbackRating,
+  MentorEvaluationResponse,
+  MentorFeedbackResponse,
+  Rubric,
+  RubricCategory,
+  RubricsResponse,
+  SubmitMentorFeedbackRequest,
+  SubmitMentorFeedbackResponse,
+} from "./feedback";
 
 export type {
   AllVideoHistoryResponse,
