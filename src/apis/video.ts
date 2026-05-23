@@ -2,6 +2,8 @@ import apiInstance from "@shared/apis";
 
 import type {
   AllVideoHistoryResponse,
+  VideoCompareResponse,
+  VideoHistoryDetailResponse,
   VideoUploadRequest,
   VideoUploadResponse,
 } from "./types";
@@ -38,6 +40,28 @@ export const videoUploadApi = async ({
 export const getVideoHistoryApi = async () => {
   const response = await apiInstance.get<AllVideoHistoryResponse>(
     HISTORY_URL.DEFAULT,
+  );
+
+  return response.result;
+};
+
+export const getVideoHistoryDetailApi = async (videoId: number) => {
+  const response = await apiInstance.get<VideoHistoryDetailResponse>(
+    HISTORY_URL.DETAIL(videoId),
+  );
+
+  return response.result;
+};
+
+export const getVideoCompareApi = async (videoId1: number, videoId2: number) => {
+  const response = await apiInstance.get<VideoCompareResponse>(
+    HISTORY_URL.COMPARE,
+    {
+      params: {
+        videoId1,
+        videoId2,
+      },
+    },
   );
 
   return response.result;

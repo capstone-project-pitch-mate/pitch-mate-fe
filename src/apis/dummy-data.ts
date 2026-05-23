@@ -113,6 +113,7 @@ export const createDummyVideoUploadResponse = ({
   videoUrl: URL.createObjectURL(file),
   thumbnailUrl: "https://placehold.co/640x360/png",
   type: videoType,
+  practiceType: null,
   requestedMentorId: requestedMentorId ?? null,
   durationSeconds: 180,
   createdAt: new Date().toISOString(),
@@ -126,8 +127,9 @@ export const addDummyUploadedVideoToHistory = (
     {
       videoId: uploadResponse.videoId,
       videoTitle: uploadResponse.title,
-      videoThumbnailUrl: uploadResponse.thumbnailUrl,
-      durationSeconds: uploadResponse.durationSeconds,
+      videoThumbnailUrl:
+        uploadResponse.thumbnailUrl ?? "https://placehold.co/640x360/png",
+      durationSeconds: uploadResponse.durationSeconds ?? 0,
       totalScore: 0,
       analysisStatus: "PROCESSING",
       createdAt: uploadResponse.createdAt,

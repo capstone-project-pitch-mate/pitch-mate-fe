@@ -14,4 +14,11 @@ export const CONNECTIONS_QUERY_KEY = {
 
 export const HISTORY_QUERY_KEY = {
   DEFAULT: ["history"],
+  DETAIL: (videoId: number) => ["history", "video", videoId],
+  COMPARE: (videoId1: number, videoId2: number) => [
+    "history",
+    "compare",
+    videoId1,
+    videoId2,
+  ],
 };
