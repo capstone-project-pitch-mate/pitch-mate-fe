@@ -12,6 +12,8 @@ export type { UserRole } from "@shared/types";
 
 export type { RecentVideosType, DashboardResponse } from "./dashboard";
 
+export type { Rubric, RubricCategory, RubricsResponse } from "./feedback";
+
 export type {
   AllVideoHistoryResponse,
   RequestedVideosResponse,
