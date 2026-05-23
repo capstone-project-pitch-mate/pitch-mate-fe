@@ -1,26 +1,154 @@
-export interface VideoUploadRequest {
-  title: string;
-  description: string;
-  videoType: "UPLOAD" | "RECORD";
-  file: File;
-}
+export type VideoType = "UPLOAD" | "RECORD";
+export type PracticeType = "PRESENTATION" | "INTERVIEW" | "SPEECH";
+export type EvaluationType = "AI" | "MENTOR" | string;
+export type AnalysisStatus =
+  | "PENDING"
+  | "IN_PROGRESS"
+  | "COMPLETED"
+  | "FAILED"
+  | string;
 
-export interface VideoUploadResponse {
+export interface BaseVideo {
   videoId: number;
   title: string;
-  description: string;
-  videoUrl: string;
-  thumbnailUrl: string;
-  durationSeconds: number;
   createdAt: string;
 }
 
-export type AllVideoHistoryResponse = {
+export interface VideoMetadata extends BaseVideo {
+  ownerId: number;
+  ownerNickname: string;
+  description: string;
+  videoUrl: string;
+  thumbnailUrl: string | null;
+  type: VideoType;
+  practiceType: PracticeType | string | null;
+  requestedMentorId: number | null;
+  durationSeconds: number | null;
+}
+
+export interface HistoryVideoSummary {
   videoId: number;
   videoTitle: string;
   videoThumbnailUrl: string;
   durationSeconds: number;
   totalScore: number;
-  analysisStatus: string;
+  analysisStatus: AnalysisStatus;
   createdAt: string;
-}[];
+}
+
+export interface CategoryScore {
+  speechAvg: number;
+  nonVerbalAvg: number;
+  deliveryAvg: number;
+}
+
+export interface RubricScore {
+  rubricId: number;
+  rubricTitle: string;
+  score: number;
+  comment: string;
+}
+
+export interface VideoUploadRequest {
+  title: string;
+  description: string;
+  videoType: VideoType;
+  // practiceType: PracticeType;
+  requestedMentorId?: number | null;
+  file: File;
+}
+
+export type VideoUploadResponse = VideoMetadata;
+
+export type AllVideoHistoryResponse = HistoryVideoSummary[];
+
+export type VideoHistoryDetailVideo = VideoMetadata;
+
+export interface VideoHistoryDetailFeedback {
+  feedbackId: number;
+  authorId: number | null;
+  authorNickname: string;
+  rubricId: number | null;
+  rubricTitle: string | null;
+  rating: string | null;
+  startTimeSeconds: number;
+  endTimeSeconds: number;
+  content: string;
+  type: EvaluationType;
+  createdAt: string;
+}
+
+export interface VideoHistoryDetailEvaluation {
+  evaluationId: number;
+  videoId: number;
+  evaluatorId: number | null;
+  evaluatorNickname: string;
+  type: EvaluationType;
+  totalScore: number;
+  maxTotalScore: number;
+  comment: string;
+  scores: RubricScore[];
+  createdAt: string;
+}
+
+export interface VideoHistoryDetailAnalysis {
+  analysisId: number;
+  videoId: number;
+  status: AnalysisStatus;
+  speechRateWpm: number;
+  silenceRatio: number;
+  fillerWordCount: number;
+  fillerWords: string[];
+  speakingDurationSeconds: number;
+  errorMessage: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface VideoHistoryDetailResponse {
+  video: VideoHistoryDetailVideo;
+  feedbacks: {
+    ai: VideoHistoryDetailFeedback[];
+    mentor: VideoHistoryDetailFeedback[];
+  };
+  evaluations: {
+    ai: VideoHistoryDetailEvaluation | null;
+    mentor: VideoHistoryDetailEvaluation | null;
+  };
+  analysis: VideoHistoryDetailAnalysis | null;
+  categoryScores: {
+    ai: CategoryScore | null;
+    mentor: CategoryScore | null;
+  };
+}
+
+export interface VideoCompareSession {
+  videoId: number;
+  videoTitle: string;
+  totalScore: number;
+  durationSeconds: number;
+  createdAt: string;
+}
+
+export interface VideoCompareRubricComparison {
+  rubricId: number;
+  rubricTitle: string;
+  session1Score: number;
+  session2Score: number;
+}
+
+export interface VideoCompareResponse {
+  session1: VideoCompareSession;
+  session2: VideoCompareSession;
+  evaluationScores: {
+    session1TotalScore: number;
+    session2TotalScore: number;
+    rubricComparisons: VideoCompareRubricComparison[];
+  };
+  categoryData: {
+    session1: CategoryScore;
+    session2: CategoryScore;
+  };
+  session1OverallComment: string;
+  session2OverallComment: string;
+}

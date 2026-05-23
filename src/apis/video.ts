@@ -1,50 +1,68 @@
-// TEMP_DUMMY_DATA: restore apiInstance import when API integration resumes.
-// import apiInstance from "@shared/apis";
+import apiInstance from "@shared/apis";
 
-import type { VideoUploadRequest } from "./types";
-// TEMP_DUMMY_DATA: restore response type imports when API integration resumes.
-// import type { VideoUploadResponse } from "./types";
-// import type { AllVideoHistoryResponse } from "./types/video";
-// TEMP_DUMMY_DATA: restore URL constants when API integration resumes.
-// import { HISTORY_URL, VIDEO_URL } from "./constants";
-import {
-  createDummyVideoUploadResponse,
-  getDummyVideoHistoryResponse,
-} from "./dummy-data";
+import type {
+  AllVideoHistoryResponse,
+  VideoCompareResponse,
+  VideoHistoryDetailResponse,
+  VideoUploadRequest,
+  VideoUploadResponse,
+} from "./types";
+import { HISTORY_URL, VIDEO_URL } from "./constants";
 
 export const videoUploadApi = async ({
   title,
   description,
   videoType,
+  requestedMentorId,
   file,
 }: VideoUploadRequest) => {
-  // TEMP_DUMMY_DATA: original upload API call is preserved below while dummy data is used.
-  // const formData = new FormData();
-  // formData.append("file", file);
+  const formData = new FormData();
+  formData.append("file", file);
 
-  // const response = await apiInstance.post<VideoUploadResponse>(
-  //   VIDEO_URL.DEFAULT,
-  //   formData,
-  //   {
-  //     contentType: "form-data",
-  //     params: { title, description, videoType },
-  //   },
-  // );
-  //
-  // return response.result;
+  const response = await apiInstance.post<VideoUploadResponse, FormData>(
+    VIDEO_URL.DEFAULT,
+    formData,
+    {
+      contentType: "form-data",
+      params: {
+        title,
+        description,
+        videoType,
+        ...(requestedMentorId !== null &&
+          requestedMentorId !== undefined && { requestedMentorId }),
+      },
+    },
+  );
 
-  // ADDED_DUMMY_DATA: return local upload response until backend contract is reconnected.
-  return createDummyVideoUploadResponse({ title, description, videoType, file });
+  return response.result;
 };
 
 export const getVideoHistoryApi = async () => {
-  // TEMP_DUMMY_DATA: original history API call is preserved below while dummy data is used.
-  // const response = await apiInstance.get<AllVideoHistoryResponse>(
-  //   HISTORY_URL.DEFAULT,
-  // );
-  //
-  // return response.result;
+  const response = await apiInstance.get<AllVideoHistoryResponse>(
+    HISTORY_URL.DEFAULT,
+  );
 
-  // ADDED_DUMMY_DATA: return local history response until backend contract is reconnected.
-  return getDummyVideoHistoryResponse();
+  return response.result;
+};
+
+export const getVideoHistoryDetailApi = async (videoId: number) => {
+  const response = await apiInstance.get<VideoHistoryDetailResponse>(
+    HISTORY_URL.DETAIL(videoId),
+  );
+
+  return response.result;
+};
+
+export const getVideoCompareApi = async (videoId1: number, videoId2: number) => {
+  const response = await apiInstance.get<VideoCompareResponse>(
+    HISTORY_URL.COMPARE,
+    {
+      params: {
+        videoId1,
+        videoId2,
+      },
+    },
+  );
+
+  return response.result;
 };

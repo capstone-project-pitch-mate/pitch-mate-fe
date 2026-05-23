@@ -21,6 +21,8 @@ export const VIDEO_URL = {
 
 export const HISTORY_URL = {
   DEFAULT: "/history",
+  DETAIL: (videoId: number) => `/history/video/${videoId}`,
+  COMPARE: "/history/compare",
 };
 
 export const CONNECTIONS_URL = {

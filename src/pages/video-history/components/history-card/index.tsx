@@ -1,10 +1,4 @@
-import {
-  ArrowRight,
-  Check,
-  Clock,
-  Loader2,
-  TriangleAlert,
-} from "lucide-react";
+import { ArrowRight, Check, Clock, Loader2, TriangleAlert } from "lucide-react";
 
 import { cn } from "@utils/cn";
 import { formatDate, formatDuration } from "@utils/formatter";

@@ -125,8 +125,7 @@ export default function VideoUpload() {
       description: videoDesc,
       videoType: uploadType,
       file: videoFile,
-      // ADDED_UPLOAD_MENTOR_REQUEST: include selectedMentorId in the future upload API payload.
-      // selectedMentorId,
+      requestedMentorId: selectedMentorId,
     });
   };
 

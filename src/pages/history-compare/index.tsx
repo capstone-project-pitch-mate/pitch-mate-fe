@@ -1,27 +1,82 @@
 import { useState } from "react";
 import { ArrowLeft } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 
+import { useVideoCompareQuery } from "@apis/queries";
+import type { VideoCompareResponse } from "@apis/types";
 import { FeedbackViewSelector } from "@pages/video-history-detail/components";
 import type { FeedbackViewType } from "@pages/video-history-detail/types";
+import { PageError, PageLoading } from "@shared/ui";
+import { ROUTES } from "@router/constants";
 
 import { CompareFeedbackResultSection } from "./components";
-import { AI_COMPARE_RESULT, MENTOR_COMPARE_RESULT } from "./constants";
+import type { CompareFeedbackResult } from "./types";
+
+const toCompareResult = (
+  data: VideoCompareResponse,
+): CompareFeedbackResult => ({
+  label: "AI 피드백 비교",
+  session1: {
+    videoId: data.session1.videoId,
+    videoTitle: data.session1.videoTitle,
+    totalScore: data.evaluationScores.session1TotalScore,
+    durationSeconds: data.session1.durationSeconds,
+    createdAt: data.session1.createdAt,
+  },
+  session2: {
+    videoId: data.session2.videoId,
+    videoTitle: data.session2.videoTitle,
+    totalScore: data.evaluationScores.session2TotalScore,
+    durationSeconds: data.session2.durationSeconds,
+    createdAt: data.session2.createdAt,
+  },
+  category: data.categoryData,
+  detail: data.evaluationScores.rubricComparisons,
+  overallComment: {
+    session1OverallComment: data.session1OverallComment,
+    session2OverallComment: data.session2OverallComment,
+  },
+});
+
+const EMPTY_COMPARE_MESSAGE: Record<FeedbackViewType, string> = {
+  AI: "비교할 AI 평가 결과가 없습니다.",
+  MENTOR: "멘토 피드백 비교는 아직 지원되지 않습니다.",
+  ALL: "표시할 비교 결과가 없습니다.",
+};
 
 export default function HistoryCompare() {
   const navigate = useNavigate();
+  const { videoId1, videoId2 } = useParams();
+  const parsedVideoId1 = Number(videoId1);
+  const parsedVideoId2 = Number(videoId2);
+
+  const { compareData, isPendingCompare, isErrorCompare } =
+    useVideoCompareQuery(parsedVideoId1, parsedVideoId2);
   const [selectedView, setSelectedView] = useState<FeedbackViewType>("AI");
 
   const handleBack = () => {
     navigate(-1);
   };
 
+  if (parsedVideoId1 === null || parsedVideoId2 === null) {
+    return <Navigate to={ROUTES.VIDEO_HISTORY} replace />;
+  }
+
+  if (isPendingCompare) {
+    return <PageLoading />;
+  }
+
+  if (isErrorCompare || !compareData) {
+    return <PageError />;
+  }
+
+  const aiCompareResult = toCompareResult(compareData);
   const compareResults =
     selectedView === "AI"
-      ? [AI_COMPARE_RESULT]
+      ? [aiCompareResult]
       : selectedView === "MENTOR"
-        ? [MENTOR_COMPARE_RESULT]
-        : [AI_COMPARE_RESULT, MENTOR_COMPARE_RESULT];
+        ? []
+        : [aiCompareResult];
 
   return (
     <div className="flex min-h-screen min-w-300 flex-col gap-10 p-10 pb-30">
@@ -40,9 +95,15 @@ export default function HistoryCompare() {
         selectedView={selectedView}
         handleChangeView={setSelectedView}
       />
-      {compareResults.map((result) => (
-        <CompareFeedbackResultSection key={result.label} result={result} />
-      ))}
+      {compareResults.length === 0 ? (
+        <div className="flex min-h-50 items-center justify-center rounded-3xl bg-[#F5F5FA] text-2xl font-medium text-[#71718A]">
+          {EMPTY_COMPARE_MESSAGE[selectedView]}
+        </div>
+      ) : (
+        compareResults.map((result) => (
+          <CompareFeedbackResultSection key={result.label} result={result} />
+        ))
+      )}
     </div>
   );
 }
