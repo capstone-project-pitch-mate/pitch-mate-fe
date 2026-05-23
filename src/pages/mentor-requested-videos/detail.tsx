@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, CalendarDays, UserRound } from "lucide-react";
 import { toast } from "react-toastify";
 
+import type { VideoMetadata } from "@apis/types";
 import { ROUTES } from "@router/constants";
 import { formatDate, formatDuration } from "@utils/formatter";
 
@@ -24,12 +25,25 @@ import type {
   SegmentCommentDraft,
 } from "./types";
 
+const toRequestedVideo = (video: VideoMetadata) => ({
+  id: video.videoId,
+  title: video.title,
+  menteeNickname: video.ownerNickname,
+  thumbnailUrl: video.thumbnailUrl ?? "",
+  videoUrl: video.videoUrl,
+  durationSeconds: video.durationSeconds ?? 0,
+  requestedAt: video.createdAt,
+  description: video.description,
+});
+
 export default function MentorRequestedVideoDetail() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { videoId } = useParams();
-  const video = DUMMY_REQUESTED_VIDEOS.find(
-    (item) => String(item.id) === videoId,
-  );
+  const routeState = location.state as { video?: VideoMetadata } | null;
+  const video = routeState?.video
+    ? toRequestedVideo(routeState.video)
+    : DUMMY_REQUESTED_VIDEOS.find((item) => String(item.id) === videoId);
 
   const [selectedStep, setSelectedStep] =
     useState<FeedbackWritingStep>("COMMENT");

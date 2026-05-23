@@ -17,6 +17,7 @@ export const USER_URL = {
 
 export const VIDEO_URL = {
   DEFAULT: "/videos",
+  REQUESTED: "/videos/requested",
 };
 
 export const HISTORY_URL = {

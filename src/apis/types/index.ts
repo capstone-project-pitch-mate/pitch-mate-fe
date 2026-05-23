@@ -14,8 +14,10 @@ export type { RecentVideosType, DashboardResponse } from "./dashboard";
 
 export type {
   AllVideoHistoryResponse,
+  RequestedVideosResponse,
   VideoCompareResponse,
   VideoHistoryDetailResponse,
+  VideoMetadata,
   VideoUploadRequest,
   VideoUploadResponse,
 } from "./video";

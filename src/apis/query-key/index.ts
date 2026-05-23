@@ -6,6 +6,10 @@ export const USER_INFO_QUERY_KEY = {
   DEFAULT: ["user-info"],
 };
 
+export const VIDEO_QUERY_KEY = {
+  REQUESTED: ["videos", "requested"],
+};
+
 export const CONNECTIONS_QUERY_KEY = {
   DEFAULT: ["connections"],
   MENTOR_SEARCH: (nickname: string) => ["connections", "mentors", nickname],

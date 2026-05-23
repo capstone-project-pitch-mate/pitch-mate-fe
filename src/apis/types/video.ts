@@ -60,6 +60,8 @@ export interface VideoUploadRequest {
 
 export type VideoUploadResponse = VideoMetadata;
 
+export type RequestedVideosResponse = VideoMetadata[];
+
 export type AllVideoHistoryResponse = HistoryVideoSummary[];
 
 export type VideoHistoryDetailVideo = VideoMetadata;

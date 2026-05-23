@@ -1,11 +1,10 @@
 import { CalendarDays, Clock, UserRound } from "lucide-react";
 
+import type { VideoMetadata } from "@apis/types";
 import { formatDate, formatDuration } from "@utils/formatter";
 
-import type { MentorRequestedVideo } from "../../types";
-
 interface RequestVideoCardProps {
-  video: MentorRequestedVideo;
+  video: VideoMetadata;
   handleClick: (videoId: number) => void;
 }
 
@@ -17,17 +16,23 @@ export default function RequestVideoCard({
     <button
       className="flex min-h-78 flex-col gap-4 rounded-2xl bg-white p-5 text-left shadow-[0_2px_5px_0_rgba(0,0,0,0.10),0_2px_3px_-2px_rgba(0,0,0,0.10)] transition-colors hover:bg-[rgba(104,104,255,0.04)]"
       type="button"
-      onClick={() => handleClick(video.id)}
+      onClick={() => handleClick(video.videoId)}
     >
       <div className="relative overflow-hidden rounded-2xl bg-[#F5F5FA]">
-        <img
-          className="aspect-video w-full object-cover"
-          src={video.thumbnailUrl}
-          alt={`${video.title} 썸네일`}
-        />
+        {video.thumbnailUrl ? (
+          <img
+            className="aspect-video w-full object-cover"
+            src={video.thumbnailUrl}
+            alt={`${video.title} 썸네일`}
+          />
+        ) : (
+          <div className="flex aspect-video w-full items-center justify-center bg-[#EDEDFF] text-lg font-medium text-[#6868FF]">
+            썸네일 없음
+          </div>
+        )}
         <div className="absolute right-2 bottom-2 rounded-lg bg-[rgba(0,0,0,0.70)] px-2 py-0.5">
           <span className="text-sm text-white">
-            {formatDuration(video.durationSeconds)}
+            {formatDuration(video.durationSeconds ?? 0)}
           </span>
         </div>
       </div>
@@ -42,15 +47,15 @@ export default function RequestVideoCard({
         <div className="mt-auto flex flex-row flex-wrap gap-x-5 gap-y-2 text-lg text-[#71718A]">
           <span className="flex flex-row items-center gap-1.5">
             <UserRound size={18} />
-            {video.menteeNickname}
+            {video.ownerNickname}
           </span>
           <span className="flex flex-row items-center gap-1.5">
             <CalendarDays size={18} />
-            {formatDate(video.requestedAt)}
+            {formatDate(video.createdAt)}
           </span>
           <span className="flex flex-row items-center gap-1.5">
             <Clock size={18} />
-            {formatDuration(video.durationSeconds)}
+            {formatDuration(video.durationSeconds ?? 0)}
           </span>
         </div>
       </div>
