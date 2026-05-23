@@ -81,12 +81,12 @@ const EMPTY_FEEDBACK_MESSAGE: Record<FeedbackViewType, string> = {
 export default function VideoHistoryDetail() {
   const { videoId } = useParams();
   const parsedVideoId = Number(videoId);
-  const validVideoId = Number.isFinite(parsedVideoId) ? parsedVideoId : null;
+
   const { historyDetail, isPendingHistoryDetail, isErrorHistoryDetail } =
-    useVideoHistoryDetailQuery(validVideoId);
+    useVideoHistoryDetailQuery(parsedVideoId);
   const [selectedView, setSelectedView] = useState<FeedbackViewType>("AI");
 
-  if (validVideoId === null) {
+  if (parsedVideoId === null) {
     return <Navigate to={ROUTES.VIDEO_HISTORY} replace />;
   }
 

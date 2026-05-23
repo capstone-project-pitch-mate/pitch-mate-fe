@@ -12,7 +12,9 @@ import { ROUTES } from "@router/constants";
 import { CompareFeedbackResultSection } from "./components";
 import type { CompareFeedbackResult } from "./types";
 
-const toCompareResult = (data: VideoCompareResponse): CompareFeedbackResult => ({
+const toCompareResult = (
+  data: VideoCompareResponse,
+): CompareFeedbackResult => ({
   label: "AI 피드백 비교",
   session1: {
     videoId: data.session1.videoId,
@@ -47,21 +49,16 @@ export default function HistoryCompare() {
   const { videoId1, videoId2 } = useParams();
   const parsedVideoId1 = Number(videoId1);
   const parsedVideoId2 = Number(videoId2);
-  const validVideoId1 = Number.isFinite(parsedVideoId1)
-    ? parsedVideoId1
-    : null;
-  const validVideoId2 = Number.isFinite(parsedVideoId2)
-    ? parsedVideoId2
-    : null;
+
   const { compareData, isPendingCompare, isErrorCompare } =
-    useVideoCompareQuery(validVideoId1, validVideoId2);
+    useVideoCompareQuery(parsedVideoId1, parsedVideoId2);
   const [selectedView, setSelectedView] = useState<FeedbackViewType>("AI");
 
   const handleBack = () => {
     navigate(-1);
   };
 
-  if (validVideoId1 === null || validVideoId2 === null) {
+  if (parsedVideoId1 === null || parsedVideoId2 === null) {
     return <Navigate to={ROUTES.VIDEO_HISTORY} replace />;
   }
 
@@ -77,9 +74,9 @@ export default function HistoryCompare() {
   const compareResults =
     selectedView === "AI"
       ? [aiCompareResult]
-    : selectedView === "MENTOR"
-      ? []
-      : [aiCompareResult];
+      : selectedView === "MENTOR"
+        ? []
+        : [aiCompareResult];
 
   return (
     <div className="flex min-h-screen min-w-300 flex-col gap-10 p-10 pb-30">
