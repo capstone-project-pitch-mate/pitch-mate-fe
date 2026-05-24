@@ -25,7 +25,9 @@ export interface SegmentCommentDraft {
 export interface MentorRubricItem {
   id: number;
   title: string;
+  description?: string;
   category: "speech" | "nonVerbal" | "delivery";
+  maxScore?: number;
 }
 
 export interface MentorRubricScore extends MentorRubricItem {

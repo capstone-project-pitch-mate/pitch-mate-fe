@@ -6,6 +6,7 @@ interface RubricFormProps {
   handleChangeScore: (rubricId: number, score: number) => void;
   handleChangeOverallComment: (value: string) => void;
   handleComplete: () => void;
+  isPending?: boolean;
 }
 
 const categoryLabel = {
@@ -20,13 +21,20 @@ export default function RubricForm({
   handleChangeScore,
   handleChangeOverallComment,
   handleComplete,
+  isPending = false,
 }: RubricFormProps) {
-  // ADDED_MENTOR_FEEDBACK_FLOW: convert 20 rubric items scored 1-10 into a 100-point total.
-  const totalScore = (
-    (rubricScores.reduce((sum, item) => sum + item.score, 0) /
-      (rubricScores.length * 10)) *
-      100
-  ).toFixed(1);
+  const maxTotalScore = rubricScores.reduce(
+    (sum, item) => sum + (item.maxScore ?? 10),
+    0,
+  );
+  const totalScore =
+    maxTotalScore === 0
+      ? "0.0"
+      : (
+          (rubricScores.reduce((sum, item) => sum + item.score, 0) /
+            maxTotalScore) *
+          100
+        ).toFixed(1);
 
   return (
     <section className="flex flex-col gap-7 rounded-3xl bg-white p-8 shadow-[0_2px_5px_0_rgba(0,0,0,0.10),0_2px_3px_-2px_rgba(0,0,0,0.10)]">
@@ -57,12 +65,19 @@ export default function RubricForm({
                   {item.title}
                 </span>
               </div>
-              <strong className="text-lg text-[#6868FF]">{item.score}</strong>
+              <strong className="text-lg text-[#6868FF]">
+                {item.score}/{item.maxScore ?? 10}
+              </strong>
             </div>
+            {item.description ? (
+              <p className="line-clamp-2 text-base leading-6 text-[#71718A]">
+                {item.description}
+              </p>
+            ) : null}
             <input
               className="accent-[#6868FF]"
               min={1}
-              max={10}
+              max={item.maxScore ?? 10}
               type="range"
               value={item.score}
               onChange={(event) =>
@@ -87,10 +102,10 @@ export default function RubricForm({
         <button
           className="rounded-2xl bg-[#6868FF] px-8 py-4 text-xl font-bold text-white disabled:bg-[#ADADAD]"
           type="button"
-          disabled={!overallComment.trim()}
+          disabled={!overallComment.trim() || isPending}
           onClick={handleComplete}
         >
-          평가 완료
+          {isPending ? "제출 중..." : "평가 완료"}
         </button>
       </div>
     </section>

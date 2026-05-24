@@ -13,14 +13,34 @@ export type { UserRole } from "@shared/types";
 export type { RecentVideosType, DashboardResponse } from "./dashboard";
 
 export type {
+  CreateMentorEvaluationRequest,
+  CreateMentorEvaluationScore,
+  CreateMentorFeedbackRequest,
+  FeedbackRating,
+  MentorEvaluationResponse,
+  MentorFeedbackResponse,
+  Rubric,
+  RubricCategory,
+  RubricsResponse,
+  SubmitMentorFeedbackRequest,
+  SubmitMentorFeedbackResponse,
+} from "./feedback";
+
+export type {
   AllVideoHistoryResponse,
+  RequestedVideosResponse,
   VideoCompareResponse,
   VideoHistoryDetailResponse,
+  VideoMetadata,
   VideoUploadRequest,
   VideoUploadResponse,
 } from "./video";
 
-export type { UserInfoResponse, EditUserInfoRequest } from "./user";
+export type {
+  DeleteUserResponse,
+  EditUserInfoRequest,
+  UserInfoResponse,
+} from "./user";
 export type {
   ConnectionListResponse,
   ConnectionStatus,

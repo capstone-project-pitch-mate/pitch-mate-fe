@@ -12,11 +12,20 @@ export const DASHBOARD_URL = {
 
 export const USER_URL = {
   DEFAULT: "/users/me",
-  EDIT: "/users/me",
 };
 
 export const VIDEO_URL = {
   DEFAULT: "/videos",
+  REQUESTED: "/videos/requested",
+};
+
+export const RUBRICS_URL = {
+  DEFAULT: "/rubrics",
+};
+
+export const FEEDBACK_URL = {
+  FEEDBACKS: (videoId: number) => `/videos/${videoId}/feedbacks`,
+  EVALUATIONS: (videoId: number) => `/videos/${videoId}/evaluations`,
 };
 
 export const HISTORY_URL = {
