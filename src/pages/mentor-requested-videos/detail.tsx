@@ -1,7 +1,10 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 
-import { useRubricsQuery, useSubmitMentorFeedbackMutation } from "@apis/queries";
+import {
+  useRubricsQuery,
+  useSubmitMentorFeedbackMutation,
+} from "@apis/queries";
 import type { VideoMetadata } from "@apis/types";
 import { ROUTES } from "@router/constants";
 import { PageError, PageLoading } from "@shared/ui";
@@ -14,7 +17,6 @@ import {
   RubricForm,
   VideoFeedbackPlayer,
 } from "./components";
-import { DUMMY_REQUESTED_VIDEOS } from "./constants";
 import { useMentorFeedbackForm } from "./hooks";
 import { toRequestedVideo } from "./utils";
 
@@ -26,9 +28,11 @@ export default function MentorRequestedVideoDetail() {
   const { submitMentorFeedbackAsync, isPendingSubmitMentorFeedback } =
     useSubmitMentorFeedbackMutation();
   const routeState = location.state as { video?: VideoMetadata } | null;
-  const video = routeState?.video
-    ? toRequestedVideo(routeState.video)
-    : DUMMY_REQUESTED_VIDEOS.find((item) => String(item.id) === videoId);
+  const stateVideo = routeState?.video;
+  const video =
+    stateVideo && String(stateVideo.videoId) === videoId
+      ? toRequestedVideo(stateVideo)
+      : null;
   const feedbackForm = useMentorFeedbackForm({
     rubrics,
     videoId: video?.id,

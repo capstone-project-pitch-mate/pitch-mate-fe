@@ -1,6 +1,8 @@
 import { Camera, User } from "lucide-react";
 import type { ChangeEvent, RefObject } from "react";
 
+import { ALLOWED_PROFILE_IMAGE_TYPES } from "@shared/constants";
+
 interface ProfileImagePickerProps {
   disabled: boolean;
   email: string;
@@ -49,7 +51,8 @@ export default function ProfileImagePicker({
         ref={inputRef}
         className="hidden"
         type="file"
-        accept="image/*"
+        accept={ALLOWED_PROFILE_IMAGE_TYPES.join(",")}
+        disabled={disabled}
         onChange={handleChange}
       />
 
