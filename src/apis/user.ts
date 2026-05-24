@@ -1,7 +1,11 @@
 import apiInstance from "@shared/apis";
 
 import { USER_URL } from "./constants";
-import type { EditUserInfoRequest, UserInfoResponse } from "./types";
+import type {
+  DeleteUserResponse,
+  EditUserInfoRequest,
+  UserInfoResponse,
+} from "./types";
 
 export const getUserInfoApi = async () => {
   const response = await apiInstance.get<UserInfoResponse>(USER_URL.DEFAULT);
@@ -21,7 +25,7 @@ export const editUserInfoApi = async ({
   }
 
   const response = await apiInstance.put<UserInfoResponse, FormData>(
-    USER_URL.EDIT,
+    USER_URL.DEFAULT,
     formData,
     {
       contentType: "form-data",
@@ -30,6 +34,14 @@ export const editUserInfoApi = async ({
         ...(intro !== undefined && { intro }),
       },
     },
+  );
+
+  return response.result;
+};
+
+export const deleteUserApi = async () => {
+  const response = await apiInstance.delete<DeleteUserResponse>(
+    USER_URL.DEFAULT,
   );
 
   return response.result;

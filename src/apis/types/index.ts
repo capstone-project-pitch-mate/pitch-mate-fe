@@ -36,7 +36,11 @@ export type {
   VideoUploadResponse,
 } from "./video";
 
-export type { UserInfoResponse, EditUserInfoRequest } from "./user";
+export type {
+  DeleteUserResponse,
+  EditUserInfoRequest,
+  UserInfoResponse,
+} from "./user";
 export type {
   ConnectionListResponse,
   ConnectionStatus,

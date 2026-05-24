@@ -20,3 +20,5 @@ export interface EditUserInfoRequest {
   profileImage?: File;
   intro?: string;
 }
+
+export type DeleteUserResponse = string;
