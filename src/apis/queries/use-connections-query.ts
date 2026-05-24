@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
 import {
@@ -9,11 +7,8 @@ import {
 } from "@apis/connections";
 import { CONNECTIONS_QUERY_KEY } from "@apis/query-key";
 import type { ConnectionListResponse, SearchMentorResponse } from "@apis/types";
-import { ROUTES } from "@router/constants";
 
 export const useConnectionsQuery = () => {
-  const navigate = useNavigate();
-
   const {
     data: connectionsData,
     isPending: isPendingConnections,
@@ -25,15 +20,6 @@ export const useConnectionsQuery = () => {
     retry: 2,
   });
 
-  useEffect(() => {
-    if (
-      isErrorConnections &&
-      (connectionsError.status === 403 || connectionsError.status === 401)
-    ) {
-      navigate(ROUTES.LOGIN, { replace: true });
-    }
-  }, [isErrorConnections, connectionsError, navigate]);
-
   return {
     connectionsData,
     isPendingConnections,
@@ -44,7 +30,6 @@ export const useConnectionsQuery = () => {
 
 export const useSearchMentorsQuery = (nickname: string) => {
   const trimmedNickname = nickname.trim();
-  const navigate = useNavigate();
 
   const {
     data: searchMentorsData,
@@ -58,15 +43,6 @@ export const useSearchMentorsQuery = (nickname: string) => {
     retry: 2,
   });
 
-  useEffect(() => {
-    if (
-      isErrorSearchMentors &&
-      (searchMentorsError.status === 403 || searchMentorsError.status === 401)
-    ) {
-      navigate(ROUTES.LOGIN, { replace: true });
-    }
-  }, [isErrorSearchMentors, searchMentorsError, navigate]);
-
   return {
     searchMentorsData,
     isPendingSearchMentors,
@@ -76,8 +52,6 @@ export const useSearchMentorsQuery = (nickname: string) => {
 };
 
 export const useAcceptedMentorsQuery = () => {
-  const navigate = useNavigate();
-
   const {
     data: acceptedMentorsData,
     isPending: isPendingAcceptedMentors,
@@ -88,16 +62,6 @@ export const useAcceptedMentorsQuery = () => {
     queryFn: () => getAcceptedMentorsApi(),
     retry: 2,
   });
-
-  useEffect(() => {
-    if (
-      isErrorAcceptedMentors &&
-      (acceptedMentorsError.status === 403 ||
-        acceptedMentorsError.status === 401)
-    ) {
-      navigate(ROUTES.LOGIN, { replace: true });
-    }
-  }, [isErrorAcceptedMentors, acceptedMentorsError, navigate]);
 
   return {
     acceptedMentorsData,

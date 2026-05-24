@@ -213,6 +213,19 @@ export const isRefreshTokenAuthFailure = (error: unknown): boolean => {
   return axios.isAxiosError(error) && error.response?.status === 401;
 };
 
+const shouldRedirectToLogin = (error: ApiError, url?: string): boolean => {
+  if (shouldBypassAuth(url)) {
+    return false;
+  }
+
+  return (
+    error.status === 401 ||
+    error.status === 403 ||
+    error.code === AUTH_ERROR_CODE.INVALID_TOKEN ||
+    error.code === AUTH_ERROR_CODE.EXPIRED_REFRESH_TOKEN
+  );
+};
+
 const shouldAttemptReissue = (error: unknown): boolean => {
   if (!axios.isAxiosError(error)) {
     return false;
@@ -224,7 +237,11 @@ const shouldAttemptReissue = (error: unknown): boolean => {
     return false;
   }
 
-  return error.response?.status === 401 || code === AUTH_ERROR_CODE.INVALID_TOKEN;
+  return (
+    error.response?.status === 401 ||
+    error.response?.status === 403 ||
+    code === AUTH_ERROR_CODE.INVALID_TOKEN
+  );
 };
 
 axiosInstance.interceptors.request.use((config) => {
@@ -364,7 +381,14 @@ const request = async <TResult = unknown, TData = unknown>(
 
     return response.data;
   } catch (error) {
-    throw toApiError(error);
+    const apiError = toApiError(error);
+
+    if (shouldRedirectToLogin(apiError, requestConfig.url)) {
+      clearAuthStorage();
+      redirectToLogin();
+    }
+
+    throw apiError;
   }
 };
 
