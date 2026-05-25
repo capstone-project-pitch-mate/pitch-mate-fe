@@ -1,5 +1,7 @@
 export const DASHBOARD_QUERY_KEY = {
   DEFAULT: ["dashboard"],
+  MENTEE: ["dashboard", "mentee"],
+  MENTOR: ["dashboard", "mentor"],
 };
 
 export const USER_INFO_QUERY_KEY = {

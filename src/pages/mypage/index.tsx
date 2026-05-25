@@ -1,5 +1,4 @@
 import { useUserInfoQuery } from "@apis/queries";
-import { Overview } from "@shared/ui";
 
 import { EditProfileSection } from "./components";
 
@@ -37,13 +36,6 @@ export default function MyPage() {
           {roleLabel}
         </span>
       </div>
-      {userInfoData.role === "MENTEE" && (
-        <Overview
-          totalCount={userInfoData.totalVideos}
-          completedCount={userInfoData.analyzedVideos}
-          averageScore={userInfoData.averageScore}
-        />
-      )}
       <EditProfileSection
         key={userInfoData.userId}
         userInfoData={userInfoData}

@@ -20,7 +20,7 @@ export const useVideoUploadMutation = () => {
   >({
     mutationFn: (data: VideoUploadRequest) => videoUploadApi(data),
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: DASHBOARD_QUERY_KEY.DEFAULT });
+      qc.invalidateQueries({ queryKey: DASHBOARD_QUERY_KEY.MENTEE });
       qc.invalidateQueries({ queryKey: HISTORY_QUERY_KEY.DEFAULT });
       toast.info("동영상이 업로드되었습니다.");
       navigate(ROUTES.VIDEO_HISTORY);

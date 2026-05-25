@@ -9,8 +9,8 @@ export interface MentorDashboardVideo {
   id: number;
   title: string;
   menteeNickname: string;
-  thumbnailUrl: string;
-  durationSeconds: number;
+  thumbnailUrl: string | null;
+  durationSeconds: number | null;
   date: string;
   status: MentorDashboardVideoStatus;
 }

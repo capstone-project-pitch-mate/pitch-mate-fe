@@ -10,7 +10,13 @@ export type {
 
 export type { UserRole } from "@shared/types";
 
-export type { RecentVideosType, DashboardResponse } from "./dashboard";
+export type {
+  DashboardResponse,
+  MenteeDashboardResponse,
+  MentorDashboardRequestedVideo,
+  MentorDashboardResponse,
+  RecentVideosType,
+} from "./dashboard";
 
 export type {
   CreateMentorEvaluationRequest,

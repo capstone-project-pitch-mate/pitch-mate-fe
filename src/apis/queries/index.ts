@@ -1,4 +1,7 @@
-export { useDashboardQuery } from "./use-dashboard-query";
+export {
+  useDashboardQuery,
+  useMentorDashboardQuery,
+} from "./use-dashboard-query";
 export { useUserInfoQuery } from "./use-user-info-query";
 export { useDeleteUserMutation } from "./use-delete-user-mutation";
 export { useEditUserInfoMutation } from "./use-edit-user-info-mutation";
