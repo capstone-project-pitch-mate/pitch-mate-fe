@@ -37,10 +37,11 @@ const isAllowedVideoFile = (file: File) => {
 const toConnectedMentor = (
   connection: ConnectionListResponse[number],
 ): Mentor => ({
-  id: connection.mentorId,
+  id: connection.userId,
   connectionId: connection.connectionId,
-  nickname: connection.mentorNickname,
-  bio: connection.mentorIntro ?? "",
+  nickname: connection.nickname,
+  bio: connection.intro ?? "",
+  profileImage: connection.profileImage,
   status: "CONNECTED",
 });
 

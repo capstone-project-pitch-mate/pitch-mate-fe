@@ -1,6 +1,7 @@
-import { Check, UserRound } from "lucide-react";
+import { Check } from "lucide-react";
 
 import type { Mentor } from "@pages/mentor-list/types";
+import { UserAvatar } from "@shared/ui";
 import { cn } from "@utils/cn";
 
 import type { SelectedMentorId } from "../../types";
@@ -56,9 +57,10 @@ export default function MentorFeedbackSection({
                 onClick={() => handleSelectMentor(mentor.id)}
               >
                 <div className="flex min-w-0 flex-row gap-4">
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[rgba(104,104,255,0.10)]">
-                    <UserRound color="#6868FF" />
-                  </div>
+                  <UserAvatar
+                    imageUrl={mentor.profileImage}
+                    name={mentor.nickname}
+                  />
                   <div className="flex min-w-0 flex-col gap-2">
                     <h3 className="text-2xl font-semibold">
                       {mentor.nickname}

@@ -7,19 +7,17 @@ export type DeleteConnectionResponse = string;
 export type SearchMentorResponse = {
   mentorId: number;
   nickname: string;
-  intro: string;
-  profileImage: string;
+  intro: string | null;
+  profileImage: string | null;
   connectionStatus: ConnectionStatus;
 }[];
 
 export interface ConnectionResponse {
   connectionId: number;
-  mentorId: number;
-  mentorNickname: string;
-  mentorIntro: string;
-  menteeId: number;
-  menteeNickname: string;
-  menteeIntro: string;
-  status: ConnectionStatus;
+  userId: number;
+  nickname: string;
+  intro: string | null;
+  profileImage: string | null;
+  connectionStatus: ConnectionStatus;
   createdAt: string;
 }

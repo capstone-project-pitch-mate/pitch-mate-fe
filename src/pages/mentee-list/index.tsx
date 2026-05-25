@@ -18,19 +18,20 @@ import {
 import type { Mentee, MenteeConnectionStatus } from "./types";
 
 const toMenteeStatus = (
-  status: ConnectionListResponse[number]["status"],
+  status: ConnectionListResponse[number]["connectionStatus"],
 ): MenteeConnectionStatus => {
   return status === "ACCEPTED" ? "CONNECTED" : "REQUESTED";
 };
 
 const toMentee = (connection: ConnectionListResponse[number]): Mentee => {
-  const status = toMenteeStatus(connection.status);
+  const status = toMenteeStatus(connection.connectionStatus);
 
   return {
-    id: connection.menteeId,
+    id: connection.userId,
     connectionId: connection.connectionId,
-    nickname: connection.menteeNickname,
-    bio: connection.menteeIntro ?? "",
+    nickname: connection.nickname,
+    bio: connection.intro ?? "",
+    profileImage: connection.profileImage,
     requestedAt: connection.createdAt,
     connectedAt: status === "CONNECTED" ? connection.createdAt : undefined,
     status,
@@ -53,7 +54,8 @@ export default function MenteeList() {
       (connectionsData ?? [])
         .filter(
           (connection) =>
-            connection.status === "PENDING" || connection.status === "ACCEPTED",
+            connection.connectionStatus === "PENDING" ||
+            connection.connectionStatus === "ACCEPTED",
         )
         .map(toMentee),
     [connectionsData],
