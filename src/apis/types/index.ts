@@ -34,9 +34,12 @@ export type {
 
 export type {
   AllVideoHistoryResponse,
+  CategoryScore,
   CompletedRequestedVideosResponse,
+  MentorFeedbackStatus,
   RequestedVideosResponse,
   VideoCompareResponse,
+  VideoHistoryDetailEvaluation,
   VideoHistoryDetailResponse,
   VideoMetadata,
   VideoUploadRequest,

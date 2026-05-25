@@ -138,6 +138,7 @@ export interface VideoCompareSession {
   totalScore: number;
   durationSeconds: number;
   createdAt: string;
+  mentorFeedbackStatus: MentorFeedbackStatus;
 }
 
 export interface VideoCompareRubricComparison {
@@ -161,4 +162,10 @@ export interface VideoCompareResponse {
   };
   session1OverallComment: string;
   session2OverallComment: string;
+  session1MentorEvaluation?: VideoHistoryDetailEvaluation | null;
+  session2MentorEvaluation?: VideoHistoryDetailEvaluation | null;
+  mentorCategoryData?: {
+    session1: CategoryScore;
+    session2: CategoryScore;
+  };
 }
