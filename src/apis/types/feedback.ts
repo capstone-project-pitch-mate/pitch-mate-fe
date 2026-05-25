@@ -37,7 +37,6 @@ export interface MentorFeedbackResponse {
 export interface CreateMentorEvaluationScore {
   rubricId: number;
   score: number;
-  comment: string;
 }
 
 export interface CreateMentorEvaluationRequest {
