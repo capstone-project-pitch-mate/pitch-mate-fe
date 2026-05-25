@@ -25,6 +25,7 @@ export const useSubmitMentorFeedbackMutation = () => {
     mutationFn: submitMentorFeedbackApi,
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: VIDEO_QUERY_KEY.REQUESTED });
+      qc.invalidateQueries({ queryKey: VIDEO_QUERY_KEY.REQUESTED_COMPLETED });
       qc.invalidateQueries({ queryKey: HISTORY_QUERY_KEY.DEFAULT });
       toast.info("멘토 피드백이 완료되었습니다.");
     },

@@ -8,6 +8,7 @@ export const USER_INFO_QUERY_KEY = {
 
 export const VIDEO_QUERY_KEY = {
   REQUESTED: ["videos", "requested"],
+  REQUESTED_COMPLETED: ["videos", "requested", "completed"],
 };
 
 export const RUBRICS_QUERY_KEY = {

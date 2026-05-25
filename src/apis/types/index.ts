@@ -28,6 +28,7 @@ export type {
 
 export type {
   AllVideoHistoryResponse,
+  CompletedRequestedVideosResponse,
   RequestedVideosResponse,
   VideoCompareResponse,
   VideoHistoryDetailResponse,
