@@ -1,7 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { submitMentorFeedbackApi } from "@apis/feedback";
-import { HISTORY_QUERY_KEY, VIDEO_QUERY_KEY } from "@apis/query-key";
+import {
+  DASHBOARD_QUERY_KEY,
+  HISTORY_QUERY_KEY,
+  VIDEO_QUERY_KEY,
+} from "@apis/query-key";
 import type {
   SubmitMentorFeedbackRequest,
   SubmitMentorFeedbackResponse,
@@ -26,6 +30,7 @@ export const useSubmitMentorFeedbackMutation = () => {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: VIDEO_QUERY_KEY.REQUESTED });
       qc.invalidateQueries({ queryKey: VIDEO_QUERY_KEY.REQUESTED_COMPLETED });
+      qc.invalidateQueries({ queryKey: DASHBOARD_QUERY_KEY.MENTOR });
       qc.invalidateQueries({ queryKey: HISTORY_QUERY_KEY.DEFAULT });
       toast.info("멘토 피드백이 완료되었습니다.");
     },

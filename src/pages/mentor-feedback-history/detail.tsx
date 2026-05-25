@@ -1,21 +1,18 @@
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, CalendarDays, UserRound } from "lucide-react";
 
-import { useVideoHistoryDetailQuery } from "@apis/queries";
-import type { VideoHistoryDetailResponse } from "@apis/types";
+import { useRubricsQuery, useVideoHistoryDetailQuery } from "@apis/queries";
+import type { Rubric, VideoHistoryDetailResponse } from "@apis/types";
 import { ROUTES } from "@router/constants";
 import { PageError, PageLoading } from "@shared/ui";
 import { formatDate, formatDuration } from "@utils/formatter";
+import { toRubricCategory } from "@pages/mentor-requested-videos/utils";
 import type {
   MentorRubricScore,
   SegmentComment,
 } from "@pages/mentor-requested-videos/types";
 
-import {
-  PageHeader,
-  RubricResult,
-  SegmentCommentList,
-} from "./components";
+import { PageHeader, RubricResult, SegmentCommentList } from "./components";
 
 const toSegmentComments = (
   feedbacks: NonNullable<VideoHistoryDetailResponse["mentor"]>["feedbacks"],
@@ -27,39 +24,78 @@ const toSegmentComments = (
     content: feedback.content,
   }));
 
+const getFallbackRubricCategory = (
+  title: string,
+): MentorRubricScore["category"] => {
+  if (
+    ["제스처", "자세", "표정", "시선", "자신감"].some((keyword) =>
+      title.includes(keyword),
+    )
+  ) {
+    return "nonVerbal";
+  }
+
+  if (
+    ["발음", "속도", "음성", "발화"].some((keyword) => title.includes(keyword))
+  ) {
+    return "speech";
+  }
+
+  return "delivery";
+};
+
 const toRubricScores = (
   evaluation: NonNullable<VideoHistoryDetailResponse["mentor"]>["evaluation"],
-): MentorRubricScore[] =>
-  evaluation?.scores.map((score) => ({
-    id: score.rubricId,
-    title: score.rubricTitle,
-    category: "delivery",
-    score: score.score,
-  })) ?? [];
+  rubrics: Rubric[],
+): MentorRubricScore[] => {
+  const rubricMap = new Map(rubrics.map((rubric) => [rubric.rubricId, rubric]));
+
+  return (
+    evaluation?.scores.map((score) => {
+      const rubric = rubricMap.get(score.rubricId);
+
+      return {
+        id: score.rubricId,
+        title: score.rubricTitle,
+        description: rubric?.description,
+        category: rubric
+          ? toRubricCategory(rubric.category)
+          : getFallbackRubricCategory(score.rubricTitle),
+        maxScore: score.maxScore,
+        score: score.score,
+      };
+    }) ?? []
+  );
+};
 
 export default function MentorFeedbackHistoryDetail() {
   const navigate = useNavigate();
   const { feedbackId } = useParams();
   const parsedVideoId = Number(feedbackId);
   const { historyDetail, isPendingHistoryDetail, isErrorHistoryDetail } =
-    useVideoHistoryDetailQuery(Number.isNaN(parsedVideoId) ? null : parsedVideoId);
+    useVideoHistoryDetailQuery(
+      Number.isNaN(parsedVideoId) ? null : parsedVideoId,
+    );
+  const { rubrics, isPendingRubrics, isErrorRubrics } = useRubricsQuery();
 
   if (Number.isNaN(parsedVideoId)) {
     return <Navigate to={ROUTES.MENTOR_FEEDBACK_HISTORY} replace />;
   }
 
-  if (isPendingHistoryDetail) {
+  if (isPendingHistoryDetail || isPendingRubrics) {
     return <PageLoading />;
   }
 
-  if (isErrorHistoryDetail || !historyDetail) {
+  if (isErrorHistoryDetail || isErrorRubrics || !historyDetail) {
     return <PageError />;
   }
 
   const { video } = historyDetail;
   const mentorEvaluation = historyDetail.mentor?.evaluation ?? null;
-  const mentorComments = toSegmentComments(historyDetail.mentor?.feedbacks ?? []);
-  const mentorRubricScores = toRubricScores(mentorEvaluation);
+  const mentorComments = toSegmentComments(
+    historyDetail.mentor?.feedbacks ?? [],
+  );
+  const mentorRubricScores = toRubricScores(mentorEvaluation, rubrics ?? []);
   const durationSeconds = video.durationSeconds ?? 0;
 
   return (
@@ -100,7 +136,8 @@ export default function MentorFeedbackHistoryDetail() {
             </span>
             <span className="flex flex-row items-center gap-2">
               <CalendarDays size={22} />
-              완료일 {formatDate(mentorEvaluation?.createdAt ?? video.createdAt)}
+              완료일{" "}
+              {formatDate(mentorEvaluation?.createdAt ?? video.createdAt)}
             </span>
             <span className="rounded-2xl bg-[rgba(104,104,255,0.10)] px-4 py-3 font-semibold text-[#6868FF]">
               영상 길이 {formatDuration(durationSeconds)}

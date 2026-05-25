@@ -15,7 +15,7 @@ export const toRequestedVideo = (
   description: video.description,
 });
 
-const toRubricCategory = (
+export const toRubricCategory = (
   category: Rubric["category"],
 ): MentorRubricScore["category"] => {
   const normalizedCategory = category.toUpperCase().replaceAll("-", "_");
