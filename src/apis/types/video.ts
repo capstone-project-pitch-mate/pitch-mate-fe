@@ -46,6 +46,7 @@ export interface RubricScore {
   rubricId: number;
   rubricTitle: string;
   score: number;
+  maxScore?: number;
   comment: string;
 }
 
@@ -61,6 +62,8 @@ export interface VideoUploadRequest {
 export type VideoUploadResponse = VideoMetadata;
 
 export type RequestedVideosResponse = VideoMetadata[];
+
+export type CompletedRequestedVideosResponse = VideoMetadata[];
 
 export type AllVideoHistoryResponse = HistoryVideoSummary[];
 
@@ -100,28 +103,33 @@ export interface VideoHistoryDetailAnalysis {
   speechRateWpm: number;
   silenceRatio: number;
   fillerWordCount: number;
-  fillerWords: string[];
+  fillerWords: string[] | string;
   speakingDurationSeconds: number;
   errorMessage: string | null;
   createdAt: string;
   updatedAt: string;
 }
 
+export type MentorFeedbackStatus = "NOT_REQUESTED" | "PENDING" | "COMPLETED";
+
+export interface VideoHistoryDetailAiResult {
+  analysis: VideoHistoryDetailAnalysis | null;
+  feedbacks: VideoHistoryDetailFeedback[];
+  evaluation: VideoHistoryDetailEvaluation | null;
+  categoryScores: CategoryScore | null;
+}
+
+export interface VideoHistoryDetailMentorResult {
+  feedbacks: VideoHistoryDetailFeedback[];
+  evaluation: VideoHistoryDetailEvaluation | null;
+  categoryScores: CategoryScore | null;
+}
+
 export interface VideoHistoryDetailResponse {
   video: VideoHistoryDetailVideo;
-  feedbacks: {
-    ai: VideoHistoryDetailFeedback[];
-    mentor: VideoHistoryDetailFeedback[];
-  };
-  evaluations: {
-    ai: VideoHistoryDetailEvaluation | null;
-    mentor: VideoHistoryDetailEvaluation | null;
-  };
-  analysis: VideoHistoryDetailAnalysis | null;
-  categoryScores: {
-    ai: CategoryScore | null;
-    mentor: CategoryScore | null;
-  };
+  mentorFeedbackStatus: MentorFeedbackStatus;
+  ai: VideoHistoryDetailAiResult | null;
+  mentor: VideoHistoryDetailMentorResult | null;
 }
 
 export interface VideoCompareSession {
@@ -130,6 +138,7 @@ export interface VideoCompareSession {
   totalScore: number;
   durationSeconds: number;
   createdAt: string;
+  mentorFeedbackStatus: MentorFeedbackStatus;
 }
 
 export interface VideoCompareRubricComparison {
@@ -153,4 +162,10 @@ export interface VideoCompareResponse {
   };
   session1OverallComment: string;
   session2OverallComment: string;
+  session1MentorEvaluation?: VideoHistoryDetailEvaluation | null;
+  session2MentorEvaluation?: VideoHistoryDetailEvaluation | null;
+  mentorCategoryData?: {
+    session1: CategoryScore;
+    session2: CategoryScore;
+  };
 }

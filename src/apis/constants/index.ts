@@ -6,8 +6,8 @@ export const AUTH_URL = {
 };
 
 export const DASHBOARD_URL = {
-  // TODO: 추후 서버 url 수정
-  DEFAULT: "/users/me",
+  MENTEE: "/users/mentee/dashboard",
+  MENTOR: "/users/mentor/dashboard",
 };
 
 export const USER_URL = {
@@ -17,6 +17,7 @@ export const USER_URL = {
 export const VIDEO_URL = {
   DEFAULT: "/videos",
   REQUESTED: "/videos/requested",
+  REQUESTED_COMPLETED: "/videos/requested/completed",
 };
 
 export const RUBRICS_URL = {

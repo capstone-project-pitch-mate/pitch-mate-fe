@@ -28,12 +28,12 @@ export default function MentorVideoCard({
       <div className="relative w-full overflow-hidden rounded-2xl bg-[#F5F5FA]">
         <img
           className="aspect-video w-full object-cover"
-          src={video.thumbnailUrl}
+          src={video.thumbnailUrl ?? "https://placehold.co/640x360/png"}
           alt={`${video.title} 썸네일`}
         />
         <div className="absolute right-2 bottom-2 rounded-lg bg-[rgba(0,0,0,0.70)] px-2 py-0.5">
           <span className="text-sm text-white">
-            {formatDuration(video.durationSeconds)}
+            {formatDuration(video.durationSeconds ?? 0)}
           </span>
         </div>
       </div>

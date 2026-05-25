@@ -1,4 +1,4 @@
-import { ArrowRight, Check, Clock, Loader2, TriangleAlert } from "lucide-react";
+import { ArrowRight, Clock, Loader2, TriangleAlert } from "lucide-react";
 
 import { cn } from "@utils/cn";
 import { formatDate, formatDuration } from "@utils/formatter";
@@ -107,7 +107,9 @@ export default function HistoryCard({
                   : "border-[rgba(113,113,138,0.40)] bg-white",
               )}
             >
-              {selectedOrder ? <Check size={20} /> : null}
+              {selectedOrder ? (
+                <span className="text-base font-bold">{selectedOrder}</span>
+              ) : null}
             </div>
           ) : (
             <ArrowRight color="#1A1A2E" size={30} />

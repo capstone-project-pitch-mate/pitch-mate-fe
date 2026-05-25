@@ -1,4 +1,6 @@
-import { UserRound, X } from "lucide-react";
+import { X } from "lucide-react";
+
+import { UserAvatar } from "@shared/ui";
 
 import { MENTOR_STATUS_LABEL, MENTOR_STATUS_STYLE } from "../../constants";
 import type { Mentor } from "../../types";
@@ -19,9 +21,7 @@ export default function MyMentorCard({
   return (
     <article className="flex min-h-36 flex-row items-center justify-between gap-5 rounded-2xl border border-[rgba(0,0,0,0.08)] bg-white p-6">
       <div className="flex min-w-0 flex-row items-center gap-4">
-        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[rgba(104,104,255,0.10)]">
-          <UserRound color="#6868FF" />
-        </div>
+        <UserAvatar imageUrl={mentor.profileImage} name={mentor.nickname} />
         <div className="flex min-w-0 flex-col gap-2">
           <div className="flex flex-row flex-wrap items-center gap-3">
             <h3 className="text-2xl font-semibold">{mentor.nickname}</h3>

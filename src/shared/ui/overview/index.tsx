@@ -34,7 +34,7 @@ export default function Overview({
         <div className="flex flex-col gap-4">
           <span className="text-xl text-[#71718A]">평균 점수</span>
           <span className="text-4xl font-bold">
-            {averageScore === null ? "-" : averageScore}
+            {averageScore === null ? "-" : averageScore.toFixed(2)}
           </span>
         </div>
       </div>

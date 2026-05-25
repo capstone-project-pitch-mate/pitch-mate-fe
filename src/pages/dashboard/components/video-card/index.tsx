@@ -7,8 +7,8 @@ import { ROUTES } from "@router/constants";
 interface VideoCardProps {
   id: number;
   title: string;
-  thumbnailUrl: string;
-  durationSeconds: number;
+  thumbnailUrl: string | null;
+  durationSeconds: number | null;
   createdAt: string;
 }
 
@@ -33,12 +33,14 @@ export default function VideoCard({
     >
       <div className="relative">
         <img
-          className="aspect-video w-full flex-1 rounded-3xl"
-          src={thumbnailUrl}
+          className="aspect-video w-full flex-1 rounded-3xl bg-[#F5F5FA] object-cover"
+          src={thumbnailUrl ?? "https://placehold.co/640x360/png"}
           alt={`${id}번 영상 썸네일`}
         />
         <div className="absolute right-4 bottom-4 rounded-lg bg-[rgba(0,0,0,0.70)] pt-1 pr-3 pb-1 pl-3">
-          <span className="text-white">{formatDuration(durationSeconds)}</span>
+          <span className="text-white">
+            {formatDuration(durationSeconds ?? 0)}
+          </span>
         </div>
       </div>
 

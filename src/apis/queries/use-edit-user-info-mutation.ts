@@ -14,7 +14,7 @@ export const useEditUserInfoMutation = () => {
       mutationFn: (data) => editUserInfoApi(data),
       onSuccess: () => {
         qc.invalidateQueries({ queryKey: USER_INFO_QUERY_KEY.DEFAULT });
-        qc.invalidateQueries({ queryKey: DASHBOARD_QUERY_KEY.DEFAULT });
+        qc.invalidateQueries({ queryKey: DASHBOARD_QUERY_KEY.MENTEE });
         toast.info("프로필이 수정되었습니다.");
       },
       onError: (error) => {

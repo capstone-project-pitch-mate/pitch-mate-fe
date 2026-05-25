@@ -1,6 +1,7 @@
-import { CalendarDays, UserRound } from "lucide-react";
+import { CalendarDays } from "lucide-react";
 
 import { formatDate } from "@utils/formatter";
+import { UserAvatar } from "@shared/ui";
 
 import type { Mentee } from "../../types";
 
@@ -20,9 +21,7 @@ export default function MenteeRequestCard({
   return (
     <article className="flex min-h-48 flex-col justify-between gap-5 rounded-2xl border border-[rgba(0,0,0,0.08)] bg-white p-6">
       <div className="flex flex-row gap-4">
-        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[rgba(104,104,255,0.10)]">
-          <UserRound color="#6868FF" />
-        </div>
+        <UserAvatar imageUrl={mentee.profileImage} name={mentee.nickname} />
         <div className="flex min-w-0 flex-1 flex-col gap-2">
           <div className="flex flex-row flex-wrap items-center gap-3">
             <h3 className="text-2xl font-semibold">{mentee.nickname}</h3>

@@ -120,7 +120,6 @@ export const useMentorFeedbackForm = ({
           scores: rubricScores.map((rubric) => ({
             rubricId: rubric.id,
             score: rubric.score,
-            comment: "",
           })),
           comment: overallComment.trim(),
         },

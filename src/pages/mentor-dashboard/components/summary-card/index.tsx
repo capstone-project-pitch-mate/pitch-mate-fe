@@ -8,7 +8,7 @@ export default function SummaryCard({ summary }: SummaryCardProps) {
   const Icon = summary.icon;
 
   return (
-    <article className="flex h-36 flex-row items-center justify-between rounded-2xl bg-white px-7 py-6 shadow-[0_2px_5px_0_rgba(0,0,0,0.10),0_2px_3px_-2px_rgba(0,0,0,0.10)]">
+    <article className="flex flex-row items-center justify-between rounded-2xl bg-white px-7 py-6 shadow-[0_2px_5px_0_rgba(0,0,0,0.10),0_2px_3px_-2px_rgba(0,0,0,0.10)]">
       <div className="flex flex-col gap-2">
         <span className="text-xl font-medium text-[#71718A]">
           {summary.title}

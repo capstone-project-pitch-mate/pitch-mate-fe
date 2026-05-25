@@ -39,17 +39,19 @@ const toMentorStatus = (status: ConnectionStatus): MentorStatus => {
 };
 
 const toMentor = (connection: ConnectionListResponse[number]): Mentor => ({
-  id: connection.mentorId,
+  id: connection.userId,
   connectionId: connection.connectionId,
-  nickname: connection.mentorNickname,
-  bio: connection.mentorIntro ?? "",
-  status: toMentorStatus(connection.status),
+  nickname: connection.nickname,
+  bio: connection.intro ?? "",
+  profileImage: connection.profileImage,
+  status: toMentorStatus(connection.connectionStatus),
 });
 
 const toSearchedMentor = (mentor: SearchMentorResponse[number]): Mentor => ({
   id: mentor.mentorId,
   nickname: mentor.nickname,
   bio: mentor.intro ?? "",
+  profileImage: mentor.profileImage,
   status: toMentorStatus(mentor.connectionStatus),
 });
 
@@ -74,7 +76,8 @@ export default function MentorList() {
       (connectionsData ?? [])
         .filter(
           (connection) =>
-            connection.status === "PENDING" || connection.status === "ACCEPTED",
+            connection.connectionStatus === "PENDING" ||
+            connection.connectionStatus === "ACCEPTED",
         )
         .map(toMentor),
     [connectionsData],

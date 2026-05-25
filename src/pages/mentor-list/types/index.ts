@@ -6,5 +6,6 @@ export interface Mentor {
   connectionId?: number;
   nickname: string;
   bio: string;
+  profileImage?: string | null;
   status: MentorStatus;
 }
