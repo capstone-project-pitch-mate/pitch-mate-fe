@@ -27,7 +27,7 @@ const EMPTY_CATEGORY_SCORE: FeedbackCategoryScore = {
 };
 
 const toFeedback = (
-  feedback: VideoHistoryDetailResponse["feedbacks"]["ai"][number],
+  feedback: NonNullable<VideoHistoryDetailResponse["ai"]>["feedbacks"][number],
 ): FeedbackType => ({
   id: feedback.feedbackId,
   authorId: feedback.authorId ?? 0,
@@ -39,7 +39,7 @@ const toFeedback = (
 });
 
 const toRubricScores = (
-  evaluation: VideoHistoryDetailResponse["evaluations"]["ai"],
+  evaluation: NonNullable<VideoHistoryDetailResponse["ai"]>["evaluation"],
 ): RubricDetailType[] =>
   evaluation?.scores.map((score) => ({
     rubricId: score.rubricId,
@@ -54,9 +54,9 @@ const toFeedbackResult = ({
   categoryScore,
 }: {
   label: string;
-  feedbacks: VideoHistoryDetailResponse["feedbacks"]["ai"];
-  evaluation: VideoHistoryDetailResponse["evaluations"]["ai"];
-  categoryScore: VideoHistoryDetailResponse["categoryScores"]["ai"];
+  feedbacks: NonNullable<VideoHistoryDetailResponse["ai"]>["feedbacks"];
+  evaluation: NonNullable<VideoHistoryDetailResponse["ai"]>["evaluation"];
+  categoryScore: NonNullable<VideoHistoryDetailResponse["ai"]>["categoryScores"];
 }): FeedbackResult | null => {
   if (!evaluation && feedbacks.length === 0) {
     return null;
@@ -98,23 +98,28 @@ export default function VideoHistoryDetail() {
     return <PageError />;
   }
 
+  const shouldShowFeedbackSelector =
+    historyDetail.mentorFeedbackStatus !== "NOT_REQUESTED";
+
   const aiFeedbackResult = toFeedbackResult({
     label: "AI 피드백",
-    feedbacks: historyDetail.feedbacks.ai,
-    evaluation: historyDetail.evaluations.ai,
-    categoryScore: historyDetail.categoryScores.ai,
+    feedbacks: historyDetail.ai?.feedbacks ?? [],
+    evaluation: historyDetail.ai?.evaluation ?? null,
+    categoryScore: historyDetail.ai?.categoryScores ?? null,
   });
   const mentorFeedbackResult = toFeedbackResult({
     label: "멘토 피드백",
-    feedbacks: historyDetail.feedbacks.mentor,
-    evaluation: historyDetail.evaluations.mentor,
-    categoryScore: historyDetail.categoryScores.mentor,
+    feedbacks: historyDetail.mentor?.feedbacks ?? [],
+    evaluation: historyDetail.mentor?.evaluation ?? null,
+    categoryScore: historyDetail.mentor?.categoryScores ?? null,
   });
 
+  const visibleFeedbackView = shouldShowFeedbackSelector ? selectedView : "AI";
+
   const feedbackResults =
-    selectedView === "AI"
+    visibleFeedbackView === "AI"
       ? [aiFeedbackResult].filter((result) => result !== null)
-      : selectedView === "MENTOR"
+      : visibleFeedbackView === "MENTOR"
         ? [mentorFeedbackResult].filter((result) => result !== null)
         : [aiFeedbackResult, mentorFeedbackResult].filter(
             (result) => result !== null,
@@ -127,13 +132,15 @@ export default function VideoHistoryDetail() {
         createdAt={historyDetail.video.createdAt}
       />
       <HistoryDetailVideo videoUrl={historyDetail.video.videoUrl} />
-      <FeedbackViewSelector
-        selectedView={selectedView}
-        handleChangeView={setSelectedView}
-      />
+      {shouldShowFeedbackSelector && (
+        <FeedbackViewSelector
+          selectedView={selectedView}
+          handleChangeView={setSelectedView}
+        />
+      )}
       {feedbackResults.length === 0 ? (
         <div className="flex min-h-50 items-center justify-center rounded-3xl bg-[#F5F5FA] text-2xl font-medium text-[#71718A]">
-          {EMPTY_FEEDBACK_MESSAGE[selectedView]}
+          {EMPTY_FEEDBACK_MESSAGE[visibleFeedbackView]}
         </div>
       ) : (
         feedbackResults.map((result) => (
