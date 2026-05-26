@@ -3,6 +3,7 @@ import { ArrowLeft } from "lucide-react";
 
 import {
   useRubricsQuery,
+  useRequestedVideosQuery,
   useSubmitMentorFeedbackMutation,
 } from "@apis/queries";
 import type { VideoMetadata } from "@apis/types";
@@ -25,14 +26,23 @@ export default function MentorRequestedVideoDetail() {
   const location = useLocation();
   const { videoId } = useParams();
   const { rubrics, isPendingRubrics, isErrorRubrics } = useRubricsQuery();
+  const {
+    requestedVideos,
+    isPendingRequestedVideos,
+    isErrorRequestedVideos,
+  } = useRequestedVideosQuery();
   const { submitMentorFeedbackAsync, isPendingSubmitMentorFeedback } =
     useSubmitMentorFeedbackMutation();
   const routeState = location.state as { video?: VideoMetadata } | null;
   const stateVideo = routeState?.video;
+  const validStateVideo =
+    stateVideo && String(stateVideo.videoId) === videoId ? stateVideo : null;
+  const requestedVideo = requestedVideos?.find(
+    (video) => String(video.videoId) === videoId,
+  );
+  const selectedVideo = validStateVideo ?? requestedVideo;
   const video =
-    stateVideo && String(stateVideo.videoId) === videoId
-      ? toRequestedVideo(stateVideo)
-      : null;
+    selectedVideo ? toRequestedVideo(selectedVideo) : null;
   const feedbackForm = useMentorFeedbackForm({
     rubrics,
     videoId: video?.id,
@@ -44,11 +54,11 @@ export default function MentorRequestedVideoDetail() {
     navigate(ROUTES.MENTOR_REQUESTED_VIDEOS);
   };
 
-  if (isPendingRubrics) {
+  if (isPendingRubrics || (!validStateVideo && isPendingRequestedVideos)) {
     return <PageLoading />;
   }
 
-  if (isErrorRubrics) {
+  if (isErrorRubrics || (!validStateVideo && isErrorRequestedVideos)) {
     return <PageError />;
   }
 
