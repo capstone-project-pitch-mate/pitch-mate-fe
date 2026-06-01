@@ -1,12 +1,16 @@
 import { useState } from "react";
 import { Navigate, useParams } from "react-router-dom";
 
-import { useVideoHistoryDetailQuery } from "@apis/queries";
+import {
+  useDeleteVideoMutation,
+  useVideoHistoryDetailQuery,
+} from "@apis/queries";
 import type { VideoHistoryDetailResponse } from "@apis/types";
 import { PageError, PageLoading } from "@shared/ui";
 import { ROUTES } from "@router/constants";
 
 import {
+  DeleteVideoConfirmModal,
   FeedbackResultSection,
   FeedbackViewSelector,
   HistoryDetailHeader,
@@ -56,7 +60,9 @@ const toFeedbackResult = ({
   label: string;
   feedbacks: NonNullable<VideoHistoryDetailResponse["ai"]>["feedbacks"];
   evaluation: NonNullable<VideoHistoryDetailResponse["ai"]>["evaluation"];
-  categoryScore: NonNullable<VideoHistoryDetailResponse["ai"]>["categoryScores"];
+  categoryScore: NonNullable<
+    VideoHistoryDetailResponse["ai"]
+  >["categoryScores"];
 }): FeedbackResult | null => {
   if (!evaluation && feedbacks.length === 0) {
     return null;
@@ -80,13 +86,18 @@ const EMPTY_FEEDBACK_MESSAGE: Record<FeedbackViewType, string> = {
 
 export default function VideoHistoryDetail() {
   const { videoId } = useParams();
-  const parsedVideoId = Number(videoId);
+  const parsedVideoId = videoId === undefined ? null : Number(videoId);
+  const isInvalidVideoId =
+    parsedVideoId === null || Number.isNaN(parsedVideoId);
+  const historyVideoId = isInvalidVideoId ? null : parsedVideoId;
 
   const { historyDetail, isPendingHistoryDetail, isErrorHistoryDetail } =
-    useVideoHistoryDetailQuery(parsedVideoId);
+    useVideoHistoryDetailQuery(historyVideoId);
+  const { deleteVideo, isPendingDeleteVideo } = useDeleteVideoMutation();
   const [selectedView, setSelectedView] = useState<FeedbackViewType>("AI");
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  if (parsedVideoId === null) {
+  if (isInvalidVideoId || historyVideoId === null) {
     return <Navigate to={ROUTES.VIDEO_HISTORY} replace />;
   }
 
@@ -97,6 +108,14 @@ export default function VideoHistoryDetail() {
   if (isErrorHistoryDetail || !historyDetail) {
     return <PageError />;
   }
+
+  const handleCloseModal = () => {
+    setIsDeleteModalOpen(false);
+  };
+  const handleConfirmDelete = () => {
+    deleteVideo(historyVideoId);
+    setIsDeleteModalOpen(false);
+  };
 
   const shouldShowFeedbackSelector =
     historyDetail.mentorFeedbackStatus !== "NOT_REQUESTED";
@@ -130,6 +149,8 @@ export default function VideoHistoryDetail() {
       <HistoryDetailHeader
         title={historyDetail.video.title}
         createdAt={historyDetail.video.createdAt}
+        isDeleting={isPendingDeleteVideo}
+        onClickDelete={() => setIsDeleteModalOpen(true)}
       />
       <HistoryDetailVideo videoUrl={historyDetail.video.videoUrl} />
       {shouldShowFeedbackSelector && (
@@ -146,6 +167,13 @@ export default function VideoHistoryDetail() {
         feedbackResults.map((result) => (
           <FeedbackResultSection key={result.label} result={result} />
         ))
+      )}
+      {isDeleteModalOpen && (
+        <DeleteVideoConfirmModal
+          isPending={isPendingDeleteVideo}
+          onCancel={handleCloseModal}
+          onConfirm={handleConfirmDelete}
+        />
       )}
     </div>
   );

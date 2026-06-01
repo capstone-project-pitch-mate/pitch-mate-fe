@@ -3,6 +3,7 @@ import apiInstance from "@shared/apis";
 import type {
   AllVideoHistoryResponse,
   CompletedRequestedVideosResponse,
+  DeleteVideoResponse,
   RequestedVideosResponse,
   VideoCompareResponse,
   VideoHistoryDetailResponse,
@@ -71,7 +72,10 @@ export const getVideoHistoryDetailApi = async (videoId: number) => {
   return response.result;
 };
 
-export const getVideoCompareApi = async (videoId1: number, videoId2: number) => {
+export const getVideoCompareApi = async (
+  videoId1: number,
+  videoId2: number,
+) => {
   const response = await apiInstance.get<VideoCompareResponse>(
     HISTORY_URL.COMPARE,
     {
@@ -80,6 +84,14 @@ export const getVideoCompareApi = async (videoId1: number, videoId2: number) => 
         videoId2,
       },
     },
+  );
+
+  return response.result;
+};
+
+export const deleteVideoApi = async (videoId: number) => {
+  const response = await apiInstance.delete<DeleteVideoResponse>(
+    VIDEO_URL.DETAIL(videoId),
   );
 
   return response.result;

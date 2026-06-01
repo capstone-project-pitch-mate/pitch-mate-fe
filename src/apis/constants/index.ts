@@ -16,6 +16,7 @@ export const USER_URL = {
 
 export const VIDEO_URL = {
   DEFAULT: "/videos",
+  DETAIL: (videoId: number) => `/videos/${videoId}`,
   REQUESTED: "/videos/requested",
   REQUESTED_COMPLETED: "/videos/requested/completed",
 };

@@ -36,6 +36,7 @@ export type {
   AllVideoHistoryResponse,
   CategoryScore,
   CompletedRequestedVideosResponse,
+  DeleteVideoResponse,
   MentorFeedbackStatus,
   RequestedVideosResponse,
   VideoCompareResponse,

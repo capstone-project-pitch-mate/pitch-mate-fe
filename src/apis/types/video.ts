@@ -61,6 +61,8 @@ export interface VideoUploadRequest {
 
 export type VideoUploadResponse = VideoMetadata;
 
+export type DeleteVideoResponse = string;
+
 export type RequestedVideosResponse = VideoMetadata[];
 
 export type CompletedRequestedVideosResponse = VideoMetadata[];

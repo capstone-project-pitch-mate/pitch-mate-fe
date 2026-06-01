@@ -23,6 +23,7 @@ export { useRequestedVideosQuery } from "./use-requested-videos-query";
 export { useCompletedRequestedVideosQuery } from "./use-completed-requested-videos-query";
 export { useRubricsQuery } from "./use-rubrics-query";
 export { useSubmitMentorFeedbackMutation } from "./use-submit-mentor-feedback-mutation";
+export { useDeleteVideoMutation } from "./use-delete-video-mutation";
 export { useVideoUploadMutation } from "./use-video-upload-mutation";
 export {
   useVideoCompareQuery,
